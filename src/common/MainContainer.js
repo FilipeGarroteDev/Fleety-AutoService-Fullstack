@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.section`
+  position: relative;
   width: 85%;
   height: 80%;
   background-color: #544E4E;
