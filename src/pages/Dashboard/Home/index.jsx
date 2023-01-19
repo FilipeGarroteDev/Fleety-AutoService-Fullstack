@@ -1,18 +1,22 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 export default function Home() {
   const carousel = useRef(null);
+  const [isClicked, setIsClicked] = useState('');
 
   function handleCarouselButton(position) {
     if (position === 'first') {
       carousel.current.scrollLeft = 0;
+      setIsClicked(position);
       return;
     } else if (position === 'second') {
       carousel.current.scrollLeft = carousel.current.offsetWidth;
+      setIsClicked(position);
       return;
     } else {
       carousel.current.scrollLeft += 2 * carousel.current.offsetWidth;
+      setIsClicked(position);
       return;
     }
   }
@@ -32,9 +36,9 @@ export default function Home() {
         <img src="https://www.lojabrazil.com.br/blog/wp-content/uploads/2017/09/blog1500.jpg" alt="banner1" />
       </Banner>
       <CarouselButtons>
-        <button onClick={() => handleCarouselButton('first')} />
-        <button onClick={() => handleCarouselButton('second')} />
-        <button onClick={() => handleCarouselButton('third')} />
+        <CarouselButton onClick={() => handleCarouselButton('first')} selected={isClicked} option="first"/>
+        <CarouselButton onClick={() => handleCarouselButton('second')} selected={isClicked} option="second"/>
+        <CarouselButton onClick={() => handleCarouselButton('third')} selected={isClicked} option="third"/>
       </CarouselButtons>
     </>
   );
@@ -75,12 +79,12 @@ const CarouselButtons = styled.nav`
   left: 50%;
   display: flex;
   gap: 30px;
+`;
 
-  > button {
-    border-radius: 50px;
-    border: none;
-    width: 15px;
-    height: 15px;
-    background-color: #ffffff;
-  }
+const CarouselButton = styled.button`
+  border-radius: 50px;
+  border: none;
+  width: 15px;
+  height: 15px;
+  background-color: ${(props) => (props.selected === props.option ? '#ffffff' : '#5f5858')};
 `;
