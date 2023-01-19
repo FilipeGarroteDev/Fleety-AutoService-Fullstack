@@ -35,6 +35,7 @@ const Container = styled.aside`
   background-color: #292727;
   box-shadow: 6px 0 10px 5px rgba(0, 0, 0, 0.4);
   position: fixed;
+  z-index: 1;
   top: 0;
   left: 0;
 
