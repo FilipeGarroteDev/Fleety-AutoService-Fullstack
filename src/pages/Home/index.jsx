@@ -3,7 +3,7 @@ import Menus from '../../components/Dashboard/Menus';
 export default function Home() {
   return (
     <>
-      <Menus />
+      <h1>Seja bem vindo, Filipe Garrote</h1>
     </>
   );
 }

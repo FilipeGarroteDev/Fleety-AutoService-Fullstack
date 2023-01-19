@@ -69,7 +69,9 @@ const ButtonsContainer = styled.nav`
     gap: 10px;
     width: 200px;
     height: 100%;
+    border: none;
     border-left: 0.5px solid #000000;
+    border-right: 0.5px solid #000000;
     background-color: #292727;
 
     > svg {
