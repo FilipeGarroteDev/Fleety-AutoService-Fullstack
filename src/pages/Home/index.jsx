@@ -1,17 +1,9 @@
-import MainContainer from '../../common/MainContainer';
-import Wrapper from '../../common/Wrapper';
-import Logo from '../../components/Dashboard/Logo';
-import NavigationBar from '../../components/Dashboard/NavigationBar';
-import TopMenu from '../../components/Dashboard/TopMenu';
+import Menus from '../../components/Dashboard/Menus';
 
 export default function Home() {
   return (
-    <Wrapper>
-      <MainContainer>
-        <Logo />
-        <NavigationBar/>
-        <TopMenu/>
-      </MainContainer>
-    </Wrapper>
+    <>
+      <Menus />
+    </>
   );
 }
