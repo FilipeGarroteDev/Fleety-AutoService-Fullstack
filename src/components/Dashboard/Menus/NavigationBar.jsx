@@ -1,23 +1,32 @@
 import styled from 'styled-components';
 import { GiWineBottle } from 'react-icons/gi';
 import { IoRestaurant, IoHome } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
 
 export default function NavigationBar() {
   return (
     <Container>
       <ButtonsContainer>
-        <button>
-          <IoHome />
-          <span>Home</span>
-        </button>
-        <button>
-          <IoRestaurant />
-          <span>Comidas</span>
-        </button>
-        <button>
-          <GiWineBottle />
-          <span>Bebidas</span>
-        </button>
+        <Link to="/home">
+          <button>
+            <IoHome />
+            <span>Home</span>
+          </button>
+        </Link>
+
+        <Link to="/foods">
+          <button>
+            <IoRestaurant />
+            <span>Comidas</span>
+          </button>
+        </Link>
+
+        <Link to="/beverages">
+          <button>
+            <GiWineBottle />
+            <span>Bebidas</span>
+          </button>
+        </Link>
       </ButtonsContainer>
       <div>
         <p>Avaliar</p>
@@ -32,7 +41,7 @@ const Container = styled.aside`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 160px;
+  width: 12%;
   height: 100%;
   background-color: #292727;
   box-shadow: 0 6px 10px 5px rgba(0, 0, 0, 0.4);
@@ -70,34 +79,38 @@ const ButtonsContainer = styled.nav`
   width: 100%;
   height: auto;
 
-  > button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    height: 160px;
-    border: none;
-    border-top: 0.5px solid #000000;
-    border-bottom: 0.5px solid #000000;
-    background-color: #292727;
+  > a {
+    text-decoration: none;
 
-    > svg {
-      color: #dea12a;
-      font-size: 35px;
-    }
+    button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 160px;
+      border: none;
+      border-top: 0.5px solid #000000;
+      border-bottom: 0.5px solid #000000;
+      background-color: #292727;
 
-    > span {
-      width: 85px;
-      color: #dea12a;
-      font-size: 18px;
-      font-weight: 700;
-    }
+      > svg {
+        color: #dea12a;
+        font-size: 35px;
+      }
 
-    &:hover {
-      cursor: pointer;
-      background-color: #121111;
+      > span {
+        width: 85px;
+        color: #dea12a;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      &:hover {
+        cursor: pointer;
+        background-color: #121111;
+      }
     }
   }
 `;
