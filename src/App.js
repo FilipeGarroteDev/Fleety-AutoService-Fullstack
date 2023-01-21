@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import GlobalStyle from './common/GlobalStyle';
 import Reset from './common/Reset';
 import Dashboard from './pages/Dashboard';
+import BeveragesPage from './pages/Dashboard/BeveragesPage';
 import FoodsPage from './pages/Dashboard/FoodsPage';
 import Home from './pages/Dashboard/Home';
 
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="/" element={<Dashboard />}>
             <Route path="home" element={<Home />} />
             <Route path="foods/:category" element={<FoodsPage />} />
+            <Route path="beverages/:category" element={<BeveragesPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -17,14 +17,14 @@ export default function NavigationBar() {
           </MenuButton>
         </Link>
 
-        <Link to="/foods">
+        <Link to="/foods/1">
           <MenuButton page={page} name="foods">
             <IoRestaurant />
             <span>Comidas</span>
           </MenuButton>
         </Link>
 
-        <Link to="/beverages">
+        <Link to="/beverages/1">
           <MenuButton page={page} name="beverages">
             <GiWineBottle />
             <span>Bebidas</span>
