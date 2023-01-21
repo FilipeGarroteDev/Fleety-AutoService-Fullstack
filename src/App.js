@@ -14,7 +14,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Dashboard />}>
             <Route path="home" element={<Home />} />
-            <Route path="foods" element={<FoodsPage />} />
+            <Route path="foods/:categoryId" element={<FoodsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

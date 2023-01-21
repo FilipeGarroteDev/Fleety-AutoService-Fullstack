@@ -5,6 +5,7 @@ import ProductCard from '../../../components/Dashboard/Menus/FoodsAndDrinksPages
 import ProductsList from '../../../components/Dashboard/Menus/FoodsAndDrinksPages/ProductsList';
 
 export default function FoodsPage() {
+  const [category, setCategory] = useState('Entradas');
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -114,9 +115,9 @@ export default function FoodsPage() {
 
   return (
     <>
-      <CategoriesMenu />
+      <CategoriesMenu setCategory={setCategory}/>
       <ProductsList>
-        <InnerCategoryTitle>Saladas</InnerCategoryTitle>
+        <InnerCategoryTitle>{category}</InnerCategoryTitle>
         {products.map(({ name, description, value, id, image }) => (
           <ProductCard key={id} image={image} name={name} description={description} value={value} id={id} />
         ))}

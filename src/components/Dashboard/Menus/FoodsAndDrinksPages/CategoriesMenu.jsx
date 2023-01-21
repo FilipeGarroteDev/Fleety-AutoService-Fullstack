@@ -1,35 +1,45 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-export default function CategoriesMenu() {
+export default function CategoriesMenu({ setCategory }) {
   const categories = [
     {
+      id: 1,
       name: 'Entradas',
       image:
         'https://b1861587.smushcdn.com/1861587/wp-content/themes/yootheme/cache/80/entradas-para-cardapio-restaurante-804ebbe0.jpeg?lossy=1&strip=1&webp=1',
     },
     {
+      id: 2,
       name: 'Lanches',
       image: 'https://www.sabornamesa.com.br/media/k2/items/cache/bf1e20a4462b71e3cc4cece2a8c96ac8_XL.jpg',
     },
     {
+      id: 3,
       name: 'Pratos Principais',
       image: 'https://revistanews.com.br/wp-content/uploads/2018/05/Prato-principal-Didge-Steakhouse-Pub.jpg',
     },
-    { name: 'Sobremesas', image: 'https://cdn.abrahao.com.br/base/fa1/4db/4d8/tipos-sobremesa-para-vender.jpg' },
+    { id: 4, name: 'Sobremesas', image: 'https://cdn.abrahao.com.br/base/fa1/4db/4d8/tipos-sobremesa-para-vender.jpg' },
   ];
 
   return (
     <CategoriesContainer>
       {categories.map((category) => (
-        <CategoryOption category={category} />
+        <CategoryOption category={category} setCategory={setCategory} />
       ))}
     </CategoriesContainer>
   );
 }
 
-function CategoryOption({ category }) {
+function CategoryOption({ category, setCategory }) {
+  const navigate = useNavigate();
   return (
-    <OptionStyle>
+    <OptionStyle
+      onClick={() => {
+        setCategory(category.name);
+        navigate(`/foods/${category.id}`);
+      }}
+    >
       <img src={category.image} alt="categoryImage" />
       <h3>{category.name}</h3>
     </OptionStyle>
@@ -69,5 +79,10 @@ const OptionStyle = styled.section`
     position: absolute;
     bottom: 20px;
     left: calc(50% - 50px);
+  }
+
+  &:hover {
+    cursor: pointer;
+    filter: brightness(0.8);
   }
 `;
