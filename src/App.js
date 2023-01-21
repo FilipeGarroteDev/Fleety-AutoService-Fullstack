@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import BeveragesPage from './pages/Dashboard/BeveragesPage';
 import FoodsPage from './pages/Dashboard/FoodsPage';
 import Home from './pages/Dashboard/Home';
+import ProductPage from './pages/Dashboard/ProductPage';
 
 export default function App() {
   return (
@@ -15,8 +16,9 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Dashboard />}>
             <Route path="home" element={<Home />} />
-            <Route path="foods/:category" element={<FoodsPage />} />
-            <Route path="beverages/:category" element={<BeveragesPage />} />
+            <Route path="foods/:categoryId" element={<FoodsPage />} />
+            <Route path="beverages/:categoryId" element={<BeveragesPage />} />
+            <Route path="product/:productId" element={<ProductPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

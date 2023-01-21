@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import CategoriesMenu from '../../../components/Dashboard/Menus/FoodsAndDrinksPages/CategoriesMenu';
-import ProductCard from '../../../components/Dashboard/Menus/FoodsAndDrinksPages/ProductCard';
-import ProductsList from '../../../components/Dashboard/Menus/FoodsAndDrinksPages/ProductsList';
+import CategoriesMenu from '../../../components/Dashboard/FoodsAndDrinksPages/CategoriesMenu';
+import ProductCard from '../../../components/Dashboard/FoodsAndDrinksPages/ProductCard';
+import ProductsList from '../../../components/Dashboard/FoodsAndDrinksPages/ProductsList';
 
 export default function FoodsPage() {
   const [category, setCategory] = useState('Entradas');
-  const [products, setProducts] = useState([
+  const products = [
     {
       id: 1,
       name: 'Salada de Atum',
@@ -111,11 +111,11 @@ export default function FoodsPage() {
       value: 3850,
       image: 'https://img.cybercook.com.br/receitas/695/dadinho-de-tapioca-com-queijo-de-coalho-1.jpeg',
     },
-  ]);
+  ];
 
   return (
     <>
-      <CategoriesMenu setCategory={setCategory}/>
+      <CategoriesMenu setCategory={setCategory} />
       <ProductsList>
         <InnerCategoryTitle>{category}</InnerCategoryTitle>
         {products.map(({ name, description, value, id, image }) => (

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import CategoriesMenu from '../../../components/Dashboard/Menus/FoodsAndDrinksPages/CategoriesMenu';
-import ProductCard from '../../../components/Dashboard/Menus/FoodsAndDrinksPages/ProductCard';
-import ProductsList from '../../../components/Dashboard/Menus/FoodsAndDrinksPages/ProductsList';
+import CategoriesMenu from '../../../components/Dashboard/FoodsAndDrinksPages/CategoriesMenu';
+import ProductCard from '../../../components/Dashboard/FoodsAndDrinksPages/ProductCard';
+import ProductsList from '../../../components/Dashboard/FoodsAndDrinksPages/ProductsList';
 
 export default function BeveragesPage() {
   const [category, setCategory] = useState('Entradas');
-  const [products, setProducts] = useState([
+  const products = [
     {
       id: 1,
       name: 'Drinkão da massa',
@@ -83,7 +83,7 @@ export default function BeveragesPage() {
       value: 599,
       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhCrMwwVG74WYPUbjEq46tm00IoPfMpy6tUw&usqp=CAU',
     },
-  ]);
+  ];
 
   return (
     <>

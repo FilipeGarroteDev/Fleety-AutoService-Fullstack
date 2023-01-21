@@ -1,9 +1,11 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 export default function ProductCard({ name, description, value, id, image }) {
-  const formattedValue = (value/100).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+  const navigate = useNavigate();
+  const formattedValue = (value / 100).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
   return (
-    <CardStyle>
+    <CardStyle onClick={() => navigate(`/product/${id}`)}>
       <img src={image} alt="productImage" />
       <div>
         <h2>{name}</h2>
@@ -45,7 +47,6 @@ const CardStyle = styled.div`
       font-weight: 700;
       margin-bottom: 15px;
     }
-
   }
 
   > aside {
