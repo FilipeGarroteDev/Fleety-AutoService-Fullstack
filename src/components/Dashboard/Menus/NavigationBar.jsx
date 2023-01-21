@@ -24,7 +24,7 @@ export default function NavigationBar() {
           </MenuButton>
         </Link>
 
-        <Link to="/beverages/1">
+        <Link to="/beverages/5">
           <MenuButton page={page} name="beverages">
             <GiWineBottle />
             <span>Bebidas</span>

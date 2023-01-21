@@ -59,19 +59,19 @@ export default function CategoriesMenu({ setCategory }) {
   return (
     <CategoriesContainer>
       {categories.map((category) => (
-        <CategoryOption category={category} setCategory={setCategory} />
+        <CategoryOption category={category} setCategory={setCategory} page={page} />
       ))}
     </CategoriesContainer>
   );
 }
 
-function CategoryOption({ category, setCategory }) {
+function CategoryOption({ category, setCategory, page }) {
   const navigate = useNavigate();
   return (
     <OptionStyle
       onClick={() => {
         setCategory(category.name);
-        navigate(`/foods/${category.id}`);
+        navigate(`/${page}/${category.id}`);
       }}
     >
       <img src={category.image} alt="categoryImage" />
