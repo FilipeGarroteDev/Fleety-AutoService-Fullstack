@@ -33,5 +33,24 @@ const ProductBanner = styled.div`
   overflow: hidden;
   position: relative;
 
-  
+  > img {
+    @keyframes animateImage {
+      0% {
+        transform: translateY(100px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    width: 100%;
+    height: 500%;
+    position: absolute;
+    top: -500px;
+    mask-image: linear-gradient(to top, #0000001f, #000000df);
+    -webkit-mask-image: linear-gradient(to top, #0000001f, #000000df);
+    animation: animateImage 3.5s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
 `;
