@@ -4,6 +4,18 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 
 export default function ProductPage() {
+  const [productAmount, setProductAmount] = useState(1);
+  const mockValue = 2599;
+  const formattedValue = (mockValue * productAmount / 100).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+
+  function increaseOrDecreaseProductAmount(operation) {
+    if (operation === '-' && productAmount > 1) {
+      setProductAmount(productAmount - 1);
+    } else if (operation === '+') {
+      setProductAmount(productAmount + 1);
+    }
+  }
+
   return (
     <Wrapper>
       <ProductBanner>
@@ -21,11 +33,11 @@ export default function ProductPage() {
       <AddItemsMenu />
       <FinishOrderSection>
         <aside>
-          <AiOutlineMinusCircle />
-          <strong>0</strong>
-          <AiOutlinePlusCircle />
+          <AiOutlineMinusCircle onClick={() => increaseOrDecreaseProductAmount('-')} />
+          <strong>{productAmount}</strong>
+          <AiOutlinePlusCircle onClick={() => increaseOrDecreaseProductAmount('+')} />
         </aside>
-        <button>R$ 25,99 Adicionar</button>
+        <button>{`${formattedValue} Adicionar`}</button>
       </FinishOrderSection>
     </Wrapper>
   );
@@ -335,7 +347,7 @@ const FinishOrderSection = styled.footer`
     width: 160px;
     height: 80px;
     border-radius: 15px;
-    background-color: #2A6437;
+    background-color: #2a6437;
     border: none;
     color: #ffffff;
     font-size: 20px;
