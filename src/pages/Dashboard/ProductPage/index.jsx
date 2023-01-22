@@ -5,8 +5,12 @@ import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 
 export default function ProductPage() {
   const [productAmount, setProductAmount] = useState(1);
+  const [extraValue, setExtraValue] = useState(0);
   const mockValue = 2599;
-  const formattedValue = (mockValue * productAmount / 100).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+  const formattedValue = (((mockValue + extraValue) * productAmount) / 100).toLocaleString('pt-br', {
+    style: 'currency',
+    currency: 'BRL',
+  });
 
   function increaseOrDecreaseProductAmount(operation) {
     if (operation === '-' && productAmount > 1) {
@@ -30,7 +34,7 @@ export default function ProductPage() {
         azeitonas e muçarela de búfala.
       </h2>
       <WithdrawItemsMenu />
-      <AddItemsMenu />
+      <AddItemsMenu extraValue={extraValue} setExtraValue={setExtraValue} />
       <FinishOrderSection>
         <aside>
           <AiOutlineMinusCircle onClick={() => increaseOrDecreaseProductAmount('-')} />
@@ -59,9 +63,20 @@ function WithdrawItemsMenu() {
   );
 }
 
-function AddItemsMenu() {
+function AddItemsMenu({ extraValue, setExtraValue }) {
   const [isClicked, setIsClicked] = useState(false);
-  const [amount, setAmount] = useState(0);
+  const mockAddValue = 400;
+  const [extraAmount, setExtraAmount] = useState(0);
+
+  function selectExtraItems(operation) {
+    if (operation === '-' && extraAmount > 0) {
+      setExtraAmount(extraAmount - 1);
+      setExtraValue(extraValue - mockAddValue);
+    } else if (operation === '+') {
+      setExtraAmount(extraAmount + 1);
+      setExtraValue(extraValue + mockAddValue);
+    }
+  }
 
   return (
     <OptionsBoxStyle isClicked={isClicked}>
@@ -76,9 +91,9 @@ function AddItemsMenu() {
             <aside>
               <span>+ R$ 4,00</span>
               <div>
-                <button>-</button>
-                <strong>{amount}</strong>
-                <button>+</button>
+                <button onClick={() => selectExtraItems('-')}>-</button>
+                <strong>{extraAmount}</strong>
+                <button onClick={() => selectExtraItems('+')}>+</button>
               </div>
             </aside>
           </li>
@@ -87,9 +102,9 @@ function AddItemsMenu() {
             <aside>
               <span>+ R$ 4,00</span>
               <div>
-                <button>-</button>
-                <strong>{amount}</strong>
-                <button>+</button>
+                <button onClick={() => selectExtraItems('-')}>-</button>
+                <strong>{extraAmount}</strong>
+                <button onClick={() => selectExtraItems('+')}>+</button>
               </div>
             </aside>
           </li>
@@ -98,9 +113,9 @@ function AddItemsMenu() {
             <aside>
               <span>+ R$ 4,00</span>
               <div>
-                <button>-</button>
-                <strong>{amount}</strong>
-                <button>+</button>
+                <button onClick={() => selectExtraItems('-')}>-</button>
+                <strong>{extraAmount}</strong>
+                <button onClick={() => selectExtraItems('+')}>+</button>
               </div>
             </aside>
           </li>
@@ -109,9 +124,9 @@ function AddItemsMenu() {
             <aside>
               <span>+ R$ 4,00</span>
               <div>
-                <button>-</button>
-                <strong>{amount}</strong>
-                <button>+</button>
+                <button onClick={() => selectExtraItems('-')}>-</button>
+                <strong>{extraAmount}</strong>
+                <button onClick={() => selectExtraItems('+')}>+</button>
               </div>
             </aside>
           </li>
@@ -120,9 +135,9 @@ function AddItemsMenu() {
             <aside>
               <span>+ R$ 4,00</span>
               <div>
-                <button>-</button>
-                <strong>{amount}</strong>
-                <button>+</button>
+                <button onClick={() => selectExtraItems('-')}>-</button>
+                <strong>{extraAmount}</strong>
+                <button onClick={() => selectExtraItems('+')}>+</button>
               </div>
             </aside>
           </li>
