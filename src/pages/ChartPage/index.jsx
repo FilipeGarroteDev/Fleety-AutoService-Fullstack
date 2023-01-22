@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import ProductCard from '../../components/Dashboard/FoodsAndDrinksPages/ProductCard';
 import NavigationBar from '../../components/Dashboard/Menus/NavigationBar';
@@ -42,6 +43,14 @@ export default function ChartPage() {
     },
   ];
 
+  function calculateTotalValue() {
+    const sumValues = mockedOrderList.reduce((acc, curr) => {
+      acc += curr.value;
+      return acc;
+    }, 0);
+    return `R$ ${sumValues / 100}`;
+  }
+
   return (
     <>
       <OpacityStyle />
@@ -59,7 +68,7 @@ export default function ChartPage() {
         <footer>
           <div>
             <h2>VALOR TOTAL:</h2>
-            <h3>R$ 103,96</h3>
+            <h3>{calculateTotalValue()}</h3>
           </div>
           <button>ENVIAR PEDIDO</button>
         </footer>
@@ -182,5 +191,5 @@ const OrderContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px
+  gap: 15px;
 `;
