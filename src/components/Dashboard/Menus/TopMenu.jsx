@@ -2,25 +2,31 @@ import styled from 'styled-components';
 import fleetyLogo from '../../../assets/images/fleetyLogo.png';
 import { IoHandRight, IoWallet } from 'react-icons/io5';
 import { BsFillCartCheckFill } from 'react-icons/bs';
+import { Link } from 'react-router-dom';
 
 export default function TopMenu() {
   return (
     <Container>
       <img src={fleetyLogo} alt="logo" />
       <div>Mesa 15</div>
+
       <ButtonsContainer>
         <button>
           <IoHandRight />
           <span>Chamar garçom</span>
         </button>
+
         <button>
           <IoWallet />
           <span>Minha conta</span>
         </button>
-        <button>
-          <BsFillCartCheckFill />
-          <span>Meu pedido</span>
-        </button>
+
+        <Link to="/chart">
+          <button>
+            <BsFillCartCheckFill />
+            <span>Meu pedido</span>
+          </button>
+        </Link>
       </ButtonsContainer>
     </Container>
   );
@@ -63,7 +69,7 @@ const ButtonsContainer = styled.nav`
   width: auto;
   height: 100%;
 
-  > button {
+  button {
     display: flex;
     align-items: center;
     justify-content: center;

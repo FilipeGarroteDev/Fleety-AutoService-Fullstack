@@ -10,6 +10,7 @@ export default createGlobalStyle`
     width: 100vw;
     height: 100vh;
     background-color: #544E4E;
+    overflow: hidden;
 
   }
 
