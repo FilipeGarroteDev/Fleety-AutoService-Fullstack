@@ -16,7 +16,7 @@ export default function ProductPage() {
         Salada fresca com folhas diversas, incluindo alface crespa, rúcula e alface americana, além de salmão desfiado,
         azeitonas e muçarela de búfala.
       </h2>
-      <OptionsMenu />
+      <AddItemsMenu />
       {/* <div>
         <h3>Adicionais</h3>
         <FaChevronDown />
@@ -26,7 +26,7 @@ export default function ProductPage() {
   );
 }
 
-function OptionsMenu() {
+function WithdrawItemsMenu() {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -37,6 +37,68 @@ function OptionsMenu() {
       </div>
       <div className="opened">
         <textarea placeholder="Digite aqui o que deseja retirar..." />
+      </div>
+    </OptionsBoxStyle>
+  );
+}
+
+function AddItemsMenu() {
+  const [isClicked, setIsClicked] = useState(false);
+  const [amount, setAmount] = useState(0);
+
+  return (
+    <OptionsBoxStyle isClicked={isClicked}>
+      <div className="closed" onClick={() => setIsClicked(!isClicked)}>
+        <h3>Adicionais</h3>
+        {isClicked ? <FaChevronUp /> : <FaChevronDown />}
+      </div>
+      <div className="opened">
+        <ExtraItemsList>
+          <li>
+            <h5>Adicional Parmesão</h5>
+            <aside>
+              <span>+ R$ 4,00</span>
+              <div>
+                <button>-</button>
+                <strong>{amount}</strong>
+                <button>+</button>
+              </div>
+            </aside>
+          </li>
+          <li>
+            <h5>Adicional Parmesão</h5>
+            <aside>
+              <span>+ R$ 4,00</span>
+              <div>
+                <button>-</button>
+                <strong>{amount}</strong>
+                <button>+</button>
+              </div>
+            </aside>
+          </li>
+          <li>
+            <h5>Adicional Parmesão</h5>
+            <aside>
+              <span>+ R$ 4,00</span>
+              <div>
+                <button>-</button>
+                <strong>{amount}</strong>
+                <button>+</button>
+              </div>
+            </aside>
+          </li>
+          <li>
+            <h5>Adicional Parmesão</h5>
+            <aside>
+              <span>+ R$ 4,00</span>
+              <div>
+                <button>-</button>
+                <strong>{amount}</strong>
+                <button>+</button>
+              </div>
+            </aside>
+          </li>
+        </ExtraItemsList>
       </div>
     </OptionsBoxStyle>
   );
@@ -145,6 +207,71 @@ const OptionsBoxStyle = styled.section`
         color: #d9d9d9;
         font-style: italic;
       }
+    }
+  }
+`;
+
+const ExtraItemsList = styled.ul`
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  > li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    > h5 {
+      font-size: 22px;
+      font-weight: 400;
+      color: #ffffff;
+    }
+
+    > aside {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+
+      > span {
+        font-size: 18px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      > div {
+        width: 70px;
+        height: 22px;
+        border-radius: 2px;
+        background-color: #D9D9D9;
+        padding: 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        > button {
+          width: 22px;
+          height: 22px;
+          border-radius: 2px;
+          background-color: #544e4e;
+          border: none;
+          color: #D9D9D9;
+          font-size: 20px;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        > strong {
+          font-size: 14px;
+          font-weight: 700;
+          color: #000000;
+        }
+      }
+      
     }
   }
 `;
