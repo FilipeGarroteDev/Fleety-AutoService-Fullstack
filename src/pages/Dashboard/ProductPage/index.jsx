@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 
 export default function ProductPage() {
   return (
@@ -18,11 +19,14 @@ export default function ProductPage() {
       </h2>
       <WithdrawItemsMenu />
       <AddItemsMenu />
-      {/* <div>
-        <h3>Adicionais</h3>
-        <FaChevronDown />
-      </div> */}
-      <footer></footer>
+      <FinishOrderSection>
+        <aside>
+          <AiOutlineMinusCircle />
+          <strong>0</strong>
+          <AiOutlinePlusCircle />
+        </aside>
+        <button>R$ 25,99 Adicionar</button>
+      </FinishOrderSection>
     </Wrapper>
   );
 }
@@ -120,7 +124,7 @@ const Wrapper = styled.main`
   width: 100%;
   height: 100%;
   padding-right: 20px;
-  padding-bottom: 50px;
+  padding-bottom: 150px;
   overflow-x: hidden;
   overflow-y: auto;
 
@@ -286,5 +290,58 @@ const ExtraItemsList = styled.ul`
         }
       }
     }
+  }
+`;
+
+const FinishOrderSection = styled.footer`
+  width: 100%;
+  height: 100px;
+  padding-left: 14%;
+  padding-right: 20px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  box-shadow: -2px 0 20px rgba(0, 0, 0, 0.2);
+  justify-content: space-between;
+  background-color: #544e4e;
+
+  > aside {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    > svg {
+      color: #d9d9d9;
+      font-size: 40px;
+    }
+
+    > strong {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 35px;
+      height: 35px;
+      background-color: #d9d9d9;
+      border-radius: 50px;
+      color: #544e4e;
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+
+  > button {
+    width: 160px;
+    height: 80px;
+    border-radius: 15px;
+    background-color: #2A6437;
+    border: none;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
