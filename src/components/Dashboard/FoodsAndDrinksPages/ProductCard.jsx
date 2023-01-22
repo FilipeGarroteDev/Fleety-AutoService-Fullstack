@@ -1,15 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-export default function ProductCard({ name, description, value, id, image }) {
+export default function ProductCard({ name, description, value, id, image, optionals, amount, chart }) {
   const navigate = useNavigate();
   const formattedValue = (value / 100).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
   return (
-    <CardStyle onClick={() => navigate(`/product/${id}`)}>
+    <CardStyle chart={chart} onClick={() => navigate(`/product/${id}`)}>
       <img src={image} alt="productImage" />
       <div>
-        <h2>{name}</h2>
-        <h4>{description}</h4>
+        <h2>{amount ? `${amount}x ${name}` : name}</h2>
+        <h4>{optionals ? '+ adicionais' : description}</h4>
       </div>
       <aside>
         <span>{formattedValue}</span>
@@ -19,8 +19,8 @@ export default function ProductCard({ name, description, value, id, image }) {
 }
 
 const CardStyle = styled.div`
-  width: 80%;
-  height: 120px;
+  width: ${(props) => (props.chart ? '90%' : '80%')};
+  height: ${(props) => (props.chart ? '80px' : '120px')};
   border-radius: 15px;
   background-color: #2f2c2c;
   overflow: hidden;

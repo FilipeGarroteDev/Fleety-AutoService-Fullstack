@@ -1,17 +1,61 @@
 import styled from 'styled-components';
+import ProductCard from '../../components/Dashboard/FoodsAndDrinksPages/ProductCard';
 import NavigationBar from '../../components/Dashboard/Menus/NavigationBar';
 import TopMenu from '../../components/Dashboard/Menus/TopMenu';
+import Home from '../Dashboard/Home';
 
 export default function ChartPage() {
+  const mockedOrderList = [
+    {
+      id: 1,
+      image:
+        'https://saboreiaavida.nestle.pt/sites/default/files/styles/receita_card_620x560/public/pictures/e10d8b86-55e2-11e4-b7b1-d4ae52be23e7.png?h=80accfed&itok=ZvgUCzxd',
+      name: 'Salada de salmão',
+      value: 4099,
+      amount: 2,
+      optionals: ['carne'],
+    },
+    {
+      id: 2,
+      image:
+        'https://saboreiaavida.nestle.pt/sites/default/files/styles/receita_card_620x560/public/pictures/e10d8b86-55e2-11e4-b7b1-d4ae52be23e7.png?h=80accfed&itok=ZvgUCzxd',
+      name: 'Salada de salmão',
+      value: 2599,
+      amount: 1,
+    },
+    {
+      id: 3,
+      image:
+        'https://saboreiaavida.nestle.pt/sites/default/files/styles/receita_card_620x560/public/pictures/e10d8b86-55e2-11e4-b7b1-d4ae52be23e7.png?h=80accfed&itok=ZvgUCzxd',
+      name: 'Salada de salmão',
+      value: 2599,
+      amount: 3,
+      optionals: ['carne'],
+    },
+    {
+      id: 4,
+      image:
+        'https://saboreiaavida.nestle.pt/sites/default/files/styles/receita_card_620x560/public/pictures/e10d8b86-55e2-11e4-b7b1-d4ae52be23e7.png?h=80accfed&itok=ZvgUCzxd',
+      name: 'Salada de salmão',
+      value: 2599,
+      amount: 12,
+    },
+  ];
+
   return (
     <>
       <OpacityStyle />
       <TopMenu />
       <NavigationBar />
+      <Home />
       <ChartWindow>
         <button>X</button>
         <header>MEU PEDIDO</header>
-        <div></div>
+        <OrderContainer>
+          {mockedOrderList.map(({ name, value, id, image, optionals, amount }) => (
+            <ProductCard key={id} name={name} value={value} image={image} optionals={optionals} amount={amount} chart />
+          ))}
+        </OrderContainer>
         <footer>
           <div>
             <h2>VALOR TOTAL:</h2>
@@ -80,7 +124,7 @@ const ChartWindow = styled.section`
 
   > header {
     width: inherit;
-    height: 100px;
+    height: 14%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -95,7 +139,7 @@ const ChartWindow = styled.section`
 
   > footer {
     width: inherit;
-    height: 110px;
+    height: 14.5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -105,19 +149,19 @@ const ChartWindow = styled.section`
     position: fixed;
     bottom: 0;
 
-    >div h2 {
+    > div h2 {
       font-size: 26px;
       font-weight: 700;
       margin-bottom: 10px;
     }
 
-    >div h3 {
+    > div h3 {
       font-size: 24px;
       font-weight: 700;
-      color: #2A6437;
+      color: #2a6437;
     }
 
-    >button {
+    > button {
       width: 180px;
       height: 65px;
       border: none;
@@ -128,4 +172,15 @@ const ChartWindow = styled.section`
       font-size: 16px;
     }
   }
+`;
+
+const OrderContainer = styled.div`
+  width: 100%;
+  height: 71.5%;
+  margin-top: 12%;
+  margin-bottom: 14.5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px
 `;
