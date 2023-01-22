@@ -16,6 +16,7 @@ export default function ProductPage() {
         Salada fresca com folhas diversas, incluindo alface crespa, rúcula e alface americana, além de salmão desfiado,
         azeitonas e muçarela de búfala.
       </h2>
+      <WithdrawItemsMenu />
       <AddItemsMenu />
       {/* <div>
         <h3>Adicionais</h3>
@@ -98,6 +99,17 @@ function AddItemsMenu() {
               </div>
             </aside>
           </li>
+          <li>
+            <h5>Adicional Parmesão</h5>
+            <aside>
+              <span>+ R$ 4,00</span>
+              <div>
+                <button>-</button>
+                <strong>{amount}</strong>
+                <button>+</button>
+              </div>
+            </aside>
+          </li>
         </ExtraItemsList>
       </div>
     </OptionsBoxStyle>
@@ -108,6 +120,9 @@ const Wrapper = styled.main`
   width: 100%;
   height: 100%;
   padding-right: 20px;
+  padding-bottom: 50px;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   > h2 {
     font-size: 26px;
@@ -116,15 +131,12 @@ const Wrapper = styled.main`
 `;
 
 const ProductBanner = styled.header`
-  width: calc(100% + 45px);
+  width: 100%;
   height: 200px;
   background-color: #000000;
   box-shadow: 5px 0 15px 0 rgba(0, 0, 0, 0.3);
   overflow: hidden;
   position: relative;
-  top: -20px;
-  left: -27px;
-  right: 0;
   margin-bottom: 10px;
 
   > img {
@@ -217,6 +229,8 @@ const ExtraItemsList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 15px;
+  border-top: 1px solid #807b7b;
+  padding-top: 15px;
 
   > li {
     display: flex;
@@ -245,7 +259,7 @@ const ExtraItemsList = styled.ul`
         width: 70px;
         height: 22px;
         border-radius: 2px;
-        background-color: #D9D9D9;
+        background-color: #d9d9d9;
         padding: 0 0;
         display: flex;
         align-items: center;
@@ -257,7 +271,7 @@ const ExtraItemsList = styled.ul`
           border-radius: 2px;
           background-color: #544e4e;
           border: none;
-          color: #D9D9D9;
+          color: #d9d9d9;
           font-size: 20px;
           font-weight: 700;
           display: flex;
@@ -271,7 +285,6 @@ const ExtraItemsList = styled.ul`
           color: #000000;
         }
       }
-      
     }
   }
 `;
