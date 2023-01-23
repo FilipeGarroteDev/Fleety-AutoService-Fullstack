@@ -71,6 +71,10 @@ const ButtonsContainer = styled.nav`
   width: auto;
   height: 100%;
 
+  > a {
+    text-decoration: none;
+  }
+
   button {
     display: flex;
     align-items: center;
