@@ -9,57 +9,78 @@ export default function RateSection() {
     {
       id: 1,
       name: 'Ambiente',
+      tag: 'environmentRate',
       image: <BiHomeHeart />,
     },
     {
       id: 2,
       name: 'Comidas',
+      tag: 'foodRate',
       image: <IoRestaurantOutline />,
     },
     {
       id: 3,
       name: 'Bebidas',
+      tag: 'beverageRate',
       image: <IoBeerOutline />,
     },
     {
       id: 4,
       name: 'Preços',
+      tag: 'priceRate',
       image: <RiMoneyDollarCircleLine />,
     },
     {
       id: 5,
       name: 'Atendimento',
+      tag: 'serviceRate',
       image: <BiWinkSmile />,
     },
   ];
+  const [ratingObject, setRatingObject] = useState({});
 
   return (
     <Container>
       <h2>Compartilhe conosco o que achou do nosso serviço. Sua opinião é muito importante para nós!</h2>
       <ul>
-        {ratingsOptions.map(({ id, name, image }) => (
-          <OptionLine key={id} name={name} image={image} />
+        {ratingsOptions.map(({ id, name, image, tag }) => (
+          <OptionLine
+            key={id}
+            name={name}
+            image={image}
+            tag={tag}
+            ratingObject={ratingObject}
+            setRatingObject={setRatingObject}
+          />
         ))}
       </ul>
     </Container>
   );
 }
 
-function OptionLine({ name, image }) {
-  const [rate, setRate] = useState();
-  
+function OptionLine({ name, image, tag, ratingObject, setRatingObject }) {
+  const [rate, setRate] = useState(1);
+
+  function handleRatingOption(value, name) {
+    setRatingObject({
+      ...ratingObject,
+      [name]: value,
+    });
+    setRate(value);
+  }
+
   return (
     <LineStyle>
       <div>
         <div>{image}</div>
         <h3>{name}</h3>
       </div>
-      <Rate>
-        <IoStar />
-        <IoStar />
-        <IoStar />
-        <IoStar />
-        <IoStar />
+      <Rate rate={rate}>
+        <IoStar onClick={() => handleRatingOption(1, tag)} />
+        <IoStar onClick={() => handleRatingOption(2, tag)} />
+        <IoStar onClick={() => handleRatingOption(3, tag)} />
+        <IoStar onClick={() => handleRatingOption(4, tag)} />
+        <IoStar onClick={() => handleRatingOption(5, tag)} />
       </Rate>
     </LineStyle>
   );
@@ -124,4 +145,49 @@ const Rate = styled.li`
   gap: 5px;
   font-size: 26px;
   color: #9e9a9a;
+
+  svg:nth-child(1) {
+    color: ${(props) => (props.rate >= 1 ? '#DEA12A' : '#9e9a9a')};
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.9);
+    }
+  }
+
+  svg:nth-child(2) {
+    color: ${(props) => (props.rate >= 2 ? '#DEA12A' : '#9e9a9a')};
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.9);
+    }
+  }
+
+  svg:nth-child(3) {
+    color: ${(props) => (props.rate >= 3 ? '#DEA12A' : '#9e9a9a')};
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.9);
+    }
+  }
+
+  svg:nth-child(4) {
+    color: ${(props) => (props.rate >= 4 ? '#DEA12A' : '#9e9a9a')};
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.9);
+    }
+  }
+
+  svg:nth-child(5) {
+    color: ${(props) => (props.rate === 5 ? '#DEA12A' : '#9e9a9a')};
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.9);
+    }
+  }
 `;
