@@ -32,8 +32,7 @@ export default function NavigationBar() {
         </Link>
       </ButtonsContainer>
       <div>
-        <p>Avaliar</p>
-        <p>Logout</p>
+        <Link to="/rate">Avaliar</Link>
       </div>
     </Container>
   );
@@ -63,8 +62,9 @@ const Container = styled.aside`
     justify-content: center;
     gap: 15px;
 
-    p {
+    a {
       color: #ffffff;
+      text-decoration: none;
       font-size: 16px;
       font-weight: 700;
 

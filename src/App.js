@@ -9,6 +9,7 @@ import BeveragesPage from './pages/Dashboard/BeveragesPage';
 import FoodsPage from './pages/Dashboard/FoodsPage';
 import Home from './pages/Dashboard/Home';
 import ProductPage from './pages/Dashboard/ProductPage';
+import RatingsPage from './pages/RatingsPage';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           </Route>
           <Route path="/chart" element={<ChartPage />} />
           <Route path="/checkout" element={<AccountPage />} />
+          <Route path="/rate" element={<RatingsPage />} />
         </Routes>
       </BrowserRouter>
     </>

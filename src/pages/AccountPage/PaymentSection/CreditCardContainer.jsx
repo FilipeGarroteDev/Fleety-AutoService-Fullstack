@@ -89,9 +89,13 @@ const Button = styled.button`
   margin-top: 50px;
   height: 35px;
   border-radius: 5px;
-  border: 0px;
+  border: 1px solid #7a7474;
+  background-color: #c4bdbd;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
   animation: fadeIn 1s;
+  color: #7a7474;
+  font-weight: 700;
+  
   cursor: pointer;
   :active {
     transform: translate(-5px, 5px);
@@ -115,9 +119,7 @@ const Allcards = styled.div`
       color: #8e8e8e;
       font-size: 15px;
       line-height: 23px;
-      :focus {
-        outline: 3px solid #8e8e8e;
-      }
+      outline: none;
     }
     .ValidThru {
       width: 50%;
@@ -132,5 +134,5 @@ const Text = styled.div`
   width: 290px;
   font-size: 20px;
   line-height: 23px;
-  color: #8e8e8e;
+  color: #7a7474;
 `;
