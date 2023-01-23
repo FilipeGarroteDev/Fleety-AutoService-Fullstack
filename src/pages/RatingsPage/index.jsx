@@ -1,12 +1,13 @@
 import styled from 'styled-components';
+import RateSection from './RateSection';
 
 export default function RatingsPage() {
   return (
     <Wrapper>
       <h1>Avalie os nossos serviços</h1>
-      <RateContainer>
-
-      </RateContainer>
+      <RatingsBox>
+        <RateSection />
+      </RatingsBox>
     </Wrapper>
   );
 }
@@ -22,7 +23,7 @@ const Wrapper = styled.main`
   }
 `;
 
-const RateContainer = styled.section`
+const RatingsBox = styled.section`
   width: 84vw;
   height: 70vh;
   border-radius: 5px;
