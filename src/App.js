@@ -1,6 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import GlobalStyle from './common/GlobalStyle';
 import Reset from './common/Reset';
+import Menus from './components/Dashboard/Menus';
+import AccountPage from './pages/AccountPage';
 import ChartPage from './pages/ChartPage';
 import Dashboard from './pages/Dashboard';
 import BeveragesPage from './pages/Dashboard/BeveragesPage';
@@ -14,6 +16,7 @@ export default function App() {
       <Reset />
       <GlobalStyle />
       <BrowserRouter>
+        <Menus />
         <Routes>
           <Route path="/" element={<Dashboard />}>
             <Route path="home" element={<Home />} />
@@ -21,7 +24,8 @@ export default function App() {
             <Route path="beverages/:categoryId" element={<BeveragesPage />} />
             <Route path="product/:productId" element={<ProductPage />} />
           </Route>
-          <Route path="/chart" element={<ChartPage />}/>
+          <Route path="/chart" element={<ChartPage />} />
+          <Route path="/checkout" element={<AccountPage />} />
         </Routes>
       </BrowserRouter>
     </>

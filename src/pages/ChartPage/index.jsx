@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ProductCard from '../../components/Dashboard/FoodsAndDrinksPages/ProductCard';
-import NavigationBar from '../../components/Dashboard/Menus/NavigationBar';
-import TopMenu from '../../components/Dashboard/Menus/TopMenu';
 import Home from '../Dashboard/Home';
 
 export default function ChartPage() {
+  const navigate = useNavigate();
   const mockedOrderList = [
     {
       id: 1,
@@ -53,12 +52,10 @@ export default function ChartPage() {
 
   return (
     <>
-      <OpacityStyle />
-      <TopMenu />
-      <NavigationBar />
+      <OpacityStyle onClick={() => navigate('/home')} />
       <Home />
       <ChartWindow>
-        <button>X</button>
+        <button onClick={() => navigate('/home')}>X</button>
         <header>MEU PEDIDO</header>
         <OrderContainer>
           {mockedOrderList.map(({ name, value, id, image, optionals, amount }) => (

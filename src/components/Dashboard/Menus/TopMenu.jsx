@@ -16,10 +16,12 @@ export default function TopMenu() {
           <span>Chamar garçom</span>
         </button>
 
-        <button>
-          <IoWallet />
-          <span>Minha conta</span>
-        </button>
+        <Link to="/checkout">
+          <button>
+            <IoWallet />
+            <span>Minha conta</span>
+          </button>
+        </Link>
 
         <Link to="/chart">
           <button>
