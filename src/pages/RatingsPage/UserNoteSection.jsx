@@ -1,19 +1,37 @@
 import styled from 'styled-components';
 
-export default function UserNoteSection() {
+export default function UserNoteSection({ ratingObject, setRatingObject }) {
+  function handleInput(e) {
+    setRatingObject({
+      ...ratingObject,
+      [e.target.name]: e.target.value,
+    });
+  }
+
   return (
     <Container>
       <InputField>
         <h3>Nome</h3>
-        <input placeholder='Digite seu nome'/>
+        <input placeholder="Digite seu nome" name="name" value={ratingObject.name} onChange={handleInput} type="name" />
       </InputField>
       <InputField>
         <h3>E-mail</h3>
-        <input placeholder='Digite seu melhor e-mail'/>
+        <input
+          placeholder="Digite seu melhor e-mail"
+          name="email"
+          value={ratingObject.email}
+          onChange={handleInput}
+          type="email"
+        />
       </InputField>
       <InputField>
         <h3>Escreva abaixo sua opinião. Toda crítica e elogio são bem vindos!</h3>
-        <textarea placeholder='Fique à vontade para escrever aquilo que desejar...'/>
+        <textarea
+          placeholder="Fique à vontade para escrever aquilo que desejar..."
+          name="userNote"
+          value={ratingObject.userNote}
+          onChange={handleInput}
+        />
       </InputField>
     </Container>
   );
@@ -47,7 +65,7 @@ const InputField = styled.div`
     border: none;
     outline: none;
 
-    &::placeholder{
+    &::placeholder {
       font-style: italic;
     }
   }
@@ -57,10 +75,14 @@ const InputField = styled.div`
     height: 110px;
     border: none;
     resize: none;
+    outline: none;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana,
+      sans-serif;
 
-    &::placeholder{
+    &::placeholder {
       font-style: italic;
-      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana,
+        sans-serif;
     }
   }
 `;

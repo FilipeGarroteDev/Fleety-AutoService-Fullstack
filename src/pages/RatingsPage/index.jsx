@@ -1,15 +1,18 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import RateSection from './RateSection';
 import UserNoteSection from './UserNoteSection';
 
 export default function RatingsPage() {
+  const [ratingObject, setRatingObject] = useState({});
+
   return (
     <Wrapper>
       <h1>Avalie os nossos serviços</h1>
       <RatingsBox>
         <div>
-          <RateSection />
-          <UserNoteSection />
+          <RateSection ratingObject={ratingObject} setRatingObject={setRatingObject} />
+          <UserNoteSection ratingObject={ratingObject} setRatingObject={setRatingObject} />
         </div>
         <button>Enviar Avaliação</button>
       </RatingsBox>
@@ -51,22 +54,20 @@ const RatingsBox = styled.section`
     margin-right: 120px;
 
     border: none;
-    background-color: #DEA12A;
+    background-color: #dea12a;
     border-radius: 10px;
     font-size: 18px;
     font-weight: 700;
     color: #121111;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
 
-    &:hover{
+    &:hover {
       cursor: pointer;
       filter: brightness(0.9);
     }
 
-    &:active{
+    &:active {
       transform: scale(1.02);
     }
   }
-
-
 `;

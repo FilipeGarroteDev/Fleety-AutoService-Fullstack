@@ -4,7 +4,7 @@ import { IoRestaurantOutline, IoBeerOutline, IoStar } from 'react-icons/io5';
 import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import { useState } from 'react';
 
-export default function RateSection() {
+export default function RateSection({ ratingObject, setRatingObject }) {
   const ratingsOptions = [
     {
       id: 1,
@@ -37,7 +37,6 @@ export default function RateSection() {
       image: <BiWinkSmile />,
     },
   ];
-  const [ratingObject, setRatingObject] = useState({});
 
   return (
     <Container>
