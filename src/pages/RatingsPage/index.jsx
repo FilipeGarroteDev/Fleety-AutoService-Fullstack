@@ -1,12 +1,17 @@
 import styled from 'styled-components';
 import RateSection from './RateSection';
+import UserNoteSection from './UserNoteSection';
 
 export default function RatingsPage() {
   return (
     <Wrapper>
       <h1>Avalie os nossos serviços</h1>
       <RatingsBox>
-        <RateSection />
+        <div>
+          <RateSection />
+          <UserNoteSection />
+        </div>
+        <button>Enviar Avaliação</button>
       </RatingsBox>
     </Wrapper>
   );
@@ -16,7 +21,7 @@ const Wrapper = styled.main`
   margin-left: 14%;
   margin-top: 9%;
 
-  >h1{
+  > h1 {
     font-size: 22px;
     font-weight: 700;
     color: #9b9999;
@@ -24,6 +29,9 @@ const Wrapper = styled.main`
 `;
 
 const RatingsBox = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 84vw;
   height: 70vh;
   border-radius: 5px;
@@ -31,4 +39,34 @@ const RatingsBox = styled.section`
   box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
   margin-top: 30px;
   padding: 40px;
+
+  > div {
+    display: flex;
+  }
+
+  > button {
+    width: 20%;
+    height: 50px;
+    margin-top: 25px;
+    margin-right: 120px;
+
+    border: none;
+    background-color: #DEA12A;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #121111;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+
+    &:hover{
+      cursor: pointer;
+      filter: brightness(0.9);
+    }
+
+    &:active{
+      transform: scale(1.02);
+    }
+  }
+
+
 `;

@@ -91,6 +91,8 @@ const Container = styled.section`
   flex-direction: column;
   height: 100%;
   width: 45%;
+  border-right: 1px solid #b4b1b1;
+  padding-right: 20px;
 
   > h2 {
     font-size: 16px;
