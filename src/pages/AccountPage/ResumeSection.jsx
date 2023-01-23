@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import fleetyLogo from '../../assets/images/fleetyLogo.png';
 
 export default function ResumeSection() {
   const mockOrders = [
@@ -40,7 +41,9 @@ export default function ResumeSection() {
       value: 2599,
     },
   ];
+  const mocketTotalValue = 18193;
   const [peopleQuantity, setPeopleQuantity] = useState(1);
+  const [tipValue, setTipValue] = useState(1);
 
   function selectPeopleQuantity(e) {
     setPeopleQuantity(e.target.value);
@@ -61,16 +64,26 @@ export default function ResumeSection() {
         </div>
         <div>
           <h3>Total + gorjeta:</h3>
-          <span>R$ 201,12</span>
+          <span>
+            {((mocketTotalValue * tipValue) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+          </span>
         </div>
       </Subtotal>
       <TipsContainer>
         <h3>Gostaria de adicionar gorjeta?</h3>
         <div>
-          <button>0%</button>
-          <button>10%</button>
-          <button>15%</button>
-          <button>20%</button>
+          <TipButton onClick={() => setTipValue(1)} tipValue={tipValue} thisTip={1}>
+            0%
+          </TipButton>
+          <TipButton onClick={() => setTipValue(1.1)} tipValue={tipValue} thisTip={1.1}>
+            10%
+          </TipButton>
+          <TipButton onClick={() => setTipValue(1.15)} tipValue={tipValue} thisTip={1.15}>
+            15%
+          </TipButton>
+          <TipButton onClick={() => setTipValue(1.2)} tipValue={tipValue} thisTip={1.2}>
+            20%
+          </TipButton>
         </div>
       </TipsContainer>
       <SplitContainer>
@@ -78,9 +91,10 @@ export default function ResumeSection() {
         <input type="range" min="1" max="15" value={peopleQuantity} onChange={selectPeopleQuantity} />
         <div>
           <h3>Total por pessoa {`(${peopleQuantity}p)`}:</h3>
-          <span>{'R$ '+(201.12 / peopleQuantity).toFixed(2)}</span>
+          <span>{'R$ ' + (201.12 / peopleQuantity).toFixed(2)}</span>
         </div>
       </SplitContainer>
+      <img src={fleetyLogo} alt="logo" />
     </ResumeContainer>
   );
 }
@@ -115,6 +129,10 @@ const ResumeContainer = styled.div`
     flex-direction: column;
     gap: 8px;
     margin-bottom: 15px;
+  }
+
+  > img {
+    margin-left: 65px;
   }
 `;
 
@@ -180,17 +198,22 @@ const TipsContainer = styled.footer`
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+`;
 
-    > button {
-      width: 20%;
-      height: 40px;
-      border: 1px solid #275832;
-      border-radius: 25px;
-      background-color: #a39d9d;
-      color: #275832;
-      font-size: 16px;
-      font-weight: 700;
-    }
+const TipButton = styled.button`
+  width: 20%;
+  height: 40px;
+  border: 1px solid #275832;
+  border-radius: 25px;
+  background-color: ${(props) => (props.tipValue === props.thisTip ? '#275832' : '#a39d9d')};
+  color: ${(props) => (props.tipValue === props.thisTip ? '#a39d9d' : '#275832')};
+  font-size: 16px;
+  font-weight: 700;
+
+  &:hover{
+    cursor: pointer;
+    filter: brightness(1.1);
   }
 `;
 
