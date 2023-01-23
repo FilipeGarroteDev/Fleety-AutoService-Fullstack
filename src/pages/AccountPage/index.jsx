@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import PaymentSection from './PaymentSection/PaymentSection';
 import ResumeSection from './ResumeSection';
 
 export default function AccountPage() {
@@ -13,8 +14,10 @@ export default function AccountPage() {
           <h1>MINHA CONTA</h1>
           <span>Mesa 15</span>
         </header>
-        <ResumeSection />
-        <section></section>
+        <section>
+          <ResumeSection />
+          <PaymentSection />
+        </section>
       </CheckoutWindow>
     </>
   );
@@ -73,6 +76,7 @@ const CheckoutWindow = styled.main`
     height: 60px;
     display: flex;
     justify-content: center;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
     align-items: center;
     gap: 20px;
     background-color: #312e2e;
@@ -94,5 +98,9 @@ const CheckoutWindow = styled.main`
       color: #312e2e;
       font-weight: 700;
     }
+  }
+
+  >section{
+    display: flex;
   }
 `;

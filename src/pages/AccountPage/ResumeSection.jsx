@@ -40,6 +40,24 @@ export default function ResumeSection() {
       name: 'Salada de atum',
       value: 2599,
     },
+    {
+      id: 1,
+      amount: 2,
+      name: 'Salada de atum',
+      value: 2599,
+    },
+    {
+      id: 1,
+      amount: 2,
+      name: 'Salada de atum',
+      value: 2599,
+    },
+    {
+      id: 1,
+      amount: 2,
+      name: 'Salada de atum',
+      value: 2599,
+    },
   ];
   const mocketTotalValue = 18193;
   const [peopleQuantity, setPeopleQuantity] = useState(1);
@@ -116,6 +134,8 @@ const ResumeContainer = styled.div`
   height: 100%;
   border-right: 1px solid #928f8f;
   padding: 15px 20px;
+  flex-shrink: 0;
+
 
   > h2 {
     font-size: 20px;
@@ -125,10 +145,27 @@ const ResumeContainer = styled.div`
   }
 
   > ul {
+    height: 150px;
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-bottom: 15px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #a39d9d;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #292727;
+      border-radius: 50px;
+      border: 3px solid #a39d9d;
+    }
+
   }
 
   > img {
