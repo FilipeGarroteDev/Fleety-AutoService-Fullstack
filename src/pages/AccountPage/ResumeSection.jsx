@@ -75,13 +75,10 @@ export default function ResumeSection() {
       </TipsContainer>
       <SplitContainer>
         <h3>Não está sozinho? Calcule a divisão correta:</h3>
+        <input type="range" min="1" max="15" value={peopleQuantity} onChange={selectPeopleQuantity} />
         <div>
-          <input type="range" min="1" max="15" value={peopleQuantity} onChange={selectPeopleQuantity} />
-          <h3>{peopleQuantity}</h3>
-        </div>
-        <div>
-          <h3>Total por pessoa:</h3>
-          <span>R$ 201,12</span>
+          <h3>Total por pessoa {`(${peopleQuantity}p)`}:</h3>
+          <span>{'R$ '+(201.12 / peopleQuantity).toFixed(2)}</span>
         </div>
       </SplitContainer>
     </ResumeContainer>
@@ -170,6 +167,7 @@ const TipsContainer = styled.footer`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 12px;
 
   > h3 {
     font-size: 18px;
@@ -199,7 +197,7 @@ const TipsContainer = styled.footer`
 const SplitContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 10px;
   border-top: 1px solid #928f8f;
   padding-top: 10px;
@@ -213,7 +211,7 @@ const SplitContainer = styled.div`
   input {
     -webkit-appearance: none;
     appearance: none;
-    width: 90%;
+    width: 100%;
     height: 0.5em;
     left: 4em;
     border-radius: 5px;
@@ -234,10 +232,11 @@ const SplitContainer = styled.div`
   > div {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
+    gap: 5px;
 
     > h3 {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       color: #312e2e;
     }
