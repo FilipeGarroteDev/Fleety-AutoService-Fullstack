@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id         Int          @id @default(autoincrement())
+  name       String       @db.VarChar(255) 
+  email      String       @unique @db.VarChar(255)
+  image      String
+  privilege  UserPrivileges
+  createdAt  DateTime     @default(now())
+  Tickets    Tickets[]
+  Ratings    Ratings[]
+  Sessions   Sessions[]
+}
+
+enum UserPrivileges {
+  ADMIN
+  CLIENT
+}
+
+model Sessions {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  User      Users     @relation(fields: [userId], references: [id])
+  token     String
+  createdAt DateTime  @default(now())
+}
+
+model ProductCategories {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique @db.VarChar(255)
+  Products   Products[]
+}
+
+model ProductTypes {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique @db.VarChar(255)
+  Products   Products[]
+}
+
+model Products {
+  id            Int                   @id @default(autoincrement())
+  name          String                @unique @db.VarChar(255)
+  categoryId    Int      
+  Category      ProductCategories     @relation(fields: [categoryId], references: [id])
+  description   String     
+  value         Int     
+  typeId        Int
+  Type          ProductTypes          @relation(fields: [typeId], references: [id])
+  image         String
+  Orders        Orders[]
+}
+
+model Tickets {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  User      Users     @relation(fields: [userId], references: [id])
+  status    TicketStatus
+  createdAt DateTime  @default(now())
+  Orders    Orders[]
+}
+
+enum TicketStatus {
+  RESERVED
+  PAID
+}
+
+model Orders {
+  id          Int         @id @default(autoincrement())
+  ticketId    Int
+  Ticket      Tickets     @relation(fields: [ticketId], references: [id])                
+  productId   Int
+  Product     Products    @relation(fields: [productId], references: [id])                      
+  totalValue  Int
+  optionals   String     
+  status      OrderStatus     
+  createdAt   DateTime    @default(now())
+}
+
+enum OrderStatus {
+  ORDERED
+  DELIVERED
+}
+
+model Ratings {
+  id                Int         @id @default(autoincrement())
+  userId            Int
+  User              Users       @relation(fields: [userId], references: [id])
+  name              String      @db.VarChar(255) 
+  email             String      @db.VarChar(255)
+  environmentRate   Int
+  foodRate          Int
+  beverageRate      Int
+  pricesRate        Int
+  serviceRate       Int
+  userNote          String
+  createdAt         DateTime    @default(now())
+}
