@@ -38,13 +38,16 @@ model Sessions {
 model ProductCategories {
   id         Int          @id @default(autoincrement())
   name       String       @unique @db.VarChar(255)
+  image      String
+  typeId     Int
+  Type       ProductTypes @relation(fields: [typeId], references: [id])
   Products   Products[]
 }
 
 model ProductTypes {
   id         Int          @id @default(autoincrement())
   name       String       @unique @db.VarChar(255)
-  Products   Products[]
+  Categories ProductCategories[]
 }
 
 model Products {
@@ -54,8 +57,6 @@ model Products {
   Category      ProductCategories     @relation(fields: [categoryId], references: [id])
   description   String     
   value         Int     
-  typeId        Int
-  Type          ProductTypes          @relation(fields: [typeId], references: [id])
   image         String
   Orders        Orders[]
 }

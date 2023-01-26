@@ -1,11 +1,11 @@
 {
-	"name": "fleety-backend",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"start": "node dist/server.js",
-		"test": "NODE_ENV=test jest --passWithNoTests --runInBand",
+  "name": "fleety-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "test": "NODE_ENV=test jest --passWithNoTests --runInBand",
     "test:coverage": "NODE_ENV=test jest --passWithNoTests --runInBand --coverage --collectCoverageFrom='./src/**'",
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
     "test:migration:generate": "npm run test:load-envs prisma migrate dev",
@@ -17,20 +17,23 @@
     "dev:migration:generate": "npm run dev:load-envs prisma migrate dev",
     "dev:seed": "npm run dev:load-envs prisma db seed",
     "dev": "NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts"
-	},
-	"keywords": [
-		"fleety",
-		"back-end",
-		"typescript",
-		"driven",
-		"postgres",
-		"express",
-		"nodejs",
+  },
+  "keywords": [
+    "fleety",
+    "back-end",
+    "typescript",
+    "driven",
+    "postgres",
+    "express",
+    "nodejs",
     "redis",
     "mongodb"
-	],
-	"author": "Filipe Garrote Ramaldes",
-	"license": "ISC",
+  ],
+  "author": "Filipe Garrote Ramaldes",
+  "license": "ISC",
+  "prisma": {
+    "seed": "npm run dev:load-envs -- ts-node prisma/seed.ts"
+  },
   "devDependencies": {
     "@faker-js/faker": "^6.3.1",
     "@types/cors": "^2.8.12",
@@ -59,7 +62,6 @@
     "ts-node": "^10.7.0",
     "typescript": "^4.2.4",
     "typescript-transform-paths": "2.2.3"
-
   },
   "dependencies": {
     "@prisma/client": "^3.14.0",

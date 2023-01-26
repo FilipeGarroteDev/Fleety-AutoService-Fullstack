@@ -1,14 +1,10 @@
-import express from 'express';
+import app, { init } from '@/app';
 
-import cors from 'cors';
-import { loadEnvs } from '@/config';
+const port = +process.env.PORT || 4000;
 
-loadEnvs();
-
-const server = express();
-server.use(express.json());
-server.use(cors());
-
-server.get('/health', (req, res) => res.send('tudo certo, nego!'));
-
-server.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`));
+init().then(() => {
+  app.listen(port, () => {
+    /* eslint-disable-next-line no-console */
+    console.log(`Server is listening on port ${port}.`);
+  });
+});
