@@ -64,7 +64,6 @@ async function mainSeed() {
   }
 
   if (!hasTypes) {
-    console.log("tem")
     foodTypes.forEach(async (type) => {
       await prisma.productTypes.create({
         data: {
