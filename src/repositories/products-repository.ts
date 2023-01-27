@@ -5,6 +5,13 @@ async function getProductsByCategoryId(categoryId: number) {
     where: {
       categoryId,
     },
+    include: {
+      Category: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
 }
 

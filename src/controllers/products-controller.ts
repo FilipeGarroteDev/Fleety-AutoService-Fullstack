@@ -13,6 +13,8 @@ export async function listCategoryProducts(req: Request, res: Response) {
       return res.sendStatus(httpStatus.UNPROCESSABLE_ENTITY);
     } else if (error.name === 'NotFoundError') {
       return res.sendStatus(httpStatus.NOT_FOUND);
+    } else {
+      res.sendStatus(httpStatus.BAD_REQUEST);
     }
   }
 
@@ -30,6 +32,8 @@ export async function findSpecificProductData(req: Request, res: Response) {
       return res.sendStatus(httpStatus.UNPROCESSABLE_ENTITY);
     } else if (error.name === 'NotFoundError') {
       return res.sendStatus(httpStatus.NOT_FOUND);
+    } else {
+      res.sendStatus(httpStatus.BAD_REQUEST);
     }
   }
 

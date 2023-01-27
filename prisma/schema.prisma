@@ -12,17 +12,18 @@ datasource db {
 
 model Users {
   id         Int          @id @default(autoincrement())
-  name       String       @db.VarChar(255) 
-  email      String       @unique @db.VarChar(255)
-  image      String
-  privilege  UserPrivileges
+  name       String       @unique @db.VarChar(255) 
+  email      String       @default("")
+  password   String       @db.VarChar(255) 
+  image      String       @default("")
+  role       Roles
   createdAt  DateTime     @default(now())
   Tickets    Tickets[]
   Ratings    Ratings[]
   Sessions   Sessions[]
 }
 
-enum UserPrivileges {
+enum Roles {
   ADMIN
   CLIENT
 }

@@ -13,6 +13,8 @@ export async function getCategories(req: Request, res: Response) {
       return res.sendStatus(httpStatus.NOT_FOUND);
     } else if (error.name === 'BadRequestError') {
       return res.sendStatus(httpStatus.BAD_REQUEST);
+    } else {
+      res.sendStatus(httpStatus.BAD_REQUEST);
     }
   }
 }
