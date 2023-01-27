@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import Menus from '../../components/Dashboard/Menus';
 import RateSection from './RateSection';
 import UserNoteSection from './UserNoteSection';
 
@@ -7,16 +8,19 @@ export default function RatingsPage() {
   const [ratingObject, setRatingObject] = useState({});
 
   return (
-    <Wrapper>
-      <h1>Avalie os nossos serviços</h1>
-      <RatingsBox>
-        <div>
-          <RateSection ratingObject={ratingObject} setRatingObject={setRatingObject} />
-          <UserNoteSection ratingObject={ratingObject} setRatingObject={setRatingObject} />
-        </div>
-        <button>Enviar Avaliação</button>
-      </RatingsBox>
-    </Wrapper>
+    <>
+      <Menus />
+      <Wrapper>
+        <h1>Avalie os nossos serviços</h1>
+        <RatingsBox>
+          <div>
+            <RateSection ratingObject={ratingObject} setRatingObject={setRatingObject} />
+            <UserNoteSection ratingObject={ratingObject} setRatingObject={setRatingObject} />
+          </div>
+          <button>Enviar Avaliação</button>
+        </RatingsBox>
+      </Wrapper>
+    </>
   );
 }
 

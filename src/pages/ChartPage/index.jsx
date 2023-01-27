@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ProductCard from '../../components/Dashboard/FoodsAndDrinksPages/ProductCard';
+import Menus from '../../components/Dashboard/Menus';
 import Home from '../Dashboard/Home';
 
 export default function ChartPage() {
@@ -13,7 +14,7 @@ export default function ChartPage() {
       name: 'Salada de salmão',
       value: 4099,
       amount: 2,
-      optionals: ['carne'],
+      optionals: [{ id: 1, name: 'carne', value: 400 }],
     },
     {
       id: 2,
@@ -30,7 +31,7 @@ export default function ChartPage() {
       name: 'Salada de salmão',
       value: 2599,
       amount: 3,
-      optionals: ['carne'],
+      optionals: [{ id: 1, name: 'carne', value: 400 }],
     },
     {
       id: 4,
@@ -52,6 +53,7 @@ export default function ChartPage() {
 
   return (
     <>
+      <Menus />
       <OpacityStyle onClick={() => navigate('/home')} />
       <Home />
       <ChartWindow>

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Menus from '../../components/Dashboard/Menus';
 import PaymentSection from './PaymentSection/PaymentSection';
 import ResumeSection from './ResumeSection';
 
@@ -8,6 +9,7 @@ export default function AccountPage() {
 
   return (
     <>
+      <Menus />
       <OpacityStyle onClick={() => navigate('/home')} />
       <CheckoutWindow>
         <header>
