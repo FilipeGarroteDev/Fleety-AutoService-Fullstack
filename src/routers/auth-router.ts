@@ -1,10 +1,12 @@
 import express from 'express';
-import validateSchema from '@/middlewares/tokenAuth-middleware';
-import { SignUpSchema } from '@/schemas/auth-schemas';
-import { signUp } from '@/controllers/auth-controller';
+import validateSchema from '@/middlewares/schemas-middleware';
+import { SignUpSchema, SignInSchema } from '@/schemas/auth-schemas';
+import { signUp, signIn } from '@/controllers/auth-controller';
 
 const authRouter = express.Router();
 
-authRouter.post('/signup', validateSchema(SignUpSchema), signUp);
+authRouter
+  .post('/signup', validateSchema(SignUpSchema), signUp)
+  .post('/signin', validateSchema(SignInSchema), signIn);
 
 export default authRouter;

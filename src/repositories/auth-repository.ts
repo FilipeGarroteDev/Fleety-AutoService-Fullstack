@@ -15,9 +15,19 @@ async function insertNewUser(body: SignUpBody) {
   });
 }
 
+async function createNewSession(userId: number, token: string) {
+  return prisma.sessions.create({
+    data: {
+      userId,
+      token,
+    },
+  });
+}
+
 const authRepository = {
   searchUser,
   insertNewUser,
+  createNewSession,
 };
 
 export default authRepository;

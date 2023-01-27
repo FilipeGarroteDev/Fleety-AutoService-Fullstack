@@ -20,3 +20,8 @@ export type SignUpBody = {
   password: string;
   role: 'CLIENT' | 'ADMIN';
 };
+
+export type SignInBody = {
+  name: string
+  password: string,
+}

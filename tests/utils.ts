@@ -6,4 +6,6 @@ export async function cleanDb() {
   await prisma.productCategories.deleteMany({});
   await prisma.productTypes.deleteMany({});
   await prisma.optionals.deleteMany({});
+  await prisma.sessions.deleteMany({});
+  await prisma.users.deleteMany({});
 }

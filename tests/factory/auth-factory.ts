@@ -1,18 +1,21 @@
 import { prisma } from '@/config';
 import faker from '@faker-js/faker';
+import bcrypt from 'bcrypt';
 
-async function createUserByNome(name: string) {
+async function createUserByName(name: string, password: string) {
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
   return await prisma.users.create({
     data: {
       name,
-      password: faker.internet.password(),
+      password: hashedPassword,
       role: 'CLIENT',
     },
   });
 }
 
 const authFactory = {
-  createUserByNome,
+  createUserByName,
 };
 
 export default authFactory;
