@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import OptionsBoxStyle from '../../../components/Dashboard/ProductPage/OptionsBoxStyle';
 
-export default function WithdrawItemsMenu() {
+export default function WithdrawItemsMenu({ optional }) {
+  if (optional === 'Copos') return;
   const [isClicked, setIsClicked] = useState(false);
 
   return (

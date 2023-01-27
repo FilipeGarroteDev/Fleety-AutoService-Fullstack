@@ -3,36 +3,8 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import styled from 'styled-components';
 import OptionsBoxStyle from '../../../components/Dashboard/ProductPage/OptionsBoxStyle';
 
-export default function AddItemsMenu({ extraValue, setExtraValue }) {
+export default function AddItemsMenu({ extraValue, setExtraValue, optionals }) {
   const [isClicked, setIsClicked] = useState(false);
-  const mockAddValue = 400;
-  const mockExtraList = [
-    {
-      id: 1,
-      name: 'Parmesão',
-      value: mockAddValue,
-    },
-    {
-      id: 2,
-      name: 'Gorgonzola',
-      value: mockAddValue,
-    },
-    {
-      id: 3,
-      name: 'Azeitona',
-      value: mockAddValue,
-    },
-    {
-      id: 4,
-      name: 'Cebola Crispy',
-      value: mockAddValue,
-    },
-    {
-      id: 5,
-      name: 'Palmito',
-      value: mockAddValue,
-    },
-  ];
 
   return (
     <OptionsBoxStyle isClicked={isClicked}>
@@ -42,7 +14,7 @@ export default function AddItemsMenu({ extraValue, setExtraValue }) {
       </div>
       <div className="opened">
         <ExtraItemsList>
-          {mockExtraList.map(({ id, name, value }) => (
+          {optionals?.map(({ id, name, value }) => (
             <ExtraItem key={id} name={name} value={value} extraValue={extraValue} setExtraValue={setExtraValue} />
           ))}
         </ExtraItemsList>

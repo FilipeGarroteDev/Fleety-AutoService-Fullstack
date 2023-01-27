@@ -10,4 +10,8 @@ async function getCategoryProducts(categoryId) {
   return axios.get(`${BASE_URL}/products/category/${categoryId}`);
 }
 
-export { getCategories, getCategoryProducts };
+async function getProductData(productId) {
+  return axios.get(`${BASE_URL}/products/${productId}`);
+}
+
+export { getCategories, getCategoryProducts, getProductData };

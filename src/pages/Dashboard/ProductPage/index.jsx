@@ -1,14 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import AddItemsMenu from './AddItemsMenu';
 import WithdrawItemsMenu from './WithdrawItemsMenu';
+import { useParams } from 'react-router-dom';
+import { getProductData } from '../../../services/axios';
 
 export default function ProductPage() {
+  const { productId } = useParams();
   const [productAmount, setProductAmount] = useState(1);
   const [extraValue, setExtraValue] = useState(0);
-  const mockValue = 2599;
-  const formattedValue = (((mockValue + extraValue) * productAmount) / 100).toLocaleString('pt-br', {
+  const [productData, setProductData] = useState({});
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const product = await getProductData(productId);
+        setProductData(product.data);
+      } catch (error) {
+        alert(error.response.data);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const formattedValue = (((productData.value + extraValue) * productAmount) / 100).toLocaleString('pt-br', {
     style: 'currency',
     currency: 'BRL',
   });
@@ -24,18 +40,12 @@ export default function ProductPage() {
   return (
     <Wrapper>
       <ProductBanner>
-        <img
-          src="https://saboreiaavida.nestle.pt/sites/default/files/styles/receita_card_620x560/public/pictures/e10d8b86-55e2-11e4-b7b1-d4ae52be23e7.png?h=80accfed&itok=ZvgUCzxd"
-          alt="productImage"
-        />
-        <h1>Salada de salmão</h1>
+        <img src={productData.image} alt="productImage" />
+        <h1>{productData.name}</h1>
       </ProductBanner>
-      <h2>
-        Salada fresca com folhas diversas, incluindo alface crespa, rúcula e alface americana, além de salmão desfiado,
-        azeitonas e muçarela de búfala.
-      </h2>
-      <WithdrawItemsMenu />
-      <AddItemsMenu extraValue={extraValue} setExtraValue={setExtraValue} />
+      <h2>{productData.description}</h2>
+      <WithdrawItemsMenu optional={productData.Optionals ? productData.Optionals[0].name : ''} />
+      <AddItemsMenu extraValue={extraValue} setExtraValue={setExtraValue} optionals={productData.Optionals} />
       <FinishOrderSection>
         <aside>
           <AiOutlineMinusCircle onClick={() => increaseOrDecreaseProductAmount('-')} />
@@ -93,6 +103,7 @@ const ProductBanner = styled.header`
   }
 
   > h1 {
+    text-align: center;
     width: 300px;
     position: absolute;
     color: #ffffff;
