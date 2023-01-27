@@ -12,7 +12,7 @@ async function createFoodType() {
 }
 
 async function createCategories(typeId: number) {
-  const categories = await prisma.productCategories.createMany({
+  await prisma.productCategories.createMany({
     data: [
       {
         name: faker.name.firstName(),
@@ -38,9 +38,15 @@ async function createCategories(typeId: number) {
   });
 }
 
-const menuFactory = {
+async function getCategoriesIds() {
+  const categories = await prisma.productCategories.findMany({});
+  return categories;
+}
+
+const categoriesFactory = {
   createFoodType,
-  createCategories
+  createCategories,
+  getCategoriesIds
 };
 
-export default menuFactory;
+export default categoriesFactory;

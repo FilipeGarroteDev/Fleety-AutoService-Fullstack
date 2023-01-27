@@ -35,6 +35,13 @@ model Sessions {
   createdAt DateTime  @default(now())
 }
 
+model Optionals {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  value      Int
+  Optionals_Categories  Optionals_Category[]
+}
+
 model ProductCategories {
   id         Int          @id @default(autoincrement())
   name       String       @unique @db.VarChar(255)
@@ -42,6 +49,7 @@ model ProductCategories {
   typeId     Int
   Type       ProductTypes @relation(fields: [typeId], references: [id])
   Products   Products[]
+  Optionals_Categories  Optionals_Category[]
 }
 
 model ProductTypes {
@@ -59,6 +67,15 @@ model Products {
   value         Int     
   image         String
   Orders        Orders[]
+}
+
+model Optionals_Category {
+  id         Int          @id @default(autoincrement())
+  optionalId Int
+  Optionals  Optionals    @relation(fields: [optionalId], references: [id])
+  categoryId Int
+  Categories ProductCategories  @relation(fields: [categoryId], references: [id])
+
 }
 
 model Tickets {

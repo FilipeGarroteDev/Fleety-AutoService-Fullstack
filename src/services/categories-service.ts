@@ -1,16 +1,16 @@
 import badRequestError from '@/errors/badRequestError';
 import notFoundError from '@/errors/notFoundError';
-import menuRepository from '@/repositories/menu-repository';
+import categoriesRepository from '@/repositories/categories-repository';
 import { ProductCategories } from '@prisma/client';
 
 async function listAllSectionsCategories(productType: string): Promise<ProductCategories[]> {
-  const section = await menuRepository.getProductTypeByName(productType);
+  const section = await categoriesRepository.getProductTypeByName(productType);
 
   if (!section) {
     throw badRequestError();
   }
 
-  const categoriesList = await menuRepository.getCategoriesByTypeId(section.id);
+  const categoriesList = await categoriesRepository.getCategoriesByTypeId(section.id);
 
   if (categoriesList.length === 0) {
     throw notFoundError();
@@ -19,8 +19,8 @@ async function listAllSectionsCategories(productType: string): Promise<ProductCa
   return categoriesList;
 }
 
-const menuService = {
+const categoriesService = {
   listAllSectionsCategories,
 };
 
-export default menuService;
+export default categoriesService;

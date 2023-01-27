@@ -3,7 +3,8 @@ import express, { Request, Response, Express } from 'express';
 import cors from 'cors';
 import { loadEnvs } from '@/config';
 import { connectDb, disconnectDb } from './config/database';
-import { menuRouter } from './routers/menu-router';
+import { categoriesRouter } from './routers/categories-router';
+import { productsRouter } from './routers/products-router';
 
 loadEnvs();
 
@@ -12,7 +13,8 @@ app
   .use(cors())
   .use(express.json())
   .get('/health', async (req: Request, res: Response) => res.send('OK'))
-  .use('/menu', menuRouter);
+  .use('/categories', categoriesRouter)
+  .use('/products', productsRouter);
 
 export async function init(): Promise<Express> {
   connectDb();

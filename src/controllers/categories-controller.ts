@@ -1,4 +1,4 @@
-import menuService from '@/services/menu-service';
+import categoriesService from '@/services/categories-service';
 import { ProductCategories } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
@@ -6,7 +6,7 @@ import httpStatus from 'http-status';
 export async function getCategories(req: Request, res: Response) {
   const { productType } = req.params as Record<string, string>;
   try {
-    const categoriesList: ProductCategories[] = await menuService.listAllSectionsCategories(productType);
+    const categoriesList: ProductCategories[] = await categoriesService.listAllSectionsCategories(productType);
     return res.status(httpStatus.OK).send(categoriesList);
   } catch (error) {
     if (error.name === 'NotFoundError') {

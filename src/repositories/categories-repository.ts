@@ -12,14 +12,14 @@ async function getProductTypeByName(productTypeName: string): Promise<ProductTyp
 async function getCategoriesByTypeId(typeId: number): Promise<ProductCategories[]> {
   return await prisma.productCategories.findMany({
     where: {
-      typeId
-    }
+      typeId,
+    },
   });
 }
 
-const menuRepository = {
+const categoriesRepository = {
   getProductTypeByName,
   getCategoriesByTypeId,
 };
 
-export default menuRepository;
+export default categoriesRepository;
