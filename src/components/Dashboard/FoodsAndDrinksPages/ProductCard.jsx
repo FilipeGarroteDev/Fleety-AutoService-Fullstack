@@ -4,12 +4,15 @@ import styled from 'styled-components';
 export default function ProductCard({ name, description, value, id, image, optionals, amount, chart }) {
   const navigate = useNavigate();
   const formattedValue = (value / 100).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+  const formattedDescription =
+    description.split(' ').length > 10 ? description.split(' ').splice(0, 10).join(' ') + ' (...)' : description;
+
   return (
     <CardStyle chart={chart} onClick={() => navigate(`/product/${id}`)}>
       <img src={image} alt="productImage" />
       <div>
         <h2>{amount ? `${amount}x ${name}` : name}</h2>
-        <h4>{optionals ? '+ adicionais' : description}</h4>
+        <h4>{optionals ? '+ adicionais' : formattedDescription}</h4>
       </div>
       <aside>
         <span>{formattedValue}</span>

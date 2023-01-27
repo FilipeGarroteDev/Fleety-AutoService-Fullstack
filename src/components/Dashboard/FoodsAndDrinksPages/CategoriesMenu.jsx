@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { getCategories } from '../../../services/axios';
+import { getCategories, getCategoryProducts } from '../../../services/axios';
 
-export default function CategoriesMenu({ setCategory }) {
+export default function CategoriesMenu({ setProducts }) {
   const { pathname } = useLocation();
   const page = pathname.slice(1).split('/')[0];
   const [categories, setCategories] = useState([]);
@@ -23,21 +23,27 @@ export default function CategoriesMenu({ setCategory }) {
   return (
     <CategoriesContainer>
       {categories?.map((category) => (
-        <CategoryOption category={category} setCategory={setCategory} page={page} />
+        <CategoryOption category={category} setProducts={setProducts} page={page} />
       ))}
     </CategoriesContainer>
   );
 }
 
-function CategoryOption({ category, setCategory, page }) {
+function CategoryOption({ category, setProducts, page }) {
   const navigate = useNavigate();
+
+  async function goToCategory() {
+    try {
+      const products = await getCategoryProducts(category.id);
+      setProducts(products.data);
+      navigate(`/${page}/${category.id}`);
+    } catch (error) {
+      alert(error.response.data);
+    }
+  }
+
   return (
-    <OptionStyle
-      onClick={() => {
-        setCategory(category.name);
-        navigate(`/${page}/${category.id}`);
-      }}
-    >
+    <OptionStyle onClick={goToCategory}>
       <img src={category.image} alt="categoryImage" />
       <h3>{category.name}</h3>
     </OptionStyle>
