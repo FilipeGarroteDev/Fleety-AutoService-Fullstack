@@ -8,8 +8,28 @@ async function getProductsByCategoryId(categoryId: number) {
   });
 }
 
+async function getProductById(productId: number) {
+  return await prisma.products.findFirst({
+    where: {
+      id: productId,
+    },
+    include: {
+      Category: {
+        include: {
+          Optionals_Categories: {
+            include: {
+              Optionals: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 const productsRepository = {
   getProductsByCategoryId,
+  getProductById,
 };
 
 export default productsRepository;

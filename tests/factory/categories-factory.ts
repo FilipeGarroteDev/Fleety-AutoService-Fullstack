@@ -46,7 +46,7 @@ async function getCategoriesIds() {
 const categoriesFactory = {
   createFoodType,
   createCategories,
-  getCategoriesIds
+  getCategoriesIds,
 };
 
 export default categoriesFactory;
