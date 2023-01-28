@@ -2,6 +2,10 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
+async function validateToken(token) {
+  return axios.get(`${BASE_URL}/auth/validate`, { headers: { Authorization: `Bearer ${token}` } });
+}
+
 async function getCategories(productType) {
   return axios.get(`${BASE_URL}/categories/${productType}`);
 }
@@ -14,4 +18,8 @@ async function getProductData(productId) {
   return axios.get(`${BASE_URL}/products/${productId}`);
 }
 
-export { getCategories, getCategoryProducts, getProductData };
+async function signIn(body) {
+  return axios.post(`${BASE_URL}/auth/signin`, body);
+}
+
+export { getCategories, getCategoryProducts, getProductData, signIn, validateToken };

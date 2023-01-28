@@ -5,7 +5,7 @@ export default function ProductCard({ name, description, value, id, image, optio
   const navigate = useNavigate();
   const formattedValue = (value / 100).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
   const formattedDescription =
-    description.split(' ').length > 10 ? description.split(' ').splice(0, 10).join(' ') + ' (...)' : description;
+    description?.split(' ').length > 10 ? description.split(' ').splice(0, 10).join(' ') + ' (...)' : description;
 
   return (
     <CardStyle chart={chart} onClick={() => navigate(`/product/${id}`)}>

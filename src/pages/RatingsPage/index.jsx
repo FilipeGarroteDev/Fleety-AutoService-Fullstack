@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import Menus from '../../components/Dashboard/Menus';
 import RateSection from './RateSection';
 import UserNoteSection from './UserNoteSection';
 
@@ -9,7 +8,6 @@ export default function RatingsPage() {
 
   return (
     <>
-      <Menus />
       <Wrapper>
         <h1>Avalie os nossos serviços</h1>
         <RatingsBox>
@@ -25,8 +23,6 @@ export default function RatingsPage() {
 }
 
 const Wrapper = styled.main`
-  margin-left: 14%;
-  margin-top: 9%;
 
   > h1 {
     font-size: 22px;

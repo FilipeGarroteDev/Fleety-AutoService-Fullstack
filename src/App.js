@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import GlobalStyle from './common/GlobalStyle';
 import Reset from './common/Reset';
+import RouteProtector from './common/RouteProtector';
 import AccountPage from './pages/AccountPage';
 import ChartPage from './pages/ChartPage';
 import Dashboard from './pages/Dashboard';
@@ -19,15 +20,23 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/signin" element={<SigninPage />} />
-          <Route path="/" element={<Dashboard />}>
+
+          <Route
+            path="/"
+            element={
+              <RouteProtector>
+                <Dashboard />
+              </RouteProtector>
+            }
+          >
             <Route path="home" element={<Home />} />
             <Route path="foods/:categoryId" element={<FoodsPage />} />
             <Route path="beverages/:categoryId" element={<BeveragesPage />} />
             <Route path="product/:productId" element={<ProductPage />} />
+            <Route path="chart" element={<ChartPage />} />
+            <Route path="checkout" element={<AccountPage />} />
+            <Route path="rate" element={<RatingsPage />} />
           </Route>
-          <Route path="/chart" element={<ChartPage />} />
-          <Route path="/checkout" element={<AccountPage />} />
-          <Route path="/rate" element={<RatingsPage />} />
         </Routes>
       </BrowserRouter>
     </>

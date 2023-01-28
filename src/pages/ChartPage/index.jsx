@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ProductCard from '../../components/Dashboard/FoodsAndDrinksPages/ProductCard';
-import Menus from '../../components/Dashboard/Menus';
 import Home from '../Dashboard/Home';
 
 export default function ChartPage() {
@@ -53,7 +52,6 @@ export default function ChartPage() {
 
   return (
     <>
-      <Menus />
       <OpacityStyle onClick={() => navigate('/home')} />
       <Home />
       <ChartWindow>
@@ -89,6 +87,8 @@ const OpacityStyle = styled.main`
   width: 100vw;
   height: 100vh;
   position: absolute;
+  left: 0;
+  top: 0;
   animation: opacityWindow 0.7s ease-in-out;
   background-color: #000000;
   opacity: 0.5;
@@ -111,6 +111,7 @@ const ChartWindow = styled.section`
   background-color: #a39d9d;
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.8);
   position: absolute;
+  top: 0;
   right: 0;
   z-index: 3;
   animation: showWindow 0.7s ease-in-out;
@@ -185,7 +186,7 @@ const ChartWindow = styled.section`
 const OrderContainer = styled.div`
   width: 100%;
   height: 71.5%;
-  margin-top: 12%;
+  margin-top: 18%;
   margin-bottom: 14.5%;
   display: flex;
   flex-direction: column;
