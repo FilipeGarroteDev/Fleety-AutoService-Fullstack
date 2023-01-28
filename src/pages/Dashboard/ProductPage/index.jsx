@@ -3,14 +3,16 @@ import styled from 'styled-components';
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import AddItemsMenu from './AddItemsMenu';
 import WithdrawItemsMenu from './WithdrawItemsMenu';
-import { useParams } from 'react-router-dom';
-import { getProductData } from '../../../services/axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getProductData, postOrder } from '../../../services/axios';
 
 export default function ProductPage() {
+  const navigate = useNavigate();
   const { productId } = useParams();
   const [productAmount, setProductAmount] = useState(1);
   const [extraValue, setExtraValue] = useState(0);
   const [productData, setProductData] = useState({});
+  const [selectedOptionals, setSelectedOptionals] = useState({});
 
   useEffect(() => {
     async function fetchData() {
@@ -37,6 +39,34 @@ export default function ProductPage() {
     }
   }
 
+  async function sendProduct() {
+    const withdrawItens = `Retirar: ${selectedOptionals.withdraw}`;
+    let auxString = '';
+    for (let i = 0; i < Object.keys(selectedOptionals).length; i++) {
+      if (Object.keys(selectedOptionals)[i] === 'withdraw') continue;
+      auxString = auxString + `${Object.values(selectedOptionals)[i]}x ${Object.keys(selectedOptionals)[i]}, `;
+    }
+    const optionals = `${withdrawItens}\n${'Adicionais: ' + auxString.trim().slice(0, -1)}`;
+    const ticketId = JSON.parse(localStorage.getItem('ticket')).id;
+
+    const body = {
+      ticketId,
+      productId: Number(productId),
+      totalValue: (productData.value + extraValue) * productAmount,
+      optionals,
+      status: 'ORDERED',
+      amount: productAmount,
+    };
+
+    try {
+      await postOrder(body);
+      alert('Pedido realizado com sucesso. Você já pode visualizá-lo no menu "Meu Pedido"');
+      navigate('/chart');
+    } catch (error) {
+      alert('Algo deu errado com o seu pedido, por gentileza, refaça a operação');
+    }
+  }
+
   return (
     <Wrapper>
       <ProductBanner>
@@ -44,15 +74,25 @@ export default function ProductPage() {
         <h1>{productData.name}</h1>
       </ProductBanner>
       <h2>{productData.description}</h2>
-      <WithdrawItemsMenu optional={productData.Optionals ? productData.Optionals[0].name : ''} />
-      <AddItemsMenu extraValue={extraValue} setExtraValue={setExtraValue} optionals={productData.Optionals} />
+      <WithdrawItemsMenu
+        optional={productData.Optionals ? productData.Optionals[0].name : ''}
+        selectedOptionals={selectedOptionals}
+        setSelectedOptionals={setSelectedOptionals}
+      />
+      <AddItemsMenu
+        extraValue={extraValue}
+        setExtraValue={setExtraValue}
+        optionals={productData.Optionals}
+        selectedOptionals={selectedOptionals}
+        setSelectedOptionals={setSelectedOptionals}
+      />
       <FinishOrderSection>
         <aside>
           <AiOutlineMinusCircle onClick={() => increaseOrDecreaseProductAmount('-')} />
           <strong>{productAmount}</strong>
           <AiOutlinePlusCircle onClick={() => increaseOrDecreaseProductAmount('+')} />
         </aside>
-        <button>{`${formattedValue} Adicionar`}</button>
+        <button onClick={sendProduct}>{`${formattedValue} Adicionar`}</button>
       </FinishOrderSection>
     </Wrapper>
   );

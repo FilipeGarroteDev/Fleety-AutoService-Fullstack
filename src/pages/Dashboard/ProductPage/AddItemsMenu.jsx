@@ -3,7 +3,13 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import styled from 'styled-components';
 import OptionsBoxStyle from '../../../components/Dashboard/ProductPage/OptionsBoxStyle';
 
-export default function AddItemsMenu({ extraValue, setExtraValue, optionals }) {
+export default function AddItemsMenu({
+  extraValue,
+  setExtraValue,
+  optionals,
+  selectedOptionals,
+  setSelectedOptionals,
+}) {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -15,7 +21,15 @@ export default function AddItemsMenu({ extraValue, setExtraValue, optionals }) {
       <div className="opened">
         <ExtraItemsList>
           {optionals?.map(({ id, name, value }) => (
-            <ExtraItem key={id} name={name} value={value} extraValue={extraValue} setExtraValue={setExtraValue} />
+            <ExtraItem
+              key={id}
+              name={name}
+              value={value}
+              extraValue={extraValue}
+              setExtraValue={setExtraValue}
+              selectedOptionals={selectedOptionals}
+              setSelectedOptionals={setSelectedOptionals}
+            />
           ))}
         </ExtraItemsList>
       </div>
@@ -23,16 +37,24 @@ export default function AddItemsMenu({ extraValue, setExtraValue, optionals }) {
   );
 }
 
-function ExtraItem({ name, value, extraValue, setExtraValue }) {
+function ExtraItem({ name, value, extraValue, setExtraValue, selectedOptionals, setSelectedOptionals }) {
   const [extraAmount, setExtraAmount] = useState(0);
 
   function selectExtraItems(operation) {
     if (operation === '-' && extraAmount > 0) {
       setExtraAmount(extraAmount - 1);
       setExtraValue(extraValue - value);
+      setSelectedOptionals({
+        ...selectedOptionals,
+        [name]: extraAmount - 1,
+      });
     } else if (operation === '+') {
       setExtraAmount(extraAmount + 1);
       setExtraValue(extraValue + value);
+      setSelectedOptionals({
+        ...selectedOptionals,
+        [name]: extraAmount + 1,
+      });
     }
   }
 

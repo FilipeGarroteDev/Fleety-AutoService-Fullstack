@@ -36,4 +36,9 @@ async function postRatings(body) {
   return axios.post(`${BASE_URL}/ratings`, body, config);
 }
 
-export { getCategories, getCategoryProducts, getProductData, signIn, validateToken, postRatings };
+async function postOrder(body) {
+  const config = generateHeaders();
+  return axios.post(`${BASE_URL}/chart/add`, body, config);
+}
+
+export { getCategories, getCategoryProducts, getProductData, signIn, validateToken, postRatings, postOrder };

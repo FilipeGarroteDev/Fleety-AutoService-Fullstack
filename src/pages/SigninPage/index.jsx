@@ -24,6 +24,7 @@ export default function SigninPage() {
       const promise = await signIn(signInData);
       localStorage.setItem('token', promise.data.token);
       localStorage.setItem('user', JSON.stringify(promise.data.user));
+      localStorage.setItem('ticket', JSON.stringify(promise.data.ticket));
       navigate('/');
     } catch (error) {
       alert('Não foi possível realizar o login. Verifique os campos preenchidos!');
