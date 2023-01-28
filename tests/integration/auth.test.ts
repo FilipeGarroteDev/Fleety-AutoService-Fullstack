@@ -183,8 +183,7 @@ describe('GET /validate', () => {
   });
 
   it('should respond with status 401, if token isnt given', async () => {
-    const user = await authFactory.createUserByName('Mesa 13', '123456');
-    await generateValidToken(user.id);
+    await authFactory.createUserByName('Mesa 13', '123456');
     const response = await server.get('/auth/validate').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);

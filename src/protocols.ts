@@ -22,6 +22,18 @@ export type SignUpBody = {
 };
 
 export type SignInBody = {
-  name: string
-  password: string,
-}
+  name: string;
+  password: string;
+};
+
+export type NewRatingEntity = {
+  userId: number;
+  name: string;
+  email: string;
+  environmentRate: number;
+  foodRate: number;
+  beverageRate: number;
+  pricesRate: number;
+  serviceRate: number;
+  userNote: string;
+};

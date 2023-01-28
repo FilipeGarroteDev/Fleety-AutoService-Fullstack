@@ -5,14 +5,14 @@ import * as jwt from 'jsonwebtoken';
 
 export async function authTokenMiddleware(req: Request, res: Response, next: NextFunction) {
   const authorization = req.header('Authorization');
-  
+
   if (!authorization)
     return res
       .status(httpStatus.UNAUTHORIZED)
       .send('Seu login expirou ou suas credenciais são inválidas. Por gentileza, refaça o login');
 
   const token = authorization.split(' ')[1];
-  
+
   if (!token)
     return res
       .status(httpStatus.UNAUTHORIZED)

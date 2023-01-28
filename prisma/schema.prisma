@@ -121,6 +121,6 @@ model Ratings {
   beverageRate      Int
   pricesRate        Int
   serviceRate       Int
-  userNote          String
+  userNote          String      @default("")
   createdAt         DateTime    @default(now())
 }
