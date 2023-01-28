@@ -39,7 +39,7 @@ describe('POST /ratings', () => {
   });
 
   describe('when token is valid', () => {
-    const generateRatingBody = (userRating: number) => ({
+    const generateCompleteRating = (userRating: number) => ({
       name: faker.name.firstName(),
       email: faker.internet.email(),
       environmentRate: userRating,
@@ -70,7 +70,7 @@ describe('POST /ratings', () => {
 
     it('should respond with status 422 if user rating is less then one', async () => {
       const token = await generateTokenAndSession(faker.name.firstName());
-      const body = generateRatingBody(0);
+      const body = generateCompleteRating(0);
 
       const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`).send(body);
 
@@ -79,7 +79,7 @@ describe('POST /ratings', () => {
 
     it('should respond with status 422 if user rating is more then 5', async () => {
       const token = await generateTokenAndSession(faker.name.firstName());
-      const body = generateRatingBody(7);
+      const body = generateCompleteRating(7);
 
       const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`).send(body);
 
@@ -87,17 +87,46 @@ describe('POST /ratings', () => {
     });
 
     describe('when body is valid', () => {
-      it('should respond with status 200, if user rating is a number between 1 and 5', async () => {
+      const generateWithoutRatings = () => ({
+        name: faker.name.firstName(),
+        email: faker.internet.email(),
+        userNote: 'Ruim',
+      });
+      it('should respond with status 201, if ratings isnt given and return ratings with default value = 1', async () => {
         const token = await generateTokenAndSession(faker.name.firstName());
-        const body = generateRatingBody(5);
+        const body = generateWithoutRatings();
+
         const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`).send(body);
 
-        expect(response.status).toBe(httpStatus.OK);
+        expect(response.status).toBe(httpStatus.CREATED);
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            id: expect.any(Number),
+            userId: expect.any(Number),
+            name: body.name,
+            email: body.email,
+            environmentRate: 1,
+            foodRate: 1,
+            beverageRate: 1,
+            pricesRate: 1,
+            serviceRate: 1,
+            userNote: body.userNote,
+            createdAt: expect.any(String),
+          }),
+        );
+      });
+
+      it('should respond with status 201, if user rating is a number between 1 and 5', async () => {
+        const token = await generateTokenAndSession(faker.name.firstName());
+        const body = generateCompleteRating(5);
+        const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`).send(body);
+
+        expect(response.status).toBe(httpStatus.CREATED);
       });
 
       it('should save rating body on db', async () => {
         const token = await generateTokenAndSession(faker.name.firstName());
-        const body = generateRatingBody(5);
+        const body = generateCompleteRating(5);
 
         const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`).send(body);
 

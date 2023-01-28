@@ -10,7 +10,7 @@ export async function postNewUserAvaliation(req: Request, res: Response) {
 
   try {
     const createdRating: Ratings = await ratingsService.createNewRating(userId, newRating);
-    return res.status(httpStatus.OK).send(createdRating);
+    return res.status(httpStatus.CREATED).send(createdRating);
   } catch (error) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }

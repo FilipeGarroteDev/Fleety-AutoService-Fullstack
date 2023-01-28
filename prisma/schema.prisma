@@ -116,11 +116,11 @@ model Ratings {
   User              Users       @relation(fields: [userId], references: [id])
   name              String      @db.VarChar(255) 
   email             String      @db.VarChar(255)
-  environmentRate   Int
-  foodRate          Int
-  beverageRate      Int
-  pricesRate        Int
-  serviceRate       Int
+  environmentRate   Int         @default(1)
+  foodRate          Int         @default(1)
+  beverageRate      Int         @default(1)
+  pricesRate        Int         @default(1)
+  serviceRate       Int         @default(1)
   userNote          String      @default("")
   createdAt         DateTime    @default(now())
 }
