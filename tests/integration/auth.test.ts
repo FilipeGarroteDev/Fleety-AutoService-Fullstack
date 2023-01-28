@@ -2,10 +2,12 @@ import app, { init } from '@/app';
 import { prisma } from '@/config';
 import { SignUpBody } from '@/protocols';
 import faker from '@faker-js/faker';
+import { TicketStatus } from '@prisma/client';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import authFactory from '../factory/auth-factory';
 import { createSession } from '../factory/sessions-factory';
+import ticketsFactory from '../factory/tickets-factory';
 import { cleanDb, generateValidToken } from '../utils';
 
 beforeAll(async () => {
@@ -141,7 +143,71 @@ describe('POST /signin', () => {
         expect(response.status).toBe(httpStatus.OK);
       });
 
-      it('should respond with user data and token', async () => {
+      it('should create reserved ticket, if there is no active ticket yet', async () => {
+        const validBody = generateValidSigninBody();
+        const user = await authFactory.createUserByName(validBody.name, validBody.password);
+        const response = await server.post('/auth/signin').send(validBody);
+
+        expect(response.body.ticket).toEqual(
+          expect.objectContaining({
+            userId: user.id,
+            status: TicketStatus.RESERVED,
+          }),
+        );
+      });
+
+      it('should create reserved ticket, if there is a paid ticket on db', async () => {
+        const validBody = generateValidSigninBody();
+        const user = await authFactory.createUserByName(validBody.name, validBody.password);
+        await ticketsFactory.createPaidTicket(user.id);
+        const response = await server.post('/auth/signin').send(validBody);
+
+        expect(response.body.ticket).toEqual(
+          expect.objectContaining({
+            userId: user.id,
+            status: TicketStatus.RESERVED,
+          }),
+        );
+      });
+
+      it('shouldnt create ticket, if there is a reserved ticket on db', async () => {
+        const validBody = generateValidSigninBody();
+        const user = await authFactory.createUserByName(validBody.name, validBody.password);
+        const ticket = await ticketsFactory.createReservedTicket(user.id);
+        const response = await server.post('/auth/signin').send(validBody);
+
+        expect(response.body.ticket).toEqual(
+          expect.objectContaining({
+            id: ticket.id,
+            userId: user.id,
+            status: TicketStatus.RESERVED,
+          }),
+        );
+      });
+
+      it('should save ticket on db', async () => {
+        const validBody = generateValidSigninBody();
+        const user = await authFactory.createUserByName(validBody.name, validBody.password);
+        await ticketsFactory.createReservedTicket(user.id);
+        const response = await server.post('/auth/signin').send(validBody);
+
+        const ticket = await prisma.tickets.findFirst({
+          where: {
+            userId: user.id,
+            status: TicketStatus.RESERVED,
+          },
+        });
+
+        expect(ticket).toEqual(
+          expect.objectContaining({
+            id: response.body.ticket.id,
+            userId: response.body.ticket.userId,
+            status: TicketStatus.RESERVED,
+          }),
+        );
+      });
+
+      it('should respond with user data, token and ticket', async () => {
         const validBody = generateValidSigninBody();
         const createdUser = await authFactory.createUserByName(validBody.name, validBody.password);
         const response = await server.post('/auth/signin').send(validBody);

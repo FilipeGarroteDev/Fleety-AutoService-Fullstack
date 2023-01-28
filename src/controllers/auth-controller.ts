@@ -22,8 +22,8 @@ export async function signIn(req: Request, res: Response) {
   const signInData: SignInBody = req.body;
 
   try {
-    const userAndToken = await authService.validateCredentialAndSignIn(signInData);
-    res.status(httpStatus.OK).send(userAndToken);
+    const clientAccountData = await authService.validateCredentialAndSignIn(signInData);
+    res.status(httpStatus.OK).send(clientAccountData);
   } catch (error) {
     if (error.name === 'UnauthorizedError') {
       res.status(httpStatus.UNAUTHORIZED).send(error.signInMessage);

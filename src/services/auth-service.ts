@@ -2,6 +2,8 @@ import conflictError from '@/errors/conflictError';
 import unauthorizedError from '@/errors/unauthorizedError';
 import { SignInBody, SignUpBody } from '@/protocols';
 import authRepository from '@/repositories/auth-repository';
+import ticketsRepository from '@/repositories/tickets-repository';
+import { Tickets } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -35,16 +37,19 @@ async function validateCredentialAndSignIn(signInData: SignInBody) {
   }
 
   const token = await createSession(existentUser.id);
-  const userAndToken = {
+  const ticket = await verifyAndCreateTicket(existentUser.id);
+  
+  const clientAccountData = {
     user: {
       id: existentUser.id,
       name,
       role: existentUser.role,
     },
     token,
+    ticket
   };
 
-  return userAndToken;
+  return clientAccountData;
 }
 
 async function createSession(userId: number) {
@@ -52,6 +57,16 @@ async function createSession(userId: number) {
   await authRepository.createNewSession(userId, token);
 
   return token;
+}
+
+async function verifyAndCreateTicket(userId: number): Promise<Tickets> {
+  const ticket = await ticketsRepository.getActiveTicketByUserId(userId);
+
+  if (!ticket) {
+    return await ticketsRepository.createNewTicket(userId);
+  }
+
+  return ticket;
 }
 
 async function getUserData(userId: number) {
