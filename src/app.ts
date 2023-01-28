@@ -7,6 +7,7 @@ import { categoriesRouter } from './routers/categories-router';
 import { productsRouter } from './routers/products-router';
 import authRouter from './routers/auth-router';
 import { ratingsRouter } from './routers/ratings-router';
+import { ordersRouter } from './routers/orders-router';
 
 loadEnvs();
 
@@ -18,7 +19,8 @@ app
   .use('/auth', authRouter)
   .use('/categories', categoriesRouter)
   .use('/products', productsRouter)
-  .use('/ratings', ratingsRouter);
+  .use('/ratings', ratingsRouter)
+  .use('/chart', ordersRouter);
 
 export async function init(): Promise<Express> {
   connectDb();

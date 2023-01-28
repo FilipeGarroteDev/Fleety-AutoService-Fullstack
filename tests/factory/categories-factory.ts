@@ -43,10 +43,21 @@ async function getCategoriesIds() {
   return categories;
 }
 
+async function createSingleCategory(typeId: number) {
+  return await prisma.productCategories.create({
+    data: {
+      name: faker.name.firstName(),
+      image: faker.internet.url(),
+      typeId,
+    },
+  });
+}
+
 const categoriesFactory = {
   createFoodType,
   createCategories,
   getCategoriesIds,
+  createSingleCategory,
 };
 
 export default categoriesFactory;

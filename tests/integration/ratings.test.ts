@@ -50,38 +50,38 @@ describe('POST /ratings', () => {
       userNote: '',
     });
     it('should respond with status 422 if there is no body given', async () => {
-      const token = await generateTokenAndSession(faker.name.firstName());
+      const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`);
+      const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should respond with status 422 if body is invalid', async () => {
-      const token = await generateTokenAndSession(faker.name.firstName());
+      const data = await generateTokenAndSession(faker.name.firstName());
 
       const response = await server
         .post('/ratings')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${data.token}`)
         .send({ name: faker.name.firstName(), unknown: faker.lorem.word() });
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should respond with status 422 if user rating is less then one', async () => {
-      const token = await generateTokenAndSession(faker.name.firstName());
+      const data = await generateTokenAndSession(faker.name.firstName());
       const body = generateCompleteRating(0);
 
-      const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`).send(body);
+      const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should respond with status 422 if user rating is more then 5', async () => {
-      const token = await generateTokenAndSession(faker.name.firstName());
+      const data = await generateTokenAndSession(faker.name.firstName());
       const body = generateCompleteRating(7);
 
-      const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`).send(body);
+      const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -93,10 +93,10 @@ describe('POST /ratings', () => {
         userNote: 'Ruim',
       });
       it('should respond with status 201, if ratings isnt given and return ratings with default value = 1', async () => {
-        const token = await generateTokenAndSession(faker.name.firstName());
+        const data = await generateTokenAndSession(faker.name.firstName());
         const body = generateWithoutRatings();
 
-        const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`).send(body);
+        const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.CREATED);
         expect(response.body).toEqual(
@@ -117,18 +117,18 @@ describe('POST /ratings', () => {
       });
 
       it('should respond with status 201, if user rating is a number between 1 and 5', async () => {
-        const token = await generateTokenAndSession(faker.name.firstName());
+        const data = await generateTokenAndSession(faker.name.firstName());
         const body = generateCompleteRating(5);
-        const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`).send(body);
+        const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.CREATED);
       });
 
       it('should save rating body on db', async () => {
-        const token = await generateTokenAndSession(faker.name.firstName());
+        const data = await generateTokenAndSession(faker.name.firstName());
         const body = generateCompleteRating(5);
 
-        const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`).send(body);
+        const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
         const storedRating = await prisma.ratings.findMany({});
 

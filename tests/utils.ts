@@ -6,6 +6,7 @@ import { createSession } from './factory/sessions-factory';
 
 export async function cleanDb() {
   await prisma.optionals_Category.deleteMany({});
+  await prisma.orders.deleteMany({});
   await prisma.products.deleteMany({});
   await prisma.productCategories.deleteMany({});
   await prisma.productTypes.deleteMany({});
@@ -27,5 +28,5 @@ export async function generateTokenAndSession(name: string) {
 
   await createSession(incomingUser.id, token);
 
-  return token;
+  return { token, userId: incomingUser.id };
 }

@@ -100,7 +100,8 @@ model Orders {
   productId   Int
   Product     Products    @relation(fields: [productId], references: [id])                      
   totalValue  Int
-  optionals   String     
+  amount      Int
+  optionals   String      @default("")
   status      OrderStatus     
   createdAt   DateTime    @default(now())
 }

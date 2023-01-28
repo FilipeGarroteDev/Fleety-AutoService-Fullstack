@@ -1,4 +1,4 @@
-import { Optionals } from '@prisma/client';
+import { Optionals, OrderStatus } from '@prisma/client';
 
 export type ErrorEntity = {
   name: string;
@@ -36,4 +36,13 @@ export type NewRatingEntity = {
   pricesRate: number;
   serviceRate: number;
   userNote: string;
+};
+
+export type OrderBodyEntity = {
+  ticketId: number,
+  productId: number,
+  totalValue: number,
+  optionals: string,
+  status: OrderStatus
+  amount: number,
 };

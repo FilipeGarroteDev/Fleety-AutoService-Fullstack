@@ -176,6 +176,8 @@ describe('POST /signin', () => {
         const ticket = await ticketsFactory.createReservedTicket(user.id);
         const response = await server.post('/auth/signin').send(validBody);
 
+        const createdTickets = await prisma.tickets.findMany({});
+
         expect(response.body.ticket).toEqual(
           expect.objectContaining({
             id: ticket.id,
@@ -183,6 +185,7 @@ describe('POST /signin', () => {
             status: TicketStatus.RESERVED,
           }),
         );
+        expect(createdTickets.length).toBe(1);
       });
 
       it('should save ticket on db', async () => {
