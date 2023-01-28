@@ -2,6 +2,15 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
+const generateHeaders = () => {
+  const token = localStorage.getItem('token');
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
+
 async function validateToken(token) {
   return axios.get(`${BASE_URL}/auth/validate`, { headers: { Authorization: `Bearer ${token}` } });
 }
@@ -22,4 +31,9 @@ async function signIn(body) {
   return axios.post(`${BASE_URL}/auth/signin`, body);
 }
 
-export { getCategories, getCategoryProducts, getProductData, signIn, validateToken };
+async function postRatings(body) {
+  const config = generateHeaders();
+  return axios.post(`${BASE_URL}/ratings`, body, config);
+}
+
+export { getCategories, getCategoryProducts, getProductData, signIn, validateToken, postRatings };

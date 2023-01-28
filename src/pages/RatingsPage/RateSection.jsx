@@ -27,7 +27,7 @@ export default function RateSection({ ratingObject, setRatingObject }) {
     {
       id: 4,
       name: 'Preços',
-      tag: 'priceRate',
+      tag: 'pricesRate',
       image: <RiMoneyDollarCircleLine />,
     },
     {

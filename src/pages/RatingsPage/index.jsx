@@ -1,10 +1,23 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { postRatings } from '../../services/axios';
 import RateSection from './RateSection';
 import UserNoteSection from './UserNoteSection';
 
 export default function RatingsPage() {
+  const navigate = useNavigate();
   const [ratingObject, setRatingObject] = useState({});
+
+  async function sendRatings() {
+    try {
+      await postRatings(ratingObject);
+      alert('Sua opinião é muito importante para nós. Obrigado por colaborar!!');
+      navigate('/home');
+    } catch (error) {
+      alert('Algo deu errado. Você precisa preencher os campos corretamente. O campo "opinião pessoal" é opcional');
+    }
+  }
 
   return (
     <>
@@ -15,7 +28,7 @@ export default function RatingsPage() {
             <RateSection ratingObject={ratingObject} setRatingObject={setRatingObject} />
             <UserNoteSection ratingObject={ratingObject} setRatingObject={setRatingObject} />
           </div>
-          <button>Enviar Avaliação</button>
+          <button onClick={sendRatings}>Enviar Avaliação</button>
         </RatingsBox>
       </Wrapper>
     </>
@@ -23,7 +36,6 @@ export default function RatingsPage() {
 }
 
 const Wrapper = styled.main`
-
   > h1 {
     font-size: 22px;
     font-weight: 700;
