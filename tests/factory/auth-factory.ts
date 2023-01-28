@@ -1,5 +1,4 @@
 import { prisma } from '@/config';
-import faker from '@faker-js/faker';
 import bcrypt from 'bcrypt';
 
 async function createUserByName(name: string, password: string) {

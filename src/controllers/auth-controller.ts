@@ -32,3 +32,14 @@ export async function signIn(req: Request, res: Response) {
     }
   }
 }
+
+export async function validateTokenAndGetUserData(req: Request, res: Response) {
+  const userId: number = res.locals.userId;
+
+  try {
+    const name = await authService.getUserData(userId);
+    return res.status(httpStatus.OK).send({ name });
+  } catch (error) {
+    return res.sendStatus(httpStatus.UNAUTHORIZED);
+  }
+}

@@ -54,9 +54,16 @@ async function createSession(userId: number) {
   return token;
 }
 
+async function getUserData(userId: number) {
+  const user = await authRepository.getUserById(userId);
+
+  return user.name;
+}
+
 const authService = {
   searchUserAndSignUp,
   validateCredentialAndSignIn,
+  getUserData,
 };
 
 export default authService;

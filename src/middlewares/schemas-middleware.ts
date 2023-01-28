@@ -10,7 +10,9 @@ export default function validateSchema(schema: ObjectSchema) {
       next();
     } else {
       const messages = error.details.map((error) => error.message).join('\n');
-      res.status(httpStatus.UNPROCESSABLE_ENTITY).send(`Há campos preenchidos de forma errada, revise-os.\n\n${messages}`);
+      res
+        .status(httpStatus.UNPROCESSABLE_ENTITY)
+        .send(`Há campos preenchidos de forma errada, revise-os.\n\n${messages}`);
     }
   };
 }

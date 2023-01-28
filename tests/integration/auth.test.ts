@@ -5,7 +5,8 @@ import faker from '@faker-js/faker';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import authFactory from '../factory/auth-factory';
-import { cleanDb } from '../utils';
+import { createSession } from '../factory/sessions-factory';
+import { cleanDb, generateValidToken } from '../utils';
 
 beforeAll(async () => {
   await init();
@@ -164,12 +165,58 @@ describe('POST /signin', () => {
 
         const session = await prisma.sessions.findFirst({
           where: {
-            userId: createdUser.id
+            userId: createdUser.id,
           },
         });
 
         expect(response.body.token).toEqual(session.token);
       });
     });
+  });
+});
+
+describe('GET /validate', () => {
+  it('should respond with status 401 when headers isnt given', async () => {
+    const response = await server.get('/auth/validate');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if token isnt given', async () => {
+    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    await generateValidToken(user.id);
+    const response = await server.get('/auth/validate').set('Authorization', '');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if there is no active session with the given token', async () => {
+    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const token = generateValidToken(user.id);
+    const response = await server.get('/auth/validate').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 200, if there is active session token', async () => {
+    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const token = generateValidToken(user.id);
+    await createSession(user.id, token);
+    const response = await server.get('/auth/validate').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.OK);
+  });
+
+  it('should respond with user name', async () => {
+    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const token = generateValidToken(user.id);
+    await createSession(user.id, token);
+    const response = await server.get('/auth/validate').set('Authorization', `Bearer ${token}`);
+
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: user.name,
+      }),
+    );
   });
 });

@@ -24,10 +24,19 @@ async function createNewSession(userId: number, token: string) {
   });
 }
 
+async function getUserById(userId: number) {
+  return prisma.users.findFirst({
+    where: {
+      id: userId,
+    },
+  });
+}
+
 const authRepository = {
   searchUser,
   insertNewUser,
   createNewSession,
+  getUserById,
 };
 
 export default authRepository;
