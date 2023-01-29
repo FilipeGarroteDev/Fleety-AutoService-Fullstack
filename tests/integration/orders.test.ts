@@ -48,7 +48,7 @@ describe('POST /chart/add', () => {
       productId,
       totalValue: faker.datatype.number(),
       optionals: faker.lorem.words(8),
-      status: 'ORDERED',
+      status: 'SELECTED',
       amount: faker.datatype.number({ max: 10 }),
     });
     it('should respond with status 422 if there is no body given', async () => {
@@ -70,7 +70,7 @@ describe('POST /chart/add', () => {
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
 
-    it('should respond with status 422 if order status isnt ORDERED or DELIVERED', async () => {
+    it('should respond with status 422 if order status isnt SELECTED, PREPARING or DELIVERED', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
       const ticket = await ticketsFactory.createReservedTicket(data.userId);
       const foodType = await categoriesFactory.createFoodType();
@@ -91,7 +91,7 @@ describe('POST /chart/add', () => {
         ticketId,
         productId,
         totalValue: faker.datatype.number(),
-        status: 'ORDERED',
+        status: 'SELECTED',
         amount: faker.datatype.number({ max: 10 }),
       });
 
@@ -153,7 +153,7 @@ describe('POST /chart/add', () => {
             totalValue: body.totalValue,
             amount: body.amount,
             optionals: body.optionals,
-            status: 'ORDERED',
+            status: 'SELECTED',
             createdAt: expect.any(String),
           }),
         );
@@ -281,7 +281,7 @@ describe('GET /chart/:ticketId', () => {
         expect(response.body.length).toBe(0);
       });
 
-      it('should respond with status 200 and return empty array, if doesnt have order with status ORDERED', async () => {
+      it('should respond with status 200 and return empty array, if doesnt have order with status SELECTED', async () => {
         const data = await generateTokenAndSession(faker.name.firstName());
         const ticket = await ticketsFactory.createReservedTicket(data.userId);
         const foodType = await categoriesFactory.createFoodType();
@@ -301,7 +301,7 @@ describe('GET /chart/:ticketId', () => {
         const foodType = await categoriesFactory.createFoodType();
         const category = await categoriesFactory.createSingleCategory(foodType.id);
         const product = await productsFactory.createSingleProduct(category.id);
-        await ordersFactory.createManyActiveOrders(ticket.id, product.id);
+        await ordersFactory.createManySelectedOrders(ticket.id, product.id);
 
         const response = await server.get(`/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
@@ -315,8 +315,13 @@ describe('GET /chart/:ticketId', () => {
               totalValue: expect.any(Number),
               amount: expect.any(Number),
               optionals: expect.any(String),
-              status: 'ORDERED',
+              status: 'SELECTED',
               createdAt: expect.any(String),
+              Product: expect.objectContaining({
+                id: product.id,
+                name: product.name,
+                image: product.image,
+              })
             }),
           ]),
         );

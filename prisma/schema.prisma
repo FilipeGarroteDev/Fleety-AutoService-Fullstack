@@ -13,9 +13,9 @@ datasource db {
 model Users {
   id         Int          @id @default(autoincrement())
   name       String       @unique @db.VarChar(255) 
-  email      String       @default("")
+  email      String?       @default("")
   password   String       @db.VarChar(255) 
-  image      String       @default("")
+  image      String?       @default("")
   role       Roles
   createdAt  DateTime     @default(now())
   Tickets    Tickets[]
@@ -101,13 +101,14 @@ model Orders {
   Product     Products    @relation(fields: [productId], references: [id])                      
   totalValue  Int
   amount      Int
-  optionals   String      @default("")
+  optionals   String?      @default("")
   status      OrderStatus     
   createdAt   DateTime    @default(now())
 }
 
 enum OrderStatus {
-  ORDERED
+  SELECTED
+  PREPARING
   DELIVERED
 }
 
@@ -122,6 +123,6 @@ model Ratings {
   beverageRate      Int         @default(1)
   pricesRate        Int         @default(1)
   serviceRate       Int         @default(1)
-  userNote          String      @default("")
+  userNote          String?     @default("")
   createdAt         DateTime    @default(now())
 }

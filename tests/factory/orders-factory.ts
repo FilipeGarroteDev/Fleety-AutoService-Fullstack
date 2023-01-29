@@ -41,12 +41,12 @@ async function createOrderInAnotherTicket(ticketId: number, productId: number) {
       totalValue: faker.datatype.number({ max: 5000 }),
       amount: faker.datatype.number({ max: 10 }),
       optionals: faker.lorem.words(8),
-      status: OrderStatus.ORDERED,
+      status: OrderStatus.SELECTED,
     },
   });
 }
 
-async function createManyActiveOrders(ticketId: number, productId: number) {
+async function createManySelectedOrders(ticketId: number, productId: number) {
   await prisma.orders.createMany({
     data: [
       {
@@ -55,7 +55,7 @@ async function createManyActiveOrders(ticketId: number, productId: number) {
         totalValue: faker.datatype.number({ max: 5000 }),
         amount: faker.datatype.number({ max: 10 }),
         optionals: faker.lorem.words(8),
-        status: OrderStatus.ORDERED,
+        status: OrderStatus.SELECTED,
       },
       {
         ticketId,
@@ -63,7 +63,7 @@ async function createManyActiveOrders(ticketId: number, productId: number) {
         totalValue: faker.datatype.number({ max: 5000 }),
         amount: faker.datatype.number({ max: 10 }),
         optionals: faker.lorem.words(8),
-        status: OrderStatus.ORDERED,
+        status: OrderStatus.SELECTED,
       },
       {
         ticketId,
@@ -71,7 +71,7 @@ async function createManyActiveOrders(ticketId: number, productId: number) {
         totalValue: faker.datatype.number({ max: 5000 }),
         amount: faker.datatype.number({ max: 10 }),
         optionals: faker.lorem.words(8),
-        status: OrderStatus.ORDERED,
+        status: OrderStatus.SELECTED,
       },
     ],
   });
@@ -80,7 +80,7 @@ async function createManyActiveOrders(ticketId: number, productId: number) {
 const ordersFactory = {
   createManyDeliveredOrders,
   createOrderInAnotherTicket,
-  createManyActiveOrders
+  createManySelectedOrders
 };
 
 export default ordersFactory;

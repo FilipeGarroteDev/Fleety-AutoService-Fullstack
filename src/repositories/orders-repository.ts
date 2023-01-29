@@ -8,15 +8,24 @@ async function saveNewOrder(body: OrderBodyEntity): Promise<Orders> {
   });
 }
 
-async function getAllOrders(ticketId: number): Promise<Orders[]> {
+async function getAllSelectedOrders(ticketId: number): Promise<Orders[]> {
   return prisma.orders.findMany({
     where: {
       ticketId,
-      status: OrderStatus.ORDERED,
+      status: OrderStatus.SELECTED,
+    },
+    include: {
+      Product: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
     },
   });
 }
 
-const ordersRepository = { saveNewOrder, getAllOrders };
+const ordersRepository = { saveNewOrder, getAllSelectedOrders };
 
 export default ordersRepository;

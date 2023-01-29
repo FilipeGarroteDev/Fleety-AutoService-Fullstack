@@ -27,7 +27,7 @@ async function searchOrdersByTicketId(ticketId: string): Promise<Orders[]> {
 
   if (!ticket) throw notFoundError();
 
-  const orders: Orders[] = await ordersRepository.getAllOrders(validTicketId);
+  const orders: Orders[] = await ordersRepository.getAllSelectedOrders(validTicketId);
   return orders;
 }
 

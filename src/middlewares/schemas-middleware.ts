@@ -5,7 +5,6 @@ import httpStatus from 'http-status';
 export default function validateSchema(schema: ObjectSchema) {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body, { abortEarly: false });
-
     if (!error) {
       next();
     } else {
