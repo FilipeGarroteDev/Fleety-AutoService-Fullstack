@@ -18,3 +18,20 @@ export async function finishAndSendProductOrder(req: Request, res: Response) {
     }
   }
 }
+
+export async function listAllTicketOrders(req: Request, res: Response) {
+  const { ticketId } = req.params as Record<string, string>;
+
+  try {
+    const orders: Orders[] = await ordersService.searchOrdersByTicketId(ticketId);
+    return res.status(httpStatus.OK).send(orders);
+  } catch (error) {
+    if (error.name === 'NotFoundError') {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    } else if (error.name === 'UnprocessableEntityError') {
+      return res.sendStatus(httpStatus.UNPROCESSABLE_ENTITY);
+    } else {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
+    }
+  }
+}
