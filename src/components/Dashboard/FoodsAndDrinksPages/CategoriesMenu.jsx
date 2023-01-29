@@ -23,7 +23,7 @@ export default function CategoriesMenu({ setProducts }) {
   return (
     <CategoriesContainer>
       {categories?.map((category) => (
-        <CategoryOption category={category} setProducts={setProducts} page={page} />
+        <CategoryOption key={category.id} category={category} setProducts={setProducts} page={page} />
       ))}
     </CategoriesContainer>
   );

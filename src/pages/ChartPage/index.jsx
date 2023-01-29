@@ -1,50 +1,33 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ProductCard from '../../components/Dashboard/FoodsAndDrinksPages/ProductCard';
+import { listAllOrders } from '../../services/axios';
 import Home from '../Dashboard/Home';
 
 export default function ChartPage() {
   const navigate = useNavigate();
-  const mockedOrderList = [
-    {
-      id: 1,
-      image:
-        'https://saboreiaavida.nestle.pt/sites/default/files/styles/receita_card_620x560/public/pictures/e10d8b86-55e2-11e4-b7b1-d4ae52be23e7.png?h=80accfed&itok=ZvgUCzxd',
-      name: 'Salada de salmão',
-      value: 4099,
-      amount: 2,
-      optionals: [{ id: 1, name: 'carne', value: 400 }],
-    },
-    {
-      id: 2,
-      image:
-        'https://saboreiaavida.nestle.pt/sites/default/files/styles/receita_card_620x560/public/pictures/e10d8b86-55e2-11e4-b7b1-d4ae52be23e7.png?h=80accfed&itok=ZvgUCzxd',
-      name: 'Salada de salmão',
-      value: 2599,
-      amount: 1,
-    },
-    {
-      id: 3,
-      image:
-        'https://saboreiaavida.nestle.pt/sites/default/files/styles/receita_card_620x560/public/pictures/e10d8b86-55e2-11e4-b7b1-d4ae52be23e7.png?h=80accfed&itok=ZvgUCzxd',
-      name: 'Salada de salmão',
-      value: 2599,
-      amount: 3,
-      optionals: [{ id: 1, name: 'carne', value: 400 }],
-    },
-    {
-      id: 4,
-      image:
-        'https://saboreiaavida.nestle.pt/sites/default/files/styles/receita_card_620x560/public/pictures/e10d8b86-55e2-11e4-b7b1-d4ae52be23e7.png?h=80accfed&itok=ZvgUCzxd',
-      name: 'Salada de salmão',
-      value: 2599,
-      amount: 12,
-    },
-  ];
+  const [ordersList, setOrdersList] = useState([]);
+
+  useEffect(() => {
+    const ticket = JSON.parse(localStorage.getItem('ticket'));
+
+    async function fetchData() {
+      try {
+        const promise = await listAllOrders(ticket.id);
+        setOrdersList(promise.data);
+      } catch (error) {
+        alert('Algo deu errado em sua requisição. Tente novamente mais tarde');
+        navigate('/home');
+      }
+    }
+
+    if (ticket) fetchData();
+  }, []);
 
   function calculateTotalValue() {
-    const sumValues = mockedOrderList.reduce((acc, curr) => {
-      acc += curr.value;
+    const sumValues = ordersList.reduce((acc, curr) => {
+      acc += curr.totalValue;
       return acc;
     }, 0);
     return `R$ ${sumValues / 100}`;
@@ -58,9 +41,22 @@ export default function ChartPage() {
         <button onClick={() => navigate('/home')}>X</button>
         <header>MEU PEDIDO</header>
         <OrderContainer>
-          {mockedOrderList.map(({ name, value, id, image, optionals, amount }) => (
-            <ProductCard key={id} name={name} value={value} image={image} optionals={optionals} amount={amount} chart />
-          ))}
+          {ordersList.length === 0 ? (
+            <h1>Não tem nada</h1>
+          ) : (
+            ordersList.map(({ totalValue, id, optionals, amount, Product }) => (
+              <ProductCard
+                key={id}
+                name={Product.name}
+                value={totalValue}
+                image={Product.image}
+                optionals={optionals}
+                amount={amount}
+                id={Product.id}
+                chart
+              />
+            ))
+          )}
         </OrderContainer>
         <footer>
           <div>
@@ -186,10 +182,20 @@ const ChartWindow = styled.section`
 const OrderContainer = styled.div`
   width: 100%;
   height: 71.5%;
-  margin-top: 18%;
-  margin-bottom: 14.5%;
   display: flex;
+  margin-top: 12.5%;
+  padding-top: 3%;
+  padding-bottom: 5%;
   flex-direction: column;
   align-items: center;
   gap: 15px;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar-track {
+    background: #a39d9d;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border: 3px solid #a39d9d;
+  }
 `;

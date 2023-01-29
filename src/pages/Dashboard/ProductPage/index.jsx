@@ -40,13 +40,14 @@ export default function ProductPage() {
   }
 
   async function sendProduct() {
-    const withdrawItens = `Retirar: ${selectedOptionals.withdraw}`;
+    const withdrawItens = selectedOptionals.withdraw ? `Retirar: ${selectedOptionals.withdraw}\n` : '';
     let auxString = '';
     for (let i = 0; i < Object.keys(selectedOptionals).length; i++) {
       if (Object.keys(selectedOptionals)[i] === 'withdraw') continue;
       auxString = auxString + `${Object.values(selectedOptionals)[i]}x ${Object.keys(selectedOptionals)[i]}, `;
     }
-    const optionals = `${withdrawItens}\n${'Adicionais: ' + auxString.trim().slice(0, -1)}`;
+    const additionals = auxString === '' ? '' : 'Adicionais: ' + auxString.trim().slice(0, -1);
+    const optionals = `${withdrawItens}${additionals}`;
     const ticketId = JSON.parse(localStorage.getItem('ticket')).id;
 
     const body = {

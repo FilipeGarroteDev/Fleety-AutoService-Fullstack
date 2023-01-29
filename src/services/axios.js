@@ -41,4 +41,18 @@ async function postOrder(body) {
   return axios.post(`${BASE_URL}/chart/add`, body, config);
 }
 
-export { getCategories, getCategoryProducts, getProductData, signIn, validateToken, postRatings, postOrder };
+async function listAllOrders(ticketId) {
+  const config = generateHeaders();
+  return axios.get(`${BASE_URL}/chart/${ticketId}`, config);
+}
+
+export {
+  getCategories,
+  getCategoryProducts,
+  getProductData,
+  signIn,
+  validateToken,
+  postRatings,
+  postOrder,
+  listAllOrders,
+};

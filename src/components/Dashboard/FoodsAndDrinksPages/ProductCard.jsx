@@ -12,7 +12,7 @@ export default function ProductCard({ name, description, value, id, image, optio
       <img src={image} alt="productImage" />
       <div>
         <h2>{amount ? `${amount}x ${name}` : name}</h2>
-        <h4>{optionals ? '+ adicionais' : formattedDescription}</h4>
+        <h4>{optionals ? '+ observações' : formattedDescription}</h4>
       </div>
       <aside>
         <span>{formattedValue}</span>
@@ -23,7 +23,7 @@ export default function ProductCard({ name, description, value, id, image, optio
 
 const CardStyle = styled.div`
   width: ${(props) => (props.chart ? '90%' : '80%')};
-  height: ${(props) => (props.chart ? '80px' : '120px')};
+  height: ${(props) => (props.chart ? '90px' : '120px')};
   border-radius: 15px;
   background-color: #2f2c2c;
   overflow: hidden;
@@ -39,9 +39,9 @@ const CardStyle = styled.div`
   }
 
   > div {
-    width: 50%;
+    width: ${(props) => (props.chart ? '70%' : '50%')};
     height: 100%;
-    padding: 20px 15px;
+    padding: ${(props) => (props.chart ? '15px 15px' : '20px 15px')};
     display: flex;
     flex-direction: column;
     color: #c3c3c3;

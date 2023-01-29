@@ -3,12 +3,20 @@ import fleetyLogo from '../../../assets/images/fleetyLogo.png';
 import { IoHandRight, IoWallet } from 'react-icons/io5';
 import { BsFillCartCheckFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 export default function TopMenu() {
+  const [userData, setUserData] = useState('');
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    setUserData(user);
+  }, []);
+
   return (
     <Container>
       <img src={fleetyLogo} alt="logo" />
-      <div>Mesa 15</div>
+      <div>{userData.name}</div>
 
       <ButtonsContainer>
         <button>
