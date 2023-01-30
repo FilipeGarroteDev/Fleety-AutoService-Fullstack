@@ -88,7 +88,7 @@ async function createManySelectedOrders(ticketId: number, productId: number) {
 const ordersFactory = {
   createManyDeliveredOrders,
   createOrderInAnotherTicket,
-  createManySelectedOrders
+  createManySelectedOrders,
 };
 
 export default ordersFactory;

@@ -1,6 +1,6 @@
 import notFoundError from '@/errors/notFoundError';
 import unprocessableEntityError from '@/errors/unprocessableEntityError';
-import { OrderBodyEntity } from '@/protocols';
+import { OrderBodyEntity, OrderWithProductInfo } from '@/protocols';
 import ordersRepository from '@/repositories/orders-repository';
 import productsRepository from '@/repositories/products-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
@@ -14,11 +14,11 @@ async function createAndValidateNewOrder(order: OrderBodyEntity): Promise<Orders
     throw notFoundError();
   }
 
-  const createdOrder = await ordersRepository.saveNewOrder(order);
+  const createdOrder: Orders = await ordersRepository.saveNewOrder(order);
   return createdOrder;
 }
 
-async function searchOrdersByTicketId(ticketId: string): Promise<Orders[]> {
+async function searchOrdersByTicketId(ticketId: string): Promise<OrderWithProductInfo[]> {
   const validTicketId = Number(ticketId);
 
   if (!validTicketId) throw unprocessableEntityError();
@@ -27,7 +27,7 @@ async function searchOrdersByTicketId(ticketId: string): Promise<Orders[]> {
 
   if (!ticket) throw notFoundError();
 
-  const orders: Orders[] = await ordersRepository.getAllSelectedOrders(validTicketId);
+  const orders: OrderWithProductInfo[] = await ordersRepository.getAllSelectedOrders(validTicketId);
   return orders;
 }
 

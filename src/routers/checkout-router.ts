@@ -1,4 +1,4 @@
-import { updateOrderStatusAndSendToCheckout } from '@/controllers/checkout-controller';
+import { listAllFinishedOrders, updateOrderStatusAndSendToCheckout } from '@/controllers/checkout-controller';
 import { authTokenMiddleware } from '@/middlewares/authToken-middleware';
 import validateSchema from '@/middlewares/schemas-middleware';
 import { CheckoutBodySchema } from '@/schemas/checkout-schema';
@@ -8,6 +8,7 @@ const checkoutRouter = express.Router();
 
 checkoutRouter
   .all('/*', authTokenMiddleware)
+  .get('/:ticketId', listAllFinishedOrders)
   .all('/*', validateSchema(CheckoutBodySchema))
   .patch('/', updateOrderStatusAndSendToCheckout);
 

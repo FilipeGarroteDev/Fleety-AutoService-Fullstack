@@ -1,4 +1,4 @@
-import { OrderBodyEntity } from '@/protocols';
+import { OrderBodyEntity, OrderWithProductInfo } from '@/protocols';
 import ordersService from '@/services/orders-service';
 import { Orders } from '@prisma/client';
 import { Request, Response } from 'express';
@@ -23,7 +23,7 @@ export async function listAllTicketOrders(req: Request, res: Response) {
   const { ticketId } = req.params as Record<string, string>;
 
   try {
-    const orders: Orders[] = await ordersService.searchOrdersByTicketId(ticketId);
+    const orders: OrderWithProductInfo[] = await ordersService.searchOrdersByTicketId(ticketId);
     return res.status(httpStatus.OK).send(orders);
   } catch (error) {
     if (error.name === 'NotFoundError') {

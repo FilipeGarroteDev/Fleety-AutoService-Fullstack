@@ -1,5 +1,5 @@
 import { prisma } from '@/config';
-import { OrderBodyEntity } from '@/protocols';
+import { OrderBodyEntity, OrderWithProductInfo } from '@/protocols';
 import { Orders, OrderStatus } from '@prisma/client';
 
 async function saveNewOrder(body: OrderBodyEntity): Promise<Orders> {
@@ -8,7 +8,7 @@ async function saveNewOrder(body: OrderBodyEntity): Promise<Orders> {
   });
 }
 
-async function getAllSelectedOrders(ticketId: number): Promise<Orders[]> {
+async function getAllSelectedOrders(ticketId: number): Promise<OrderWithProductInfo[]> {
   return prisma.orders.findMany({
     where: {
       ticketId,

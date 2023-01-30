@@ -1,4 +1,4 @@
-import { Optionals, OrderStatus } from '@prisma/client';
+import { Optionals, OrderStatus, Products } from '@prisma/client';
 
 export type ErrorEntity = {
   name: string;
@@ -50,4 +50,16 @@ export type OrderBodyEntity = {
 export type CheckoutBodyEntity = {
   ticketId: number;
   status: OrderStatus;
+};
+
+export type OrderWithProductInfo = {
+  id: number;
+  ticketId: number;
+  productId: number;
+  totalValue: number;
+  amount: number;
+  optionals: string | null;
+  status: OrderStatus;
+  createdAt: Date;
+  Product: Partial<Products>;
 };
