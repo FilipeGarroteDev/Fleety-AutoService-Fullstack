@@ -39,10 +39,15 @@ export type NewRatingEntity = {
 };
 
 export type OrderBodyEntity = {
-  ticketId: number,
-  productId: number,
-  totalValue: number,
-  optionals: string,
-  status: OrderStatus
-  amount: number,
+  ticketId: number;
+  productId: number;
+  totalValue: number;
+  optionals: string;
+  status: OrderStatus;
+  amount: number;
+};
+
+export type CheckoutBodyEntity = {
+  ticketId: number;
+  status: OrderStatus;
 };

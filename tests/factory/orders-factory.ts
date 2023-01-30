@@ -27,7 +27,15 @@ async function createManyDeliveredOrders(ticketId: number, productId: number) {
         totalValue: faker.datatype.number({ max: 5000 }),
         amount: faker.datatype.number({ max: 10 }),
         optionals: faker.lorem.words(8),
-        status: OrderStatus.DELIVERED,
+        status: OrderStatus.PREPARING,
+      },
+      {
+        ticketId,
+        productId,
+        totalValue: faker.datatype.number({ max: 5000 }),
+        amount: faker.datatype.number({ max: 10 }),
+        optionals: faker.lorem.words(8),
+        status: OrderStatus.PREPARING,
       },
     ],
   });
