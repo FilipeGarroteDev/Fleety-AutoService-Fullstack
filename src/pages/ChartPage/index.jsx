@@ -9,6 +9,7 @@ export default function ChartPage() {
   const navigate = useNavigate();
   const [ordersList, setOrdersList] = useState([]);
   const [ticket, setTicket] = useState([]);
+  const [rerender, setRerender] = useState(false);
 
   useEffect(() => {
     const storedTicket = JSON.parse(localStorage.getItem('ticket'));
@@ -24,15 +25,18 @@ export default function ChartPage() {
       }
     }
 
-    if (ticket) fetchData();
-  }, []);
+    if (ticket) {
+      fetchData();
+    }
+  }, [rerender]);
 
   function calculateTotalValue() {
     const sumValues = ordersList.reduce((acc, curr) => {
       acc += curr.totalValue;
       return acc;
     }, 0);
-    return `R$ ${sumValues / 100}`;
+
+    return (sumValues / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
   async function checkout() {
@@ -74,6 +78,9 @@ export default function ChartPage() {
                 optionals={optionals}
                 amount={amount}
                 id={Product.id}
+                orderId={id}
+                rerender={rerender}
+                setRerender={setRerender}
                 chart
               />
             ))
@@ -206,9 +213,9 @@ const OrderContainer = styled.div`
   display: flex;
   margin-top: 12.5%;
   padding-top: 3%;
+  padding-left: 5%;
   padding-bottom: 5%;
   flex-direction: column;
-  align-items: center;
   gap: 15px;
   overflow-y: scroll;
 

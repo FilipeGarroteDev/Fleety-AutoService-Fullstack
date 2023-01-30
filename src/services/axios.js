@@ -56,6 +56,11 @@ async function listAllFinishedOrders(ticketId) {
   return axios.get(`${BASE_URL}/checkout/${ticketId}`, config);
 }
 
+async function deleteActiveOrder(orderId) {
+  const config = generateHeaders();
+  return axios.delete(`${BASE_URL}/chart/${orderId}`, config);
+}
+
 export {
   getCategories,
   getCategoryProducts,
@@ -67,4 +72,5 @@ export {
   listAllOrders,
   finishOrderAndUpdateStatus,
   listAllFinishedOrders,
+  deleteActiveOrder,
 };

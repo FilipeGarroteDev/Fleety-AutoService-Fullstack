@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 export default function CredCard() {
@@ -14,17 +13,16 @@ export default function CredCard() {
     issuer: '',
   });
 
-  function cardComplet() {
+  function cardComplete() {
     if (card.cvv === '' || card.expiry === '' || card.focused === '' || card.name === '' || card.number === '')
-      return toast('Preencha corretamente os campos do cartão');
+      return alert('Preencha corretamente os campos do cartão');
     if (isNaN(Number(card.number) && Number(card.expiry) && Number(card.cvv)) || card.issuer === 'UNKNOWN')
-      return toast('Preencha o cartão com dados válidos');
-    toast('maneiro, tá mockado, mas deu certo!');
+      return alert('Preencha o cartão com dados válidos');
   }
 
   return (
     <div id="PaymentForm">
-      <Allcards>
+      <CardContainer>
         <Cards
           cvc={card.cvv}
           expiry={card.expiry}
@@ -41,18 +39,18 @@ export default function CredCard() {
             val={card.name}
             pattern="[a-z A-Z-]+"
             required
-            placeholder="Name"
+            placeholder="Nome (como está no cartão)"
             onChange={(e) => setCard({ ...card, name: e.target.value })}
             onFocus={(e) => setCard({ ...card, focused: e.target.name })}
           />
-          <Text>E.g:49..., 51..., 36..., 37...</Text>
+          <Text>Exemplo: 49..., 51..., 36..., 37...</Text>
           <input
             type="tel"
             name="number"
             pattern="[\d| ]{16,22}"
             maxLength="19"
             val={card.number}
-            placeholder="Card Number"
+            placeholder="Número do Cartão (Apenas MasterCard e Visa)"
             required
             onChange={(e) => setCard({ ...card, number: e.target.value })}
             onFocus={(e) => setCard({ ...card, focused: e.target.name })}
@@ -61,11 +59,11 @@ export default function CredCard() {
             className={'ValidThru'}
             type="tel"
             name="expiry"
-            pattern="\d\d/\d\d"
+            pattern="\d\d\d\d"
             maxLength="4"
             required
             val={card.expiry}
-            placeholder="Valid Thru"
+            placeholder="Validade"
             onChange={(e) => setCard({ ...card, expiry: e.target.value })}
             onFocus={(e) => setCard({ ...card, focused: e.target.name })}
           />
@@ -75,18 +73,19 @@ export default function CredCard() {
             type="tel"
             name="cvc"
             val={card.cvc}
-            placeholder="cvv"
+            placeholder="CVV"
             onChange={(e) => setCard({ ...card, cvv: e.target.value })}
             onFocus={(e) => setCard({ ...card, focused: e.target.name })}
           />
+          <Button onClick={cardComplete}>FINALIZAR PAGAMENTO</Button>
         </form>
-      </Allcards>
-      <Button onClick={cardComplet}>FINALIZAR PAGAMENTO</Button>
+      </CardContainer>
+      
     </div>
   );
 }
 const Button = styled.button`
-  margin-top: 50px;
+  margin-top: 30px;
   height: 35px;
   border-radius: 5px;
   border: 1px solid #7a7474;
@@ -102,12 +101,12 @@ const Button = styled.button`
   }
 `;
 
-const Allcards = styled.div`
+const CardContainer = styled.div`
   display: flex;
   form {
     display: flex;
     flex-wrap: wrap;
-    padding: 0px 150px 0px 20px;
+    padding: 0px 70px 0px 20px;
     width: 70%;
     justify-content: space-between;
 
@@ -116,6 +115,7 @@ const Allcards = styled.div`
       border: 2px solid #8e8e8e;
       height: 30px;
       width: 100%;
+      margin-top: 5px;
       color: #8e8e8e;
       font-size: 15px;
       line-height: 23px;
