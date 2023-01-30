@@ -1,6 +1,9 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import banner1 from '../../../assets/images/banner1.png';
+import banner2 from '../../../assets/images/banner2.png';
+import banner3 from '../../../assets/images/banner3.png';
 
 export default function Home() {
   const carousel = useRef(null);
@@ -27,21 +30,9 @@ export default function Home() {
     <>
       <Greetings>Seja bem vindo, Filipe Garrote</Greetings>
       <Banner ref={carousel}>
-        <img
-          src="https://media.istockphoto.com/id/530415758/pt/foto/frango-assado-guarnecido-com-espargos-e-plantas-arom%C3%A1ticas.jpg?s=612x612&w=0&k=20&c=O0fwJuFYtlHDXoy9fgTpi93q7T3tIJk8fMCijiBmbBY="
-          alt="banner2"
-          onClick={() => navigate('/rate')}
-        />
-        <img
-          src="https://www.maquinbal.com.br/media/resized/xl-1400-797/blog/1/blog-5-melhores-entradas.jpg"
-          alt="banner3"
-          onClick={() => navigate('/foods')}
-        />
-        <img
-          src="https://www.lojabrazil.com.br/blog/wp-content/uploads/2017/09/blog1500.jpg"
-          alt="banner1"
-          onClick={() => navigate('/beverages')}
-        />
+        <img src={banner1} alt="banner1" onClick={() => navigate('/rate')} />
+        <img src={banner2} alt="banner2" onClick={() => navigate('/foods')} />
+        <img src={banner3} alt="banner3" onClick={() => navigate('/beverages')} />
       </Banner>
       <CarouselButtons>
         <CarouselButton onClick={() => handleCarouselButton('first')} selected={isClicked} option="first" />
@@ -100,7 +91,7 @@ const CarouselButton = styled.button`
   height: 15px;
   background-color: ${(props) => (props.selected === props.option ? '#ffffff' : '#5f5858')};
 
-  &:hover{
+  &:hover {
     cursor: pointer;
   }
 `;
