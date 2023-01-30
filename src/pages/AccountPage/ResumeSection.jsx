@@ -1,65 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import fleetyLogo from '../../assets/images/fleetyLogo.png';
 
-export default function ResumeSection() {
-  const mockOrders = [
-    {
-      id: 1,
-      amount: 2,
-      name: 'Salada de atum',
-      value: 2599,
-    },
-    {
-      id: 1,
-      amount: 2,
-      name: 'Salada de atum',
-      value: 2599,
-    },
-    {
-      id: 1,
-      amount: 2,
-      name: 'Salada de atum',
-      value: 2599,
-    },
-    {
-      id: 1,
-      amount: 2,
-      name: 'Salada de atum',
-      value: 2599,
-    },
-    {
-      id: 1,
-      amount: 2,
-      name: 'Salada de atum',
-      value: 2599,
-    },
-    {
-      id: 1,
-      amount: 2,
-      name: 'Salada de atum',
-      value: 2599,
-    },
-    {
-      id: 1,
-      amount: 2,
-      name: 'Salada de atum',
-      value: 2599,
-    },
-    {
-      id: 1,
-      amount: 2,
-      name: 'Salada de atum',
-      value: 2599,
-    },
-    {
-      id: 1,
-      amount: 2,
-      name: 'Salada de atum',
-      value: 2599,
-    },
-  ];
-  const mocketTotalValue = 18193;
+export default function ResumeSection({ finishedOrders, totalValue, setTotalValue }) {
   const [peopleQuantity, setPeopleQuantity] = useState(1);
   const [tipValue, setTipValue] = useState(1);
 
@@ -67,24 +10,27 @@ export default function ResumeSection() {
     setPeopleQuantity(e.target.value);
   }
 
+  useEffect(() => {
+    const sumValues = finishedOrders.reduce((acc, curr) => {
+      acc += curr.totalValue;
+      return acc;
+    }, 0);
+
+    setTotalValue(sumValues * tipValue);
+  }, [finishedOrders, tipValue]);
+
   return (
     <ResumeContainer>
       <h2>Resumo do pedido</h2>
       <ul>
-        {mockOrders.map(({ id, amount, name, value }) => (
-          <OrderItem key={id} amount={amount} name={name} value={value} />
+        {finishedOrders.map(({ id, amount, Product, totalValue }) => (
+          <OrderItem key={id} amount={amount} name={Product.name} value={totalValue} />
         ))}
       </ul>
       <Subtotal>
         <div>
-          <h3>Subtotal:</h3>
-          <span>R$ 181,93</span>
-        </div>
-        <div>
           <h3>Total + gorjeta:</h3>
-          <span>
-            {((mocketTotalValue * tipValue) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-          </span>
+          <span>{(totalValue / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
         </div>
       </Subtotal>
       <TipsContainer>
@@ -109,7 +55,9 @@ export default function ResumeSection() {
         <input type="range" min="1" max="15" value={peopleQuantity} onChange={selectPeopleQuantity} />
         <div>
           <h3>Total por pessoa {`(${peopleQuantity}p)`}:</h3>
-          <span>{'R$ ' + (201.12 / peopleQuantity).toFixed(2)}</span>
+          <span>
+            {(totalValue / 100 / peopleQuantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+          </span>
         </div>
       </SplitContainer>
       <img src={fleetyLogo} alt="logo" />
@@ -119,11 +67,12 @@ export default function ResumeSection() {
 
 function OrderItem({ amount, name, value }) {
   const formattedValue = (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const formattedName = name[0].toUpperCase() + name.toLowerCase().slice(1);
 
   return (
     <ItemStyle>
       <p>{`${amount}x`}</p>
-      <p>{name}</p>
+      <p>{formattedName}</p>
       <span>{formattedValue}</span>
     </ItemStyle>
   );
@@ -135,7 +84,6 @@ const ResumeContainer = styled.div`
   border-right: 1px solid #928f8f;
   padding: 15px 20px;
   flex-shrink: 0;
-
 
   > h2 {
     font-size: 20px;
@@ -165,7 +113,6 @@ const ResumeContainer = styled.div`
       border-radius: 50px;
       border: 3px solid #a39d9d;
     }
-
   }
 
   > img {
@@ -180,6 +127,10 @@ const ItemStyle = styled.li`
   width: 100%;
   color: #312e2e;
   font-size: 18px;
+
+  > p:nth-of-type(2) {
+    width: 60%;
+  }
 
   > span {
     color: #275832;
@@ -248,7 +199,7 @@ const TipButton = styled.button`
   font-size: 16px;
   font-weight: 700;
 
-  &:hover{
+  &:hover {
     cursor: pointer;
     filter: brightness(1.1);
   }

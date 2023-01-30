@@ -8,13 +8,15 @@ import Home from '../Dashboard/Home';
 export default function ChartPage() {
   const navigate = useNavigate();
   const [ordersList, setOrdersList] = useState([]);
+  const [ticket, setTicket] = useState([]);
 
   useEffect(() => {
-    const ticket = JSON.parse(localStorage.getItem('ticket'));
+    const storedTicket = JSON.parse(localStorage.getItem('ticket'));
+    setTicket(storedTicket);
 
     async function fetchData() {
       try {
-        const promise = await listAllOrders(ticket.id);
+        const promise = await listAllOrders(storedTicket.id);
         setOrdersList(promise.data);
       } catch (error) {
         alert('Algo deu errado em sua requisição. Tente novamente mais tarde');
@@ -34,8 +36,6 @@ export default function ChartPage() {
   }
 
   async function checkout() {
-    const ticket = JSON.parse(localStorage.getItem('ticket'));
-
     const body = {
       ticketId: ticket.id,
       status: 'PREPARING',

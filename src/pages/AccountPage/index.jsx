@@ -1,10 +1,34 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { listAllFinishedOrders } from '../../services/axios';
 import PaymentSection from './PaymentSection/PaymentSection';
 import ResumeSection from './ResumeSection';
 
 export default function AccountPage() {
   const navigate = useNavigate();
+  const [userData, setUserData] = useState('');
+  const [finishedOrders, setFinishedOrders] = useState([]);
+  const [totalValue, setTotalValue] = useState(0);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    setUserData(user);
+
+    async function fetchData() {
+      try {
+        const ticket = JSON.parse(localStorage.getItem('ticket'));
+        const promise = await listAllFinishedOrders(ticket.id);
+        setFinishedOrders(promise.data);
+      } catch (error) {
+        alert('Não foi possível carregar suas informações. Por gentileza, tente novamente.');
+        navigate('/home');
+      }
+    }
+
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -12,10 +36,10 @@ export default function AccountPage() {
       <CheckoutWindow>
         <header>
           <h1>MINHA CONTA</h1>
-          <span>Mesa 15</span>
+          <span>{userData.name}</span>
         </header>
         <section>
-          <ResumeSection />
+          <ResumeSection finishedOrders={finishedOrders} totalValue={totalValue} setTotalValue={setTotalValue}/>
           <PaymentSection />
         </section>
       </CheckoutWindow>
@@ -102,7 +126,7 @@ const CheckoutWindow = styled.main`
     }
   }
 
-  >section{
+  > section {
     display: flex;
   }
 `;
