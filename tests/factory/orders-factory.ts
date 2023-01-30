@@ -42,7 +42,7 @@ async function createManyDeliveredOrders(ticketId: number, productId: number) {
 }
 
 async function createOrderInAnotherTicket(ticketId: number, productId: number) {
-  await prisma.orders.create({
+  return await prisma.orders.create({
     data: {
       ticketId,
       productId,

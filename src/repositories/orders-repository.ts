@@ -26,6 +26,22 @@ async function getAllSelectedOrders(ticketId: number): Promise<OrderWithProductI
   });
 }
 
-const ordersRepository = { saveNewOrder, getAllSelectedOrders };
+async function getOrderById(orderId: number): Promise<Orders> {
+  return prisma.orders.findUnique({
+    where: {
+      id: orderId,
+    }
+  });
+}
+
+async function deleteOrderById(orderId: number): Promise<void> {
+  await prisma.orders.delete({
+    where: {
+      id: orderId,
+    }
+  });
+}
+
+const ordersRepository = { saveNewOrder, getAllSelectedOrders, getOrderById, deleteOrderById };
 
 export default ordersRepository;

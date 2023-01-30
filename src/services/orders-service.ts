@@ -1,4 +1,5 @@
 import notFoundError from '@/errors/notFoundError';
+import unauthorizedError from '@/errors/unauthorizedError';
 import unprocessableEntityError from '@/errors/unprocessableEntityError';
 import { OrderBodyEntity, OrderWithProductInfo } from '@/protocols';
 import ordersRepository from '@/repositories/orders-repository';
@@ -31,9 +32,26 @@ async function searchOrdersByTicketId(ticketId: string): Promise<OrderWithProduc
   return orders;
 }
 
+async function validateAndDeleteSelectedOrder(orderId: string, userId: number): Promise<void> {
+  const validOrderId = Number(orderId);
+
+  if (!validOrderId) throw unprocessableEntityError();
+
+  const order: Orders = await ordersRepository.getOrderById(validOrderId);
+
+  if (!order) throw notFoundError();
+
+  const ticket = await ticketsRepository.getTicketById(order.ticketId);
+
+  if (ticket.userId !== userId) throw unauthorizedError();
+
+  await ordersRepository.deleteOrderById(validOrderId);
+}
+
 const ordersService = {
   createAndValidateNewOrder,
   searchOrdersByTicketId,
+  validateAndDeleteSelectedOrder,
 };
 
 export default ordersService;

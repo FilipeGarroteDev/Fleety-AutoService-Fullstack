@@ -321,10 +321,104 @@ describe('GET /chart/:ticketId', () => {
                 id: product.id,
                 name: product.name,
                 image: product.image,
-              })
+              }),
             }),
           ]),
         );
+      });
+    });
+  });
+});
+
+describe('DELETE /chart/:orderId', () => {
+  it('should respond with status 401 when headers isnt given', async () => {
+    const response = await server.delete('/chart/1');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if token isnt given', async () => {
+    await authFactory.createUserByName('Mesa 13', '123456');
+    const response = await server.delete('/chart/1').set('Authorization', '');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if there is no active session with the given token', async () => {
+    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const token = generateValidToken(user.id);
+    const response = await server.delete('/chart/1').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  describe('when token is valid', () => {
+    it('should respond with status 422 if orderId has invalid format', async () => {
+      const data = await generateTokenAndSession(faker.name.firstName());
+
+      const response = await server.delete('/chart/unknown').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it('should respond with status 404 if there is no order with given id', async () => {
+      const data = await generateTokenAndSession(faker.name.firstName());
+      await ticketsFactory.createReservedTicket(data.userId);
+
+      const response = await server.delete('/chart/999999999').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
+
+    it('should respond with status 401 if the order doesnt belong to the user ', async () => {
+      const firstUserData = await generateTokenAndSession(faker.name.firstName());
+      const secondUserData = await generateTokenAndSession(faker.name.firstName());
+
+      await ticketsFactory.createReservedTicket(firstUserData.userId);
+      const secondTicketData = await ticketsFactory.createReservedTicket(secondUserData.userId);
+
+      const foodType = await categoriesFactory.createFoodType();
+      const category = await categoriesFactory.createSingleCategory(foodType.id);
+      const product = await productsFactory.createSingleProduct(category.id);
+      const order = await ordersFactory.createOrderInAnotherTicket(secondTicketData.id, product.id);
+
+      const response = await server.delete(`/chart/${order.id}`).set('Authorization', `Bearer ${firstUserData.token}`);
+
+      expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    describe('when order is valid', () => {
+      it('should respond with status 200', async () => {
+        const data = await generateTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(data.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        const order = await ordersFactory.createOrderInAnotherTicket(ticket.id, product.id);
+
+        const response = await server.delete(`/chart/${order.id}`).set('Authorization', `Bearer ${data.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+      });
+
+      it('should delete order from db', async () => {
+        const data = await generateTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(data.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        const order = await ordersFactory.createOrderInAnotherTicket(ticket.id, product.id);
+
+        const response = await server.delete(`/chart/${order.id}`).set('Authorization', `Bearer ${data.token}`);
+
+        const deletedOrder = await prisma.orders.findUnique({
+          where: {
+            id: order.id,
+          },
+        });
+
+        expect(response.status).toBe(httpStatus.OK);
+        expect(deletedOrder).toBeNull();
       });
     });
   });
