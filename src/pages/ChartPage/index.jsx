@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ProductCard from '../../components/Dashboard/FoodsAndDrinksPages/ProductCard';
-import { listAllOrders } from '../../services/axios';
+import { finishOrderAndUpdateStatus, listAllOrders } from '../../services/axios';
 import Home from '../Dashboard/Home';
 
 export default function ChartPage() {
@@ -31,6 +31,27 @@ export default function ChartPage() {
       return acc;
     }, 0);
     return `R$ ${sumValues / 100}`;
+  }
+
+  async function checkout() {
+    const ticket = JSON.parse(localStorage.getItem('ticket'));
+
+    const body = {
+      ticketId: ticket.id,
+      status: 'PREPARING',
+    };
+
+    try {
+      await finishOrderAndUpdateStatus(body);
+      alert(
+        'Seu pedido foi enviado para a cozinha! Você já consegue visualizá-lo no menu "Minha Conta". Fique à vontade para escolher mais itens! :)'
+      );
+      navigate('/foods');
+    } catch (error) {
+      alert(
+        'Ocorreu um erro com seu pedido. Certifique-se de que seu pedido não está vazio ou, caso o erro persista, chame o garçom.'
+      );
+    }
   }
 
   return (
@@ -63,7 +84,7 @@ export default function ChartPage() {
             <h2>VALOR TOTAL:</h2>
             <h3>{calculateTotalValue()}</h3>
           </div>
-          <button>ENVIAR PEDIDO</button>
+          <button onClick={checkout}>ENVIAR PEDIDO</button>
         </footer>
       </ChartWindow>
     </>

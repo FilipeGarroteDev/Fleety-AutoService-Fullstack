@@ -46,6 +46,11 @@ async function listAllOrders(ticketId) {
   return axios.get(`${BASE_URL}/chart/${ticketId}`, config);
 }
 
+async function finishOrderAndUpdateStatus(body) {
+  const config = generateHeaders();
+  return axios.patch(`${BASE_URL}/checkout`, body, config);
+}
+
 export {
   getCategories,
   getCategoryProducts,
@@ -55,4 +60,5 @@ export {
   postRatings,
   postOrder,
   listAllOrders,
+  finishOrderAndUpdateStatus
 };

@@ -55,7 +55,7 @@ export default function ProductPage() {
       productId: Number(productId),
       totalValue: (productData.value + extraValue) * productAmount,
       optionals,
-      status: 'ORDERED',
+      status: 'SELECTED',
       amount: productAmount,
     };
 
