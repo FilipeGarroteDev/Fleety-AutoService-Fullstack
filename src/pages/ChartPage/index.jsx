@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import EmptyPage from '../../components/Dashboard/FoodsAndDrinksPages/EmptyPage';
 import ProductCard from '../../components/Dashboard/FoodsAndDrinksPages/ProductCard';
 import { finishOrderAndUpdateStatus, listAllOrders } from '../../services/axios';
 import Home from '../Dashboard/Home';
@@ -67,7 +68,9 @@ export default function ChartPage() {
         <header>MEU PEDIDO</header>
         <OrderContainer>
           {ordersList.length === 0 ? (
-            <h1>Não tem nada</h1>
+            <EmptyPage>
+              <h1>Ainda não há itens selecionados. Navegue pelo menu lateral para escolher os produtos desejados</h1>
+            </EmptyPage>
           ) : (
             ordersList.map(({ totalValue, id, optionals, amount, Product }) => (
               <ProductCard

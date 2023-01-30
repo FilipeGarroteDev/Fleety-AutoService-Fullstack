@@ -40,7 +40,7 @@ export default function AccountPage() {
         </header>
         <section>
           <ResumeSection finishedOrders={finishedOrders} totalValue={totalValue} setTotalValue={setTotalValue}/>
-          <PaymentSection />
+          <PaymentSection totalValue={totalValue}/>
         </section>
       </CheckoutWindow>
     </>
@@ -53,7 +53,7 @@ const OpacityStyle = styled.main`
       opacity: 0;
     }
     100% {
-      opacity: 0.8;
+      opacity: 0.5;
     }
   }
 
@@ -64,7 +64,7 @@ const OpacityStyle = styled.main`
   left: 0;
   animation: opacityWindow 0.7s ease-in-out;
   background-color: #000000;
-  opacity: 0.8;
+  opacity: 0.5;
   z-index: 2;
   display: flex;
   justify-content: center;

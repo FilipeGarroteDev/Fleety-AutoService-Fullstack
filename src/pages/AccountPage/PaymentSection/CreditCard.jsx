@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import styled from 'styled-components';
+import CheckoutButton from '../../../components/AccountPage/CheckoutButton';
 
-export default function CredCard() {
+export default function CreditCard({ totalValue, setPaymentMethod }) {
   const [card, setCard] = useState({
     cvv: '',
     expiry: '',
@@ -11,13 +12,17 @@ export default function CredCard() {
     name: '',
     number: '',
     issuer: '',
+    totalValue,
   });
 
-  function cardComplete() {
+  function sendPayment(e) {
+    e.preventDefault();
     if (card.cvv === '' || card.expiry === '' || card.focused === '' || card.name === '' || card.number === '')
       return alert('Preencha corretamente os campos do cartão');
     if (isNaN(Number(card.number) && Number(card.expiry) && Number(card.cvv)) || card.issuer === 'UNKNOWN')
-      return alert('Preencha o cartão com dados válidos');
+      return alert('São aceitas somente as bandeiras Visa (início 4) e MasterCard (início 54)');
+
+    setPaymentMethod('paymentSuccessful');
   }
 
   return (
@@ -32,7 +37,7 @@ export default function CredCard() {
           acceptedCards={['visa', 'mastercard']}
           callback={(e) => setCard({ ...card, issuer: e.issuer.toUpperCase() })}
         />
-        <form>
+        <form onSubmit={sendPayment}>
           <input
             type="text"
             name="name"
@@ -77,29 +82,12 @@ export default function CredCard() {
             onChange={(e) => setCard({ ...card, cvv: e.target.value })}
             onFocus={(e) => setCard({ ...card, focused: e.target.name })}
           />
-          <Button onClick={cardComplete}>FINALIZAR PAGAMENTO</Button>
+          <CheckoutButton>FINALIZAR PAGAMENTO</CheckoutButton>
         </form>
       </CardContainer>
-      
     </div>
   );
 }
-const Button = styled.button`
-  margin-top: 30px;
-  height: 35px;
-  border-radius: 5px;
-  border: 1px solid #7a7474;
-  background-color: #c4bdbd;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-  animation: fadeIn 1s;
-  color: #7a7474;
-  font-weight: 700;
-  
-  cursor: pointer;
-  :active {
-    transform: translate(-5px, 5px);
-  }
-`;
 
 const CardContainer = styled.div`
   display: flex;

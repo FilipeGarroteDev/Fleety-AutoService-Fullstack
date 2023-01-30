@@ -1,40 +1,35 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import PaymentForm from './CreditCardContainer';
-import fleetyLogo from '../../../assets/images/fleetyLogo.png';
+import CreditCard from './CreditCard';
+import PaymentSuccessful from './PaymentSuccessful';
+import Splitted from './Splitted';
 
-export default function PaymentSection() {
+export default function PaymentSection({ totalValue }) {
   const [paymentMethod, setPaymentMethod] = useState('');
   const paymentOptions = {
-    creditCard: <PaymentForm />,
+    paymentSuccessful: <PaymentSuccessful />,
+    creditCard: <CreditCard totalValue={totalValue} setPaymentMethod={setPaymentMethod} />,
     splitted: <Splitted />,
   };
+
+  function renderSection(section) {
+    if (paymentMethod === 'paymentSuccessful') return;
+    setPaymentMethod(section);
+  }
 
   return (
     <Wrapper>
       <h2>Pagamento</h2>
       <PaymentOptions>
-        <Button onClick={() => setPaymentMethod('creditCard')} paymentMethod={paymentMethod} type="creditCard">
+        <Button onClick={() => renderSection('creditCard')} paymentMethod={paymentMethod} type="creditCard">
           Pagar com o cartão de crédito
         </Button>
-        <Button onClick={() => setPaymentMethod('splitted')} paymentMethod={paymentMethod} type="splitted">
+        <Button onClick={() => renderSection('splitted')} paymentMethod={paymentMethod} type="splitted">
           Prefiro dividir a conta
         </Button>
       </PaymentOptions>
       {paymentOptions[paymentMethod]}
     </Wrapper>
-  );
-}
-
-function Splitted() {
-  return (
-    <SplittedContainer>
-      <span>
-        Para ter uma experiência ainda melhor, clique no botão "Chamar o Garçom", localizado no menu superior, e
-        finalizem o pagamento por pessoa.
-      </span>
-      <img src={fleetyLogo} alt="logo" />
-    </SplittedContainer>
   );
 }
 
@@ -72,25 +67,8 @@ const Button = styled.button`
   font-size: 22px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 
-  &:hover{
+  &:hover {
     cursor: pointer;
     filter: brightness(1.07);
-  }
-`;
-
-const SplittedContainer = styled.div`
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  position: relative;
-
-  > span {
-    width: 60%;
-    color: #7a7474;
-    font-size: 30px;
-    text-align: center;
-    z-index: 3;
   }
 `;
