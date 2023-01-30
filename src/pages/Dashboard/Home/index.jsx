@@ -40,7 +40,7 @@ export default function Home() {
         <img
           src="https://www.lojabrazil.com.br/blog/wp-content/uploads/2017/09/blog1500.jpg"
           alt="banner1"
-          onClick={() => navigate('/drinks')}
+          onClick={() => navigate('/beverages')}
         />
       </Banner>
       <CarouselButtons>
