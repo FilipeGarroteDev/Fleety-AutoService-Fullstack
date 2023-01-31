@@ -1,9 +1,9 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 import { OrderStatus } from '@prisma/client';
 
 async function sumOrdersValues(): Promise<number> {
-  const orders = await prisma.orders.findMany({
+  const orders = await prismaPG.orders.findMany({
     where: {
       status: OrderStatus.DELIVERED,
     },
@@ -18,7 +18,7 @@ async function sumOrdersValues(): Promise<number> {
 }
 
 async function createDeliveredOrders(ticketId: number, productId: number) {
-  await prisma.orders.createMany({
+  await prismaPG.orders.createMany({
     data: [
       {
         ticketId,
@@ -41,7 +41,7 @@ async function createDeliveredOrders(ticketId: number, productId: number) {
 }
 
 async function createDeliveredAndSelectedOrders(ticketId: number, productId: number) {
-  await prisma.orders.createMany({
+  await prismaPG.orders.createMany({
     data: [
       {
         ticketId,
@@ -66,7 +66,7 @@ async function createDeliveredAndSelectedOrders(ticketId: number, productId: num
 const checkoutFactory = {
   createDeliveredOrders,
   sumOrdersValues,
-  createDeliveredAndSelectedOrders
+  createDeliveredAndSelectedOrders,
 };
 
 export default checkoutFactory;

@@ -1,8 +1,8 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import { Tickets, TicketStatus } from '@prisma/client';
 
 async function getActiveTicketByUserId(userId: number): Promise<Tickets> {
-  return await prisma.tickets.findFirst({
+  return await prismaPG.tickets.findFirst({
     where: {
       userId,
       status: TicketStatus.RESERVED,
@@ -11,7 +11,7 @@ async function getActiveTicketByUserId(userId: number): Promise<Tickets> {
 }
 
 async function getTicketById(id: number): Promise<Tickets> {
-  return await prisma.tickets.findFirst({
+  return await prismaPG.tickets.findFirst({
     where: {
       id,
       status: TicketStatus.RESERVED,
@@ -20,7 +20,7 @@ async function getTicketById(id: number): Promise<Tickets> {
 }
 
 async function createNewTicket(userId: number): Promise<Tickets> {
-  return prisma.tickets.create({
+  return prismaPG.tickets.create({
     data: {
       userId,
       status: TicketStatus.RESERVED,

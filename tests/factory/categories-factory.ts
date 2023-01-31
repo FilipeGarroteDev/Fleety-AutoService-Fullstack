@@ -1,8 +1,8 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 
 async function createFoodType() {
-  const foodType = await prisma.productTypes.create({
+  const foodType = await prismaPG.productTypes.create({
     data: {
       name: 'foods',
     },
@@ -12,7 +12,7 @@ async function createFoodType() {
 }
 
 async function createCategories(typeId: number) {
-  await prisma.productCategories.createMany({
+  await prismaPG.productCategories.createMany({
     data: [
       {
         name: faker.name.firstName(),
@@ -39,12 +39,12 @@ async function createCategories(typeId: number) {
 }
 
 async function getCategoriesIds() {
-  const categories = await prisma.productCategories.findMany({});
+  const categories = await prismaPG.productCategories.findMany({});
   return categories;
 }
 
 async function createSingleCategory(typeId: number) {
-  return await prisma.productCategories.create({
+  return await prismaPG.productCategories.create({
     data: {
       name: faker.name.firstName(),
       image: faker.internet.url(),

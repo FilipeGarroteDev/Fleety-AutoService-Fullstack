@@ -1,5 +1,5 @@
 import app, { init } from '@/app';
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
@@ -130,7 +130,7 @@ describe('POST /ratings', () => {
 
         const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
-        const storedRating = await prisma.ratings.findMany({});
+        const storedRating = await prismaPG.ratings.findMany({});
 
         expect(response.body).toEqual(
           expect.objectContaining({

@@ -1,5 +1,5 @@
 import app, { init } from '@/app';
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 import { OrderStatus, TicketStatus } from '@prisma/client';
 import httpStatus from 'http-status';
@@ -147,7 +147,7 @@ describe('PATCH /checkout', () => {
 
         const response = await server.patch('/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
 
-        const storedPreparingOrders = await prisma.orders.findMany({
+        const storedPreparingOrders = await prismaPG.orders.findMany({
           where: {
             status: OrderStatus.PREPARING,
           },
@@ -620,7 +620,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           .set('Authorization', `Bearer ${data.token}`)
           .send(body);
 
-        const paymentData = await prisma.payments.findFirst({
+        const paymentData = await prismaPG.payments.findFirst({
           where: {
             ticketId: ticket.id,
           },
@@ -654,7 +654,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           .set('Authorization', `Bearer ${data.token}`)
           .send(body);
 
-        const ticketPaid = await prisma.tickets.findFirst({
+        const ticketPaid = await prismaPG.tickets.findFirst({
           where: {
             id: ticket.id,
           },

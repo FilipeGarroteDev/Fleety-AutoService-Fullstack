@@ -1,9 +1,9 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 import { Optionals } from '@prisma/client';
 
 async function createProductsOnDiffCategory(firstCategory: number, secondCategory: number) {
-  await prisma.products.createMany({
+  await prismaPG.products.createMany({
     data: [
       {
         name: faker.name.firstName(),
@@ -52,7 +52,7 @@ async function createProductsOnDiffCategory(firstCategory: number, secondCategor
 }
 
 async function createSingleProduct(categoryId: number) {
-  return await prisma.products.create({
+  return await prismaPG.products.create({
     data: {
       name: faker.name.firstName(),
       description: faker.lorem.sentences(3),
@@ -64,7 +64,7 @@ async function createSingleProduct(categoryId: number) {
 }
 
 async function createOptionals() {
-  return await prisma.optionals.createMany({
+  return await prismaPG.optionals.createMany({
     data: [
       { name: faker.name.firstName(), value: faker.datatype.number() },
       { name: faker.name.firstName(), value: faker.datatype.number() },
@@ -77,7 +77,7 @@ async function createOptionals() {
 }
 
 async function findOptionals() {
-  return await prisma.optionals.findMany({});
+  return await prismaPG.optionals.findMany({});
 }
 
 async function populeOptionalsCategoryTable(optionals: Optionals[], firstCat: number, secondCat: number) {
@@ -91,7 +91,7 @@ async function populeOptionalsCategoryTable(optionals: Optionals[], firstCat: nu
     optionalsCategoryArray.push(optionalsCategoryObject);
   }
 
-  return await prisma.optionals_Category.createMany({
+  return await prismaPG.optionals_Category.createMany({
     data: optionalsCategoryArray,
   });
 }

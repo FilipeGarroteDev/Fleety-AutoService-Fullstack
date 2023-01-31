@@ -1,4 +1,4 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import * as jwt from 'jsonwebtoken';
@@ -21,7 +21,7 @@ export async function authTokenMiddleware(req: Request, res: Response, next: Nex
   try {
     const { userId } = jwt.verify(token, process.env.JWT_SECRET) as jwt.JwtPayload;
 
-    const session = await prisma.sessions.findFirst({
+    const session = await prismaPG.sessions.findFirst({
       where: {
         token,
       },

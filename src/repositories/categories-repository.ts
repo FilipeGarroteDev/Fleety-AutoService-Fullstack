@@ -1,8 +1,8 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import { ProductCategories, ProductTypes } from '@prisma/client';
 
 async function getProductTypeByName(productTypeName: string): Promise<ProductTypes> {
-  return await prisma.productTypes.findFirst({
+  return await prismaPG.productTypes.findFirst({
     where: {
       name: productTypeName,
     },
@@ -10,7 +10,7 @@ async function getProductTypeByName(productTypeName: string): Promise<ProductTyp
 }
 
 async function getCategoriesByTypeId(typeId: number): Promise<ProductCategories[]> {
-  return await prisma.productCategories.findMany({
+  return await prismaPG.productCategories.findMany({
     where: {
       typeId,
     },

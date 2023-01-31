@@ -1,5 +1,5 @@
 import app, { init } from '@/app';
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
@@ -169,7 +169,7 @@ describe('POST /chart/add', () => {
 
         const response = await server.post('/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
 
-        const order = await prisma.orders.findFirst({});
+        const order = await prismaPG.orders.findFirst({});
 
         expect(order).toEqual(
           expect.objectContaining({
@@ -411,7 +411,7 @@ describe('DELETE /chart/:orderId', () => {
 
         const response = await server.delete(`/chart/${order.id}`).set('Authorization', `Bearer ${data.token}`);
 
-        const deletedOrder = await prisma.orders.findUnique({
+        const deletedOrder = await prismaPG.orders.findUnique({
           where: {
             id: order.id,
           },

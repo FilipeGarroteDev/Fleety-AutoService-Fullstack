@@ -1,9 +1,9 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import { CheckoutBodyEntity, OrderWithProductInfo, PaymentBody } from '@/protocols';
 import { Orders, OrderStatus, Payments, Tickets, TicketStatus } from '@prisma/client';
 
 async function updateManyOrders({ ticketId, status }: CheckoutBodyEntity): Promise<void> {
-  await prisma.orders.updateMany({
+  await prismaPG.orders.updateMany({
     where: {
       ticketId,
       status: OrderStatus.SELECTED,
@@ -15,7 +15,7 @@ async function updateManyOrders({ ticketId, status }: CheckoutBodyEntity): Promi
 }
 
 async function getAllFinishedOrders(ticketId: number): Promise<OrderWithProductInfo[]> {
-  return await prisma.orders.findMany({
+  return await prismaPG.orders.findMany({
     where: {
       ticketId,
       OR: [{ status: OrderStatus.DELIVERED }, { status: OrderStatus.PREPARING }],
@@ -33,7 +33,7 @@ async function getAllFinishedOrders(ticketId: number): Promise<OrderWithProductI
 }
 
 async function postPaymentAndUpdateTicketStatus(payment: PaymentBody, ticketId: number): Promise<[Tickets, Payments]> {
-  const updateTicketStatus = prisma.tickets.update({
+  const updateTicketStatus = prismaPG.tickets.update({
     where: {
       id: ticketId,
     },
@@ -42,7 +42,7 @@ async function postPaymentAndUpdateTicketStatus(payment: PaymentBody, ticketId: 
     },
   });
 
-  const postPaymentData = prisma.payments.create({
+  const postPaymentData = prismaPG.payments.create({
     data: {
       ...payment,
       totalValue: Math.round(payment.totalValue),
@@ -50,11 +50,11 @@ async function postPaymentAndUpdateTicketStatus(payment: PaymentBody, ticketId: 
     },
   });
 
-  return await prisma.$transaction([updateTicketStatus, postPaymentData]);
+  return await prismaPG.$transaction([updateTicketStatus, postPaymentData]);
 }
 
 async function getAllDeliveredOrders(ticketId: number): Promise<Orders[]> {
-  return await prisma.orders.findMany({
+  return await prismaPG.orders.findMany({
     where: {
       ticketId,
       status: OrderStatus.DELIVERED,
@@ -63,7 +63,7 @@ async function getAllDeliveredOrders(ticketId: number): Promise<Orders[]> {
 }
 
 async function getAllActiveOrders(ticketId: number): Promise<Orders[]> {
-  return await prisma.orders.findMany({
+  return await prismaPG.orders.findMany({
     where: {
       ticketId,
       OR: [{ status: OrderStatus.SELECTED }, { status: OrderStatus.PREPARING }],

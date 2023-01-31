@@ -1,5 +1,5 @@
 import app, { init } from '@/app';
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import { SignUpBody } from '@/protocols';
 import faker from '@faker-js/faker';
 import { TicketStatus } from '@prisma/client';
@@ -79,7 +79,7 @@ describe('POST /signup', () => {
 
       const response = await server.post('/auth/signup').send(validBody);
 
-      const createdUser = await prisma.users.findUnique({
+      const createdUser = await prismaPG.users.findUnique({
         where: {
           name: validBody.name,
         },
@@ -176,7 +176,7 @@ describe('POST /signin', () => {
         const ticket = await ticketsFactory.createReservedTicket(user.id);
         const response = await server.post('/auth/signin').send(validBody);
 
-        const createdTickets = await prisma.tickets.findMany({});
+        const createdTickets = await prismaPG.tickets.findMany({});
 
         expect(response.body.ticket).toEqual(
           expect.objectContaining({
@@ -194,7 +194,7 @@ describe('POST /signin', () => {
         await ticketsFactory.createReservedTicket(user.id);
         const response = await server.post('/auth/signin').send(validBody);
 
-        const ticket = await prisma.tickets.findFirst({
+        const ticket = await prismaPG.tickets.findFirst({
           where: {
             userId: user.id,
             status: TicketStatus.RESERVED,
@@ -232,7 +232,7 @@ describe('POST /signin', () => {
         const createdUser = await authFactory.createUserByName(validBody.name, validBody.password);
         const response = await server.post('/auth/signin').send(validBody);
 
-        const session = await prisma.sessions.findFirst({
+        const session = await prismaPG.sessions.findFirst({
           where: {
             userId: createdUser.id,
           },

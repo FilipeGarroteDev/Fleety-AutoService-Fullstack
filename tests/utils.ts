@@ -1,21 +1,21 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 import * as jwt from 'jsonwebtoken';
 import authFactory from './factory/auth-factory';
 import { createSession } from './factory/sessions-factory';
 
 export async function cleanDb() {
-  await prisma.optionals_Category.deleteMany({});
-  await prisma.payments.deleteMany({});
-  await prisma.orders.deleteMany({});
-  await prisma.products.deleteMany({});
-  await prisma.productCategories.deleteMany({});
-  await prisma.productTypes.deleteMany({});
-  await prisma.optionals.deleteMany({});
-  await prisma.sessions.deleteMany({});
-  await prisma.ratings.deleteMany({});
-  await prisma.tickets.deleteMany({});
-  await prisma.users.deleteMany({});
+  await prismaPG.optionals_Category.deleteMany({});
+  await prismaPG.payments.deleteMany({});
+  await prismaPG.orders.deleteMany({});
+  await prismaPG.products.deleteMany({});
+  await prismaPG.productCategories.deleteMany({});
+  await prismaPG.productTypes.deleteMany({});
+  await prismaPG.optionals.deleteMany({});
+  await prismaPG.sessions.deleteMany({});
+  await prismaPG.ratings.deleteMany({});
+  await prismaPG.tickets.deleteMany({});
+  await prismaPG.users.deleteMany({});
 }
 
 export function generateValidToken(userId: number) {

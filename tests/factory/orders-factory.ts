@@ -1,9 +1,9 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 import { OrderStatus } from '@prisma/client';
 
 async function createDeliveredAndPreparingOrders(ticketId: number, productId: number) {
-  await prisma.orders.createMany({
+  await prismaPG.orders.createMany({
     data: [
       {
         ticketId,
@@ -42,7 +42,7 @@ async function createDeliveredAndPreparingOrders(ticketId: number, productId: nu
 }
 
 async function createOrderInAnotherTicket(ticketId: number, productId: number) {
-  return await prisma.orders.create({
+  return await prismaPG.orders.create({
     data: {
       ticketId,
       productId,
@@ -55,7 +55,7 @@ async function createOrderInAnotherTicket(ticketId: number, productId: number) {
 }
 
 async function createManySelectedOrders(ticketId: number, productId: number) {
-  await prisma.orders.createMany({
+  await prismaPG.orders.createMany({
     data: [
       {
         ticketId,
@@ -86,7 +86,7 @@ async function createManySelectedOrders(ticketId: number, productId: number) {
 }
 
 async function createSelectedAndPreparingOrders(ticketId: number, productId: number) {
-  await prisma.orders.createMany({
+  await prismaPG.orders.createMany({
     data: [
       {
         ticketId,

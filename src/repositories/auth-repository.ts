@@ -1,8 +1,8 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import { SignUpBody } from '@/protocols';
 
 async function searchUser(name: string) {
-  return prisma.users.findFirst({
+  return prismaPG.users.findFirst({
     where: {
       name,
     },
@@ -10,13 +10,13 @@ async function searchUser(name: string) {
 }
 
 async function insertNewUser(body: SignUpBody) {
-  return prisma.users.create({
+  return prismaPG.users.create({
     data: body,
   });
 }
 
 async function createNewSession(userId: number, token: string) {
-  return prisma.sessions.create({
+  return prismaPG.sessions.create({
     data: {
       userId,
       token,
@@ -25,7 +25,7 @@ async function createNewSession(userId: number, token: string) {
 }
 
 async function getUserById(userId: number) {
-  return prisma.users.findFirst({
+  return prismaPG.users.findFirst({
     where: {
       id: userId,
     },

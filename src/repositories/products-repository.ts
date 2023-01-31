@@ -1,7 +1,7 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 
 async function getProductsByCategoryId(categoryId: number) {
-  return await prisma.products.findMany({
+  return await prismaPG.products.findMany({
     where: {
       categoryId,
     },
@@ -16,7 +16,7 @@ async function getProductsByCategoryId(categoryId: number) {
 }
 
 async function getProductById(productId: number) {
-  return await prisma.products.findFirst({
+  return await prismaPG.products.findFirst({
     where: {
       id: productId,
     },

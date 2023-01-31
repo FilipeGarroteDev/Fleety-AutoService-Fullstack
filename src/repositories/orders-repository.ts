@@ -1,15 +1,15 @@
-import { prisma } from '@/config';
+import { prismaPG } from '@/config';
 import { OrderBodyEntity, OrderWithProductInfo } from '@/protocols';
 import { Orders, OrderStatus } from '@prisma/client';
 
 async function saveNewOrder(body: OrderBodyEntity): Promise<Orders> {
-  return prisma.orders.create({
+  return prismaPG.orders.create({
     data: body,
   });
 }
 
 async function getAllSelectedOrders(ticketId: number): Promise<OrderWithProductInfo[]> {
-  return prisma.orders.findMany({
+  return prismaPG.orders.findMany({
     where: {
       ticketId,
       status: OrderStatus.SELECTED,
@@ -27,7 +27,7 @@ async function getAllSelectedOrders(ticketId: number): Promise<OrderWithProductI
 }
 
 async function getOrderById(orderId: number): Promise<Orders> {
-  return prisma.orders.findUnique({
+  return prismaPG.orders.findUnique({
     where: {
       id: orderId,
     }
@@ -35,7 +35,7 @@ async function getOrderById(orderId: number): Promise<Orders> {
 }
 
 async function deleteOrderById(orderId: number): Promise<void> {
-  await prisma.orders.delete({
+  await prismaPG.orders.delete({
     where: {
       id: orderId,
     }
