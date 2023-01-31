@@ -2,7 +2,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Reset from './common/Reset';
 import AdminRouteProtector from './common/RouteProtector/AdminRouteProtector';
 import ClientRouteProtector from './common/RouteProtector/ClientRouteProtector';
-import AdminDashboard from './pages/AdminSide/AdminDashboard';
+import AdminDashboard from './pages/AdminSide/AdminDashBoard';
+import PendingWaiter from './pages/AdminSide/AdminDashBoard/ServiceSection/PendingWaiter';
 import AccountPage from './pages/ClientSide/AccountPage';
 import ChartPage from './pages/ClientSide/ChartPage';
 import ClientDashboard from './pages/ClientSide/ClientDashboard';
@@ -28,7 +29,9 @@ export default function App() {
                 <AdminDashboard />
               </AdminRouteProtector>
             }
-          ></Route>
+          >
+            <Route path="waiter-queue" element={<PendingWaiter />} />
+          </Route>
 
           <Route
             path="/"

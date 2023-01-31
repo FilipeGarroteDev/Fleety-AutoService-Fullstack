@@ -2,12 +2,14 @@ import styled from 'styled-components';
 import { BsFillStopwatchFill, BsStarFill, BsPeopleFill, BsChevronRight } from 'react-icons/bs';
 import { IoFastFoodSharp } from 'react-icons/io5';
 import { RiMoneyDollarCircleFill } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminNavBar() {
+  const navigate = useNavigate();
   return (
     <Container>
       <h1>Navegação</h1>
-      <ButtonDiv>
+      <ButtonDiv onClick={() => navigate('/admin/waiter-queue')}>
         <BsFillStopwatchFill />
         <span>Aguardando atendimento</span>
         <BsChevronRight />
