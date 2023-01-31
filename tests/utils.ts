@@ -1,4 +1,4 @@
-import { prismaPG } from '@/config';
+import { mongoDB, prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 import * as jwt from 'jsonwebtoken';
 import authFactory from './factory/auth-factory';
@@ -16,6 +16,8 @@ export async function cleanDb() {
   await prismaPG.ratings.deleteMany({});
   await prismaPG.tickets.deleteMany({});
   await prismaPG.users.deleteMany({});
+  
+  await mongoDB.collection('calls').deleteMany({});
 }
 
 export function generateValidToken(userId: number) {

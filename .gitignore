@@ -5,3 +5,11 @@ node_modules
 yarn.lock
 .vscode
 coverage
+
+src/controllers/waiter-router.ts
+src/controllers/waiter-controller.ts
+src/controllers/waiter-service.ts
+src/controllers/waiter-repository.ts
+
+tests/factory/waiter-factory.ts
+tests/integration/waiter.test.ts
