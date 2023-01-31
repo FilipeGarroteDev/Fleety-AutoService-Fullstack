@@ -4,22 +4,57 @@ import { IoHandRight, IoWallet } from 'react-icons/io5';
 import { BsFillCartCheckFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { deleteWaiterCall, getThisUserCall, postWaiterCall } from '../../../services/axios';
 
 export default function TopMenu() {
   const [userData, setUserData] = useState('');
+  const [isWaiterCalled, setIsWaiterCalled] = useState(false);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     setUserData(user);
+
+    async function fetchData() {
+      try {
+        const myCall = await getThisUserCall();
+        console.log(myCall.data);
+        if (myCall.data) {
+          setIsWaiterCalled(true);
+        } else {
+          setIsWaiterCalled(false);
+        }
+      } catch (error) {
+        alert('Algo deu errado com sua requisição. Tente novamente.');
+      }
+    }
+    fetchData();
   }, []);
+
+  async function callWaiter() {
+    if (isWaiterCalled) {
+      try {
+        await deleteWaiterCall();
+        setIsWaiterCalled(false);
+      } catch (error) {
+        alert('Algo deu errado com sua requisição. Tente novamente.');
+      }
+    } else {
+      try {
+        await postWaiterCall();
+        setIsWaiterCalled(true);
+      } catch (error) {
+        alert('Algo deu errado com sua requisição. Tente novamente.');
+      }
+    }
+  }
 
   return (
     <Container>
       <img src={fleetyLogo} alt="logo" />
       <div>{userData.name}</div>
 
-      <ButtonsContainer>
-        <button>
+      <ButtonsContainer isWaiterCalled={isWaiterCalled}>
+        <button onClick={callWaiter}>
           <IoHandRight />
           <span>Chamar garçom</span>
         </button>
@@ -110,6 +145,18 @@ const ButtonsContainer = styled.nav`
     &:hover {
       cursor: pointer;
       background-color: #121111;
+    }
+  }
+
+  > button:nth-of-type(1) {
+    background-color: ${(props) => (props.isWaiterCalled ? '#dea12a' : '#292727')};
+
+    > svg {
+      color: ${(props) => (props.isWaiterCalled ? '#292727' : '#dea12a')};
+    }
+
+    > span {
+      color: ${(props) => (props.isWaiterCalled ? '#292727' : '#dea12a')};
     }
   }
 `;

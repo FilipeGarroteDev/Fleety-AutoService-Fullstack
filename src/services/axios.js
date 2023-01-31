@@ -66,6 +66,21 @@ async function postPayment(body, ticketId) {
   return axios.post(`${BASE_URL}/checkout/payment/${ticketId}`, body, config);
 }
 
+async function postWaiterCall() {
+  const config = generateHeaders();
+  return axios.post(`${BASE_URL}/waiter`, {}, config);
+}
+
+async function deleteWaiterCall() {
+  const config = generateHeaders();
+  return axios.delete(`${BASE_URL}/waiter`, config);
+}
+
+async function getThisUserCall() {
+  const config = generateHeaders();
+  return axios.get(`${BASE_URL}/waiter/mycall`, config);
+}
+
 export {
   getCategories,
   getCategoryProducts,
@@ -79,4 +94,7 @@ export {
   listAllFinishedOrders,
   deleteActiveOrder,
   postPayment,
+  postWaiterCall,
+  deleteWaiterCall,
+  getThisUserCall,
 };

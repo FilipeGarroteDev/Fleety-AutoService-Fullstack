@@ -21,7 +21,6 @@ export default function CreditCard({ totalValue, setPaymentMethod }) {
     const storageTicket = localStorage.getItem('ticket');
     const parsedTicket = JSON.parse(storageTicket);
     setTicket(parsedTicket);
-    console.log(parsedTicket);
   }, []);
 
   async function sendPayment(e) {
