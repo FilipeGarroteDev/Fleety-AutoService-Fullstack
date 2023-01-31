@@ -1,11 +1,11 @@
-import NavigationBar from './NavigationBar';
-import TopMenu from './TopMenu';
+import AdminNavBar from './AdminNavBar';
+import AdminTopMenu from './AdminTopMenu';
 
-export default function Menus() {
+export default function AdminPageMenus() {
   return (
     <>
-      <TopMenu />
-      <NavigationBar />
+      <AdminTopMenu />
+      <AdminNavBar />
     </>
   );
 }

@@ -20,6 +20,8 @@ export default createGlobalStyle`
   }
 
   body{
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 300;
     box-sizing: border-box;
     width: 100vw;
     height: 100vh;
