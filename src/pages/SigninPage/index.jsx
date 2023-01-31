@@ -1,7 +1,7 @@
-import AuthLayout from '../../components/Auth/AuthLayout';
-import Button from '../../components/Auth/Button';
-import Form from '../../components/Auth/Form';
-import Wrapper from '../../components/Auth/Wrapper';
+import AuthLayout from '../../components/ClientSideComponents/Auth/AuthLayout';
+import Button from '../../components/ClientSideComponents/Auth/Button';
+import Form from '../../components/ClientSideComponents/Auth/Form';
+import Wrapper from '../../components/ClientSideComponents/Auth/Wrapper';
 import fleetyLogo from '../../assets/images/fleetyLogo.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +25,11 @@ export default function SigninPage() {
       localStorage.setItem('token', promise.data.token);
       localStorage.setItem('user', JSON.stringify(promise.data.user));
       localStorage.setItem('ticket', JSON.stringify(promise.data.ticket));
-      navigate('/');
+      if (promise.data.user.role === 'CLIENT') {
+        navigate('/');
+      } else if (promise.data.user.role === 'ADMIN') {
+        navigate('/admin');
+      }
     } catch (error) {
       alert('Não foi possível realizar o login. Verifique os campos preenchidos!');
     }

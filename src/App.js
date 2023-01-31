@@ -1,32 +1,41 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import GlobalStyle from './common/GlobalStyle';
 import Reset from './common/Reset';
-import RouteProtector from './common/RouteProtector';
-import AccountPage from './pages/AccountPage';
-import ChartPage from './pages/ChartPage';
-import Dashboard from './pages/Dashboard';
-import BeveragesPage from './pages/Dashboard/BeveragesPage';
-import FoodsPage from './pages/Dashboard/FoodsPage';
-import Home from './pages/Dashboard/Home';
-import ProductPage from './pages/Dashboard/ProductPage';
-import RatingsPage from './pages/RatingsPage';
+import AdminRouteProtector from './common/RouteProtector/AdminRouteProtector';
+import ClientRouteProtector from './common/RouteProtector/ClientRouteProtector';
+import AdminDashboard from './pages/AdminSide/AdminDashboard';
+import AccountPage from './pages/ClientSide/AccountPage';
+import ChartPage from './pages/ClientSide/ChartPage';
+import ClientDashboard from './pages/ClientSide/ClientDashboard';
+import BeveragesPage from './pages/ClientSide/ClientDashboard/BeveragesPage';
+import FoodsPage from './pages/ClientSide/ClientDashboard/FoodsPage';
+import Home from './pages/ClientSide/ClientDashboard/Home';
+import ProductPage from './pages/ClientSide/ClientDashboard/ProductPage';
+import RatingsPage from './pages/ClientSide/RatingsPage';
 import SigninPage from './pages/SigninPage';
 
 export default function App() {
   return (
     <>
       <Reset />
-      <GlobalStyle />
       <BrowserRouter>
         <Routes>
           <Route path="/signin" element={<SigninPage />} />
 
           <Route
+            path="/admin"
+            element={
+              <AdminRouteProtector>
+                <AdminDashboard />
+              </AdminRouteProtector>
+            }
+          ></Route>
+
+          <Route
             path="/"
             element={
-              <RouteProtector>
-                <Dashboard />
-              </RouteProtector>
+              <ClientRouteProtector>
+                <ClientDashboard />
+              </ClientRouteProtector>
             }
           >
             <Route path="home" element={<Home />} />
