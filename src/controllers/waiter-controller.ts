@@ -16,3 +16,18 @@ export async function verifyAndCreateNewWaiterCall(req: Request, res: Response) 
     }
   }
 }
+
+export async function clearUserWaiterCall(req: Request, res: Response) {
+  const userId: number = res.locals.userId;
+
+  try {
+    await waiterService.verifyAndDeleteWaiterCall(userId);
+    return res.sendStatus(httpStatus.OK);
+  } catch (error) {
+    if (error.name === 'UnauthorizedError') {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
+    } else {
+      return res.sendStatus(httpStatus.BAD_REQUEST);
+    }
+  }
+}
