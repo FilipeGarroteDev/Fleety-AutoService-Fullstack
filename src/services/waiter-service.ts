@@ -27,6 +27,7 @@ async function searchActiveUserCall(userId: number) {
 const waiterService = {
   validateAndCallWaiter,
   verifyAndDeleteWaiterCall,
+  searchActiveUserCall,
 };
 
 export default waiterService;
