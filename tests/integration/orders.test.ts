@@ -287,7 +287,7 @@ describe('GET /chart/:ticketId', () => {
         const foodType = await categoriesFactory.createFoodType();
         const category = await categoriesFactory.createSingleCategory(foodType.id);
         const product = await productsFactory.createSingleProduct(category.id);
-        await ordersFactory.createManyDeliveredOrders(ticket.id, product.id);
+        await ordersFactory.createDeliveredAndPreparingOrders(ticket.id, product.id);
 
         const response = await server.get(`/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
@@ -301,7 +301,7 @@ describe('GET /chart/:ticketId', () => {
         const foodType = await categoriesFactory.createFoodType();
         const category = await categoriesFactory.createSingleCategory(foodType.id);
         const product = await productsFactory.createSingleProduct(category.id);
-        await ordersFactory.createManySelectedOrders(ticket.id, product.id);
+        await ordersFactory.createSelectedAndPreparingOrders(ticket.id, product.id);
 
         const response = await server.get(`/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 

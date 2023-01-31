@@ -6,6 +6,7 @@ import { createSession } from './factory/sessions-factory';
 
 export async function cleanDb() {
   await prisma.optionals_Category.deleteMany({});
+  await prisma.payments.deleteMany({});
   await prisma.orders.deleteMany({});
   await prisma.products.deleteMany({});
   await prisma.productCategories.deleteMany({});

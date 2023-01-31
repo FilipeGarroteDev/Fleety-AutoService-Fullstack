@@ -86,6 +86,7 @@ model Tickets {
   status    TicketStatus
   createdAt DateTime  @default(now())
   Orders    Orders[]
+  Payments    Payments[]
 }
 
 enum TicketStatus {
@@ -110,6 +111,22 @@ enum OrderStatus {
   SELECTED
   PREPARING
   DELIVERED
+}
+
+model Payments {
+  id             Int      @id @default(autoincrement())
+  ticketId       Int
+  Ticket         Tickets   @relation(fields: [ticketId], references: [id])
+  totalValue     Int
+  firstName      String
+  cardIssuer     Issuers
+  cardLastDigits String
+  createdAt      DateTime @default(now())
+}
+
+enum Issuers {
+  MASTERCARD
+  VISA
 }
 
 model Ratings {

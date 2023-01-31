@@ -14,6 +14,7 @@ async function getTicketById(id: number): Promise<Tickets> {
   return await prisma.tickets.findFirst({
     where: {
       id,
+      status: TicketStatus.RESERVED,
     },
   });
 }

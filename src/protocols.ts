@@ -1,4 +1,4 @@
-import { Optionals, OrderStatus, Products } from '@prisma/client';
+import { Issuers, Optionals, OrderStatus, Products } from '@prisma/client';
 
 export type ErrorEntity = {
   name: string;
@@ -62,4 +62,11 @@ export type OrderWithProductInfo = {
   status: OrderStatus;
   createdAt: Date;
   Product: Partial<Products>;
+};
+
+export type PaymentBody = {
+  totalValue: number;
+  firstName: string;
+  cardIssuer: Issuers;
+  cardLastDigits: string;
 };

@@ -5,4 +5,11 @@ const CheckoutBodySchema = joi.object({
   status: joi.string().valid('PREPARING', 'DELIVERED').required(),
 });
 
-export { CheckoutBodySchema };
+const PaymentBodySchema = joi.object({
+  totalValue: joi.number().required(),
+  firstName: joi.string().required(),
+  cardIssuer: joi.string().valid('MASTERCARD', 'VISA').required(),
+  cardLastDigits: joi.string().min(4).max(4).required(),
+});
+
+export { CheckoutBodySchema, PaymentBodySchema };
