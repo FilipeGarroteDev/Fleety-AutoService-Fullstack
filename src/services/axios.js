@@ -46,6 +46,11 @@ async function listAllOrders(ticketId) {
   return axios.get(`${BASE_URL}/chart/${ticketId}`, config);
 }
 
+async function deleteActiveOrder(orderId) {
+  const config = generateHeaders();
+  return axios.delete(`${BASE_URL}/chart/${orderId}`, config);
+}
+
 async function finishOrderAndUpdateStatus(body) {
   const config = generateHeaders();
   return axios.patch(`${BASE_URL}/checkout`, body, config);
@@ -56,9 +61,9 @@ async function listAllFinishedOrders(ticketId) {
   return axios.get(`${BASE_URL}/checkout/${ticketId}`, config);
 }
 
-async function deleteActiveOrder(orderId) {
+async function postPayment(body, ticketId) {
   const config = generateHeaders();
-  return axios.delete(`${BASE_URL}/chart/${orderId}`, config);
+  return axios.post(`${BASE_URL}/checkout/payment/${ticketId}`, body, config);
 }
 
 export {
@@ -73,4 +78,5 @@ export {
   finishOrderAndUpdateStatus,
   listAllFinishedOrders,
   deleteActiveOrder,
+  postPayment,
 };

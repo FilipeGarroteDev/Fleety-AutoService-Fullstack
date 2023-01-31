@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import styled from 'styled-components';
 import CheckoutButton from '../../../components/AccountPage/CheckoutButton';
+import { postPayment } from '../../../services/axios';
 
 export default function CreditCard({ totalValue, setPaymentMethod }) {
   const [card, setCard] = useState({
@@ -14,15 +15,35 @@ export default function CreditCard({ totalValue, setPaymentMethod }) {
     issuer: '',
     totalValue,
   });
+  const [ticket, setTicket] = useState({});
 
-  function sendPayment(e) {
+  useEffect(() => {
+    const storageTicket = localStorage.getItem('ticket');
+    const parsedTicket = JSON.parse(storageTicket);
+    setTicket(parsedTicket);
+    console.log(parsedTicket);
+  }, []);
+
+  async function sendPayment(e) {
     e.preventDefault();
     if (card.cvv === '' || card.expiry === '' || card.focused === '' || card.name === '' || card.number === '')
       return alert('Preencha corretamente os campos do cartão');
     if (isNaN(Number(card.number) && Number(card.expiry) && Number(card.cvv)) || card.issuer === 'UNKNOWN')
       return alert('São aceitas somente as bandeiras Visa (início 4) e MasterCard (início 54)');
 
-    setPaymentMethod('paymentSuccessful');
+    const paymentBody = {
+      totalValue: card.totalValue,
+      firstName: card.name.split(' ')[0],
+      cardIssuer: card.issuer,
+      cardLastDigits: card.number.slice(12),
+    };
+
+    try {
+      await postPayment(paymentBody, ticket.id);
+      setPaymentMethod('paymentSuccessful');
+    } catch (error) {
+      alert(error.response.data);
+    }
   }
 
   return (

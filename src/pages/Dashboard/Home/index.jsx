@@ -28,7 +28,6 @@ export default function Home() {
 
   return (
     <>
-      <Greetings>Seja bem vindo, Filipe Garrote</Greetings>
       <Banner ref={carousel}>
         <img src={banner1} alt="banner1" onClick={() => navigate('/rate')} />
         <img src={banner2} alt="banner2" onClick={() => navigate('/foods')} />
@@ -43,18 +42,12 @@ export default function Home() {
   );
 }
 
-const Greetings = styled.h1`
-  color: #d9d9d9;
-  font-size: 30px;
-  font-weight: 700;
-`;
-
 const Banner = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   width: 88%;
-  height: 77%;
+  height: 86%;
   position: absolute;
   background-color: black;
   bottom: 0;
