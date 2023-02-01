@@ -5,6 +5,7 @@ import ClientRouteProtector from './common/RouteProtector/ClientRouteProtector';
 import AdminDashboard from './pages/AdminSide/AdminDashBoard';
 import ClientRatings from './pages/AdminSide/AdminDashBoard/ClientRatings';
 import OrdersSection from './pages/AdminSide/AdminDashBoard/OrdersSection';
+import RegisterTableSection from './pages/AdminSide/AdminDashBoard/RegisterTableSection';
 import PendingWaiter from './pages/AdminSide/AdminDashBoard/ServiceSection/PendingWaiter';
 import AccountPage from './pages/ClientSide/AccountPage';
 import ChartPage from './pages/ClientSide/ChartPage';
@@ -35,6 +36,7 @@ export default function App() {
             <Route path="waiter-queue" element={<PendingWaiter />} />
             <Route path="orders-queue" element={<OrdersSection />} />
             <Route path="ratings-overview" element={<ClientRatings />} />
+            <Route path="register" element={<RegisterTableSection />} />
           </Route>
 
           <Route

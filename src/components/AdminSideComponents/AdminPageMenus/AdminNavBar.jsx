@@ -19,17 +19,17 @@ export default function AdminNavBar() {
         <span>Aguardando pedidos</span>
         <BsChevronRight />
       </ButtonDiv>
-      <ButtonDiv>
+      {/* <ButtonDiv>
         <RiMoneyDollarCircleFill />
         <span>Faturamento</span>
         <BsChevronRight />
-      </ButtonDiv>
+      </ButtonDiv> */}
       <ButtonDiv onClick={() => navigate('/admin/ratings-overview')}>
         <BsStarFill />
         <span>Avalições dos clientes</span>
         <BsChevronRight />
       </ButtonDiv>
-      <ButtonDiv>
+      <ButtonDiv onClick={() => navigate('/admin/register')}>
         <BsPeopleFill />
         <span>Cadastro de usuário</span>
         <BsChevronRight />

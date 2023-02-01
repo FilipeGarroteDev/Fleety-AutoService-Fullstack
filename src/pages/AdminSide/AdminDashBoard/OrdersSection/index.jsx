@@ -123,12 +123,6 @@ const SummaryContainer = styled.section`
   justify-content: space-evenly;
   align-items: center;
 
-  > span {
-    font-size: 80px;
-    font-weight: 400;
-    color: #3f6ad8;
-  }
-
   > div {
     height: 100%;
     width: 20%;
