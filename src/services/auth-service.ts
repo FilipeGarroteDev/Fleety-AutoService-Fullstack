@@ -3,7 +3,7 @@ import unauthorizedError from '@/errors/unauthorizedError';
 import { SignInBody, SignUpBody } from '@/protocols';
 import authRepository from '@/repositories/auth-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
-import { Tickets } from '@prisma/client';
+import { Tickets, Users } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -69,10 +69,10 @@ async function verifyAndCreateTicket(userId: number): Promise<Tickets> {
   return ticket;
 }
 
-async function getUserData(userId: number) {
+async function getUserData(userId: number): Promise<Users> {
   const user = await authRepository.getUserById(userId);
 
-  return user.name;
+  return user;
 }
 
 const authService = {

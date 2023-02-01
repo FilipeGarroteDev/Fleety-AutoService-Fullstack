@@ -1,5 +1,6 @@
 import { SignInBody, SignUpBody } from '@/protocols';
 import authService from '@/services/auth-service';
+import { Users } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 
@@ -37,8 +38,8 @@ export async function validateTokenAndGetUserData(req: Request, res: Response) {
   const userId: number = res.locals.userId;
 
   try {
-    const name = await authService.getUserData(userId);
-    return res.status(httpStatus.OK).send({ name });
+    const users: Users = await authService.getUserData(userId);
+    return res.status(httpStatus.OK).send({ name: users.name, role: users.role });
   } catch (error) {
     return res.sendStatus(httpStatus.UNAUTHORIZED);
   }

@@ -33,3 +33,12 @@ export async function generateTokenAndSession(name: string) {
 
   return { token, userId: incomingUser.id };
 }
+
+export async function generateAdminTokenAndSession(name: string) {
+  const incomingUser = await authFactory.createAdminByName(name, faker.internet.password());
+  const token = jwt.sign({ userId: incomingUser.id }, process.env.JWT_SECRET);
+
+  await createSession(incomingUser.id, token);
+
+  return { token, userId: incomingUser.id };
+}

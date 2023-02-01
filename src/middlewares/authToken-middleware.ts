@@ -32,7 +32,15 @@ export async function authTokenMiddleware(req: Request, res: Response, next: Nex
         .status(httpStatus.UNAUTHORIZED)
         .send('Seu login expirou ou suas credenciais são inválidas. Por gentileza, refaça o login');
 
+    const user = await prismaPG.users.findUnique({
+      where: {
+        id: userId,
+      }
+    });
+
     res.locals.userId = userId;
+    res.locals.userData = user;
+
     return next();
   } catch (error) {
     return res
