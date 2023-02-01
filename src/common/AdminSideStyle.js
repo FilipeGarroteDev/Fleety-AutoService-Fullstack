@@ -13,7 +13,7 @@ export default createGlobalStyle`
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: #292727;
+      background-color: #357cd9;
       border-radius: 50px;
       border: 3px solid #f0f3f5;
     }

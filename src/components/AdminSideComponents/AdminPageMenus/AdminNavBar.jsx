@@ -14,7 +14,7 @@ export default function AdminNavBar() {
         <span>Aguardando atendimento</span>
         <BsChevronRight />
       </ButtonDiv>
-      <ButtonDiv>
+      <ButtonDiv onClick={() => navigate('/admin/orders-queue')}>
         <IoFastFoodSharp />
         <span>Aguardando pedidos</span>
         <BsChevronRight />
