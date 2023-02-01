@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { BsFillStopwatchFill } from 'react-icons/bs';
 import SectionContainer from '../../../../components/AdminSideComponents/AdminDashboard/SectionContainer';
 import SectionTitle from '../../../../components/AdminSideComponents/AdminDashboard/SectionTitle';
+import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
 
 export default function PendingWaiter() {
   const waiterArrMock = [
@@ -130,54 +131,4 @@ const WaiterQueue = styled.ul`
   overflow-y: auto;
   height: auto;
   background-color: #ffffff;
-`;
-
-const LineStyle = styled.li`
-  width: 100%;
-  height: 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  > div {
-    width: 15%;
-    display: flex;
-    justify-content: center;
-
-    > h3 {
-      font-weight: 400;
-    }
-
-    > h2 {
-      font-weight: 500;
-      font-size: 18px;
-      color: #294897;
-    }
-
-    > svg {
-      color: #3f6ad8;
-      font-size: 22px;
-    }
-
-    > button {
-      width: 120px;
-      height: 35px;
-      border: none;
-      background-color: #5b82e4;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px 3px rgba(0, 0, 0, 0.2);
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 400;
-
-      &:hover {
-        cursor: pointer;
-        filter: brightness(1.1);
-      }
-    }
-  }
-
-  &:nth-child(even) {
-    background-color: aliceblue;
-  }
 `;

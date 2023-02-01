@@ -3,6 +3,7 @@ import Reset from './common/Reset';
 import AdminRouteProtector from './common/RouteProtector/AdminRouteProtector';
 import ClientRouteProtector from './common/RouteProtector/ClientRouteProtector';
 import AdminDashboard from './pages/AdminSide/AdminDashBoard';
+import ClientRatings from './pages/AdminSide/AdminDashBoard/ClientRatings';
 import OrdersSection from './pages/AdminSide/AdminDashBoard/OrdersSection';
 import PendingWaiter from './pages/AdminSide/AdminDashBoard/ServiceSection/PendingWaiter';
 import AccountPage from './pages/ClientSide/AccountPage';
@@ -33,6 +34,7 @@ export default function App() {
           >
             <Route path="waiter-queue" element={<PendingWaiter />} />
             <Route path="orders-queue" element={<OrdersSection />} />
+            <Route path="ratings-overview" element={<ClientRatings />} />
           </Route>
 
           <Route

@@ -17,6 +17,7 @@ const TitleLayout = styled.header`
   position: fixed;
   left: 0;
   top: 60px;
+  z-index: 1;
   box-shadow: 0 6px 10px 5px rgba(0, 0, 0, 0.2);
 
   > h1 {

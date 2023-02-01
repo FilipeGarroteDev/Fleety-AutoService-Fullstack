@@ -24,7 +24,7 @@ export default function AdminNavBar() {
         <span>Faturamento</span>
         <BsChevronRight />
       </ButtonDiv>
-      <ButtonDiv>
+      <ButtonDiv onClick={() => navigate('/admin/ratings-overview')}>
         <BsStarFill />
         <span>Avalições dos clientes</span>
         <BsChevronRight />
@@ -50,7 +50,7 @@ const Container = styled.aside`
   bottom: 1000px;
   top: 100px;
   left: 20px;
-  z-index: 1;
+  z-index: 2;
 
   > h1 {
     width: 100%;

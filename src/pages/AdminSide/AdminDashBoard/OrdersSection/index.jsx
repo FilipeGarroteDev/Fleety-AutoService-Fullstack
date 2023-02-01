@@ -1,6 +1,7 @@
 import SectionTitle from '../../../../components/AdminSideComponents/AdminDashboard/SectionTitle';
 import SectionContainer from '../../../../components/AdminSideComponents/AdminDashboard/SectionContainer';
 import styled from 'styled-components';
+import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
 
 export default function OrdersSection() {
   const table = 'Mesa 13';
@@ -102,7 +103,7 @@ export default function OrdersSection() {
 
 function OrderLine({ id, ticketId, amount, optionals, createdAt, name, header, table }) {
   return (
-    <LineStyle>
+    <LineStyle order>
       <div>{header ? <h2>Mesa</h2> : <h3>{table}</h3>}</div>
       <div>{header ? <h2>Nº Comanda</h2> : <span>{ticketId}</span>}</div>
       <div>{header ? <h2>Item</h2> : <span>{`${amount}x ${name}`}</span>}</div>
@@ -159,55 +160,4 @@ const OrdersQueue = styled.ul`
   height: auto;
   background-color: #ffffff;
   margin-top: 35px;
-`;
-
-const LineStyle = styled.li`
-  width: 100%;
-  padding: 10px 0;
-  height: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  > div {
-    width: 20%;
-    display: flex;
-    justify-content: center;
-
-    > h3 {
-      font-weight: 400;
-    }
-
-    > h2 {
-      font-weight: 500;
-      font-size: 18px;
-      color: #294897;
-    }
-
-    > svg {
-      color: #3f6ad8;
-      font-size: 22px;
-    }
-
-    > button {
-      width: 120px;
-      height: 35px;
-      border: none;
-      background-color: #5b82e4;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px 3px rgba(0, 0, 0, 0.2);
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 400;
-
-      &:hover {
-        cursor: pointer;
-        filter: brightness(1.1);
-      }
-    }
-  }
-
-  &:nth-child(even) {
-    background-color: aliceblue;
-  }
 `;
