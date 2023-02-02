@@ -3,29 +3,21 @@ import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
 import { deleteWaiterCall } from '../../../../services/axios';
 
-export default function WaiterQueue({ callList, rerender, setRerender }) {
+export default function WaiterQueue({ callList }) {
   return (
     <TableStyle>
       <WaiterQueueLine header={true} />
       {callList.map(({ id, userId, table, createdAt }) => (
-        <WaiterQueueLine
-          key={id}
-          table={table}
-          createdAt={createdAt}
-          userId={userId}
-          rerender={rerender}
-          setRerender={setRerender}
-        />
+        <WaiterQueueLine key={id} table={table} createdAt={createdAt} userId={userId} />
       ))}
     </TableStyle>
   );
 }
 
-function WaiterQueueLine({ table, createdAt, userId, header, rerender, setRerender }) {
+function WaiterQueueLine({ table, createdAt, userId, header }) {
   async function finishCall() {
     try {
       await deleteWaiterCall(userId);
-      setRerender(!rerender);
     } catch (error) {
       alert('Algo deu errado. Atualize a página e tente novamente.');
     }

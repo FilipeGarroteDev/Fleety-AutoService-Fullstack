@@ -2,23 +2,24 @@ import SectionTitle from '../../../../components/AdminSideComponents/AdminDashbo
 import SectionContainer from '../../../../components/AdminSideComponents/AdminDashboard/SectionContainer';
 import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
-import { useEffect, useState } from 'react';
 import { getAllPreparingOrders } from '../../../../services/axios';
+import { useQuery } from 'react-query';
 
 export default function OrdersSection() {
-  const [ordersList, setOrdersList] = useState([]);
+  const { data, isLoading, isError } = useQuery('orders', () => {
+    return getAllPreparingOrders().then((res) => res.data);
+  }, {
+    retry: 3,
+    refetchInterval: 5000
+  });
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const preparingOrders = await getAllPreparingOrders();
-        setOrdersList(preparingOrders.data);
-      } catch (error) {
-        alert('Algo deu errado com sua requisição. Por favor, atualize a página');
-      }
-    }
-    fetchData();
-  }, []);
+  if (isLoading) {
+    return <div>LOADINGGGGGGGGGGGGG!!!</div>;
+  }
+
+  if (isError) {
+    return <div>ERROOOOOOOOOOOOOO!!!</div>;
+  }
 
   return (
     <SectionContainer>
@@ -29,7 +30,7 @@ export default function OrdersSection() {
       <SummaryContainer>
         <div>
           <h3>Em espera:</h3>
-          <strong>{ordersList.length}</strong>
+          <strong>{data.length}</strong>
         </div>
         <div>
           <h3>Entregues:</h3>
@@ -42,7 +43,7 @@ export default function OrdersSection() {
       </SummaryContainer>
       <OrdersQueue>
         <OrderLine header />
-        {ordersList.map(({ id, ticketId, amount, optionals, createdAt, Product, Ticket }) => (
+        {data.map(({ id, ticketId, amount, optionals, createdAt, Product, Ticket }) => (
           <OrderLine
             id={id}
             ticketId={ticketId}

@@ -32,7 +32,7 @@ export default function TopMenu() {
   async function callWaiter() {
     if (isWaiterCalled) {
       try {
-        await deleteWaiterCall();
+        await deleteWaiterCall(userData.id);
         setIsWaiterCalled(false);
       } catch (error) {
         alert('Algo deu errado com sua requisição. Tente novamente.');
