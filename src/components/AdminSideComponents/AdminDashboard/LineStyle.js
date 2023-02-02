@@ -10,7 +10,7 @@ export default styled.li`
   text-align: center;
 
   > div {
-    width: ${(props) => (props.order ? '10%' : '15%')};
+    width: ${(props) => (props.order ? '20%' : '15%')};
     display: flex;
     justify-content: center;
 

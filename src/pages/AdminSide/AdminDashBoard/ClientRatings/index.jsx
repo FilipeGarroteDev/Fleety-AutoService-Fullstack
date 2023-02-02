@@ -2,126 +2,54 @@ import SectionTitle from '../../../../components/AdminSideComponents/AdminDashbo
 import SectionContainer from '../../../../components/AdminSideComponents/AdminDashboard/SectionContainer';
 import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import RatingComponent from '../../../../common/MUI - components/Rating';
+import { useQuery } from 'react-query';
+import { getAllRatings } from '../../../../services/axios';
 
 export default function ClientRatings() {
   const [ratingsSum, setRatingsSum] = useState({});
+  const { data, isLoading } = useQuery(
+    'ratings',
+    () => {
+      const ratings = getAllRatings().then((res) => {
+        const ratingsAvg = {
+          environmentRate: 0,
+          foodRate: 0,
+          beverageRate: 0,
+          pricesRate: 0,
+          serviceRate: 0,
+        };
+        let total = 0;
+        let reps = 0;
 
-  const ratingsMock = [
-    {
-      id: 1,
-      name: 'Filipe',
-      email: 'filipe.garrote@gmail.com',
-      environmentRate: 5,
-      foodRate: 3,
-      beverageRate: 5,
-      pricesRate: 2,
-      serviceRate: 5,
-      userNote:
-        'Adorei conhecer o serviço de vocês. Atendimento espetacular realizado pelo garçom Fábio. As comidas estavam delicionas e as cervejas estupidamente geladas. Só os preços que achamos um pouco salgado. Mas, voltaremos mais vezes.',
-      createdAt: Date.now(),
-    },
-    {
-      id: 2,
-      name: 'Filipe',
-      email: 'filipe.garrote@gmail.com',
-      environmentRate: 3,
-      foodRate: 5,
-      beverageRate: 5,
-      pricesRate: 4,
-      serviceRate: 5,
-      userNote:
-        'Adorei conhecer o serviço de vocês. Atendimento espetacular realizado pelo garçom Fábio. As comidas estavam delicionas e as cervejas estupidamente geladas. Só os preços que achamos um pouco salgado. Mas, voltaremos mais vezes.',
-      createdAt: Date.now(),
-    },
-    {
-      id: 1,
-      name: 'Filipe',
-      email: 'filipe.garrote@gmail.com',
-      environmentRate: 4,
-      foodRate: 5,
-      beverageRate: 5,
-      pricesRate: 1,
-      serviceRate: 5,
-      userNote:
-        'Adorei conhecer o serviço de vocês. Atendimento espetacular realizado pelo garçom Fábio. As comidas estavam delicionas e as cervejas estupidamente geladas. Só os preços que achamos um pouco salgado. Mas, voltaremos mais vezes.',
-      createdAt: Date.now(),
-    },
-    {
-      id: 1,
-      name: 'Filipe',
-      email: 'filipe.garrote@gmail.com',
-      environmentRate: 5,
-      foodRate: 4,
-      beverageRate: 2,
-      pricesRate: 3,
-      serviceRate: 5,
-      userNote:
-        'Adorei conhecer o serviço de vocês. Atendimento espetacular realizado pelo garçom Fábio. As comidas estavam delicionas e as cervejas estupidamente geladas. Só os preços que achamos um pouco salgado. Mas, voltaremos mais vezes.',
-      createdAt: Date.now(),
-    },
-    {
-      id: 1,
-      name: 'Filipe',
-      email: 'filipe.garrote@gmail.com',
-      environmentRate: 5,
-      foodRate: 5,
-      beverageRate: 5,
-      pricesRate: 2,
-      serviceRate: 5,
-      userNote:
-        'Adorei conhecer o serviço de vocês. Atendimento espetacular realizado pelo garçom Fábio. As comidas estavam delicionas e as cervejas estupidamente geladas. Só os preços que achamos um pouco salgado. Mas, voltaremos mais vezes.',
-      createdAt: Date.now(),
-    },
-    {
-      id: 1,
-      name: 'Filipe',
-      email: 'filipe.garrote@gmail.com',
-      environmentRate: 5,
-      foodRate: 4,
-      beverageRate: 4,
-      pricesRate: 3,
-      serviceRate: 5,
-      userNote:
-        'Adorei conhecer o serviço de vocês. Atendimento espetacular realizado pelo garçom Fábio. As comidas estavam delicionas e as cervejas estupidamente geladas. Só os preços que achamos um pouco salgado. Mas, voltaremos mais vezes.',
-      createdAt: Date.now(),
-    },
-  ];
+        for (let i = 0; i < res.data.length; i++) {
+          ratingsAvg.environmentRate += res.data[i].environmentRate;
+          ratingsAvg.foodRate += res.data[i].foodRate;
+          ratingsAvg.beverageRate += res.data[i].beverageRate;
+          ratingsAvg.pricesRate += res.data[i].pricesRate;
+          ratingsAvg.serviceRate += res.data[i].serviceRate;
 
-  function calculateRatingsAvg() {
-    const ratingsAvg = {
-      environmentRate: 0,
-      foodRate: 0,
-      beverageRate: 0,
-      pricesRate: 0,
-      serviceRate: 0,
-    };
-    let total = 0;
-    let reps = 0;
+          reps++;
+        }
 
-    for (let i = 0; i < ratingsMock.length; i++) {
-      ratingsAvg.environmentRate += ratingsMock[i].environmentRate;
-      ratingsAvg.foodRate += ratingsMock[i].foodRate;
-      ratingsAvg.beverageRate += ratingsMock[i].beverageRate;
-      ratingsAvg.pricesRate += ratingsMock[i].pricesRate;
-      ratingsAvg.serviceRate += ratingsMock[i].serviceRate;
+        const ratingsArray = Object.keys(ratingsAvg);
+        Object.values(ratingsAvg).forEach((rate, index) => {
+          total += rate;
+          ratingsAvg[ratingsArray[index]] = rate / reps;
+        });
 
-      reps++;
-    }
+        setRatingsSum({ ...ratingsAvg, total: total / (reps * 5) });
+        return res.data;
+      });
+      return ratings;
+    },
+    { retry: 2 }
+  );
 
-    const ratingsArray = Object.keys(ratingsAvg);
-    Object.values(ratingsAvg).forEach((rate, index) => {
-      total += rate;
-      ratingsAvg[ratingsArray[index]] = rate / reps;
-    });
-
-    setRatingsSum({ ...ratingsAvg, total: total / (reps * 5) });
+  if (isLoading) {
+    return <h1>LOADINGGGGGGGGGGG!</h1>;
   }
-
-  useEffect(() => {
-    calculateRatingsAvg();
-  }, []);
 
   return (
     <SectionContainer>
@@ -163,7 +91,7 @@ export default function ClientRatings() {
       </OverviewContainer>
       <OrdersQueue>
         <OrderLine header />
-        {ratingsMock.map(({ id, name, email, userNote, createdAt }) => (
+        {data.map(({ id, name, email, userNote, createdAt }) => (
           <OrderLine key={id} email={email} userNote={userNote} createdAt={createdAt} name={name} />
         ))}
       </OrdersQueue>
@@ -234,7 +162,6 @@ const RestaurantAverage = styled.div`
   box-shadow: 0 2px 10px 3px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
 
-
   > h3 {
     width: 80%;
     font-size: 18px;
@@ -243,11 +170,11 @@ const RestaurantAverage = styled.div`
   }
 
   > strong {
-      font-size: 30px;
-      font-weight: 400;
-      text-align: center;
-      margin-right: 15px;
-    }
+    font-size: 30px;
+    font-weight: 400;
+    text-align: center;
+    margin-right: 15px;
+  }
 `;
 
 const OrdersQueue = styled.ul`

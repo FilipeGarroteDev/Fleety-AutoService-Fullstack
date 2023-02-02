@@ -96,6 +96,11 @@ async function updateOrderStatus(id) {
   return axios.patch(`${BASE_URL}/chart/${id}`, {}, config);
 }
 
+async function getAllRatings() {
+  const config = generateHeaders();
+  return axios.get(`${BASE_URL}/ratings`, config);
+}
+
 export {
   getCategories,
   getCategoryProducts,
@@ -114,5 +119,6 @@ export {
   getThisUserCall,
   getAllUserCall,
   getAllPreparingOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  getAllRatings,
 };
