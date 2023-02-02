@@ -1,18 +1,12 @@
 import styled from 'styled-components';
 
 export default styled.section`
-  height: 300px;
-  width: 17%;
+  height: 60%;
+  width: 60%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  padding: 30px 0;
-  background-color: #121111;
-  border-bottom-right-radius: 50px;
-  border-top-left-radius: 50px;
-  box-shadow: 5px 10px 3px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.3);
 
   > span {
     font-size: 12px;

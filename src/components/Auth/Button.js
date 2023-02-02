@@ -6,7 +6,7 @@ export default styled.button`
   background: linear-gradient(to right, #272a5d, #866575);
   border: none;
   border-radius: 8px;
-  margin-top: 30px;
+  margin-top: 10px;
   color: #ffffff;
   font-size: 14px;
 

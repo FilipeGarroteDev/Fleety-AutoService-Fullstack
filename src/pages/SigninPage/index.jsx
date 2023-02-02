@@ -1,11 +1,13 @@
-import AuthLayout from '../../components/ClientSideComponents/Auth/AuthLayout';
-import Button from '../../components/ClientSideComponents/Auth/Button';
-import Form from '../../components/ClientSideComponents/Auth/Form';
-import Wrapper from '../../components/ClientSideComponents/Auth/Wrapper';
+import AuthLayout from '../../components/Auth/AuthLayout';
+import Button from '../../components/Auth/Button';
+import Form from '../../components/Auth/Form';
+import Wrapper from '../../components/Auth/Wrapper';
 import fleetyLogo from '../../assets/images/fleetyLogo.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signIn } from '../../services/axios';
+import styled from 'styled-components';
+import AdminButton from '../../components/Auth/AdminButton';
 
 export default function SigninPage() {
   const [signInData, setSignInData] = useState({});
@@ -38,13 +40,73 @@ export default function SigninPage() {
   return (
     <Wrapper>
       <AuthLayout>
-        <img src={fleetyLogo} alt="logo" />
-        <Form onSubmit={sendForm}>
-          <input name="name" type="name" placeholder="Login da Mesa" onChange={handleInput} />
-          <input name="password" type="password" placeholder="Senha" onChange={handleInput} />
-          <Button>Entrar</Button>
-        </Form>
+        <LogoSection>
+          <img src={fleetyLogo} alt="logo" />
+          <h2>O seu serviço preferido de automatização de atendimento em restaurante.</h2>
+          <h2>Rápido. Prático. Personalizável. Seguro. Fleety.</h2>
+        </LogoSection>
+        <AuthContainer>
+          <h1>Login</h1>
+          <Form onSubmit={sendForm}>
+            <input name="name" type="name" placeholder="Login da Mesa" onChange={handleInput} />
+            <input name="password" type="password" placeholder="Senha" onChange={handleInput} />
+            <Button>Entrar</Button>
+          </Form>
+          <AdminButton />
+        </AuthContainer>
       </AuthLayout>
     </Wrapper>
   );
 }
+
+const LogoSection = styled.aside`
+  width: 60%;
+  height: 100%;
+  background-color: #121111;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  > img {
+    width: 40%;
+    height: 30%;
+    object-fit: cover;
+    margin-bottom: 30px;
+  }
+
+  > h2:nth-of-type(1) {
+    color: #d9d9d9;
+    font-size: 26px;
+    font-weight: 300;
+    font-family: 'Oswald', sans-serif;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  > h2:nth-of-type(2) {
+    color: #d9d9d9;
+    font-size: 26px;
+    font-family: 'Oswald', sans-serif;
+    text-align: center;
+  }
+`;
+
+const AuthContainer = styled.main`
+  width: 40%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #d9d9d9;
+
+  > h1 {
+    color: #121111;
+    font-size: 26px;
+    font-family: 'Oswald', sans-serif;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+`;

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { BsFillStopwatchFill, BsStarFill, BsPeopleFill, BsChevronRight } from 'react-icons/bs';
 import { IoFastFoodSharp } from 'react-icons/io5';
 import { RiMoneyDollarCircleFill } from 'react-icons/ri';
+import { ImExit } from 'react-icons/im';
 import { useNavigate } from 'react-router-dom';
 
 export default function AdminNavBar() {
@@ -33,6 +34,15 @@ export default function AdminNavBar() {
         <BsPeopleFill />
         <span>Cadastro de usuário</span>
         <BsChevronRight />
+      </ButtonDiv>
+      <ButtonDiv
+        onClick={() => {
+          localStorage.clear();
+          window.location.reload();
+        }}
+      >
+        <ImExit />
+        <span>Logout</span>
       </ButtonDiv>
     </Container>
   );
@@ -84,5 +94,26 @@ const ButtonDiv = styled.div`
   &:hover {
     background-color: aliceblue;
     cursor: pointer;
+  }
+
+  &:nth-last-child(1) {
+    position: absolute;
+    bottom: 40px;
+
+    > span {
+      font-size: 18px;
+      font-weight: 400;
+      color: #bd3550;
+    }
+
+    > svg {
+      font-size: 22px;
+      color: #bd3550;
+    }
+
+    &:hover {
+      background-color: #e9274e14;
+      cursor: pointer;
+    }
   }
 `;
