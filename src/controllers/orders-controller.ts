@@ -55,3 +55,18 @@ export async function deleteActiveOrder(req: Request, res: Response) {
     }
   }
 }
+
+export async function listAllPreparingOrders(req: Request, res: Response) {
+  const { role } = res.locals.userData as Record<string, string>;
+
+  try {
+    const orders: OrderWithProductInfo[] = await ordersService.searchAllOrdersWithPreparingStatus(role);
+    return res.status(httpStatus.OK).send(orders);
+  } catch (error) {
+    if (error.name === 'UnauthorizedError') {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
+    } else {
+      return res.sendStatus(httpStatus.BAD_REQUEST);
+    }
+  }
+}

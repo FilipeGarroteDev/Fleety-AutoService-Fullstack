@@ -48,10 +48,19 @@ async function validateAndDeleteSelectedOrder(orderId: string, userId: number): 
   await ordersRepository.deleteOrderById(validOrderId);
 }
 
+async function searchAllOrdersWithPreparingStatus(role: string): Promise<OrderWithProductInfo[]> {
+  if (role !== 'ADMIN') throw unauthorizedError();
+
+  const orders: OrderWithProductInfo[] = await ordersRepository.getAllPreparingOrders();
+  console.log(orders);
+  return orders;
+}
+
 const ordersService = {
   createAndValidateNewOrder,
   searchOrdersByTicketId,
   validateAndDeleteSelectedOrder,
+  searchAllOrdersWithPreparingStatus,
 };
 
 export default ordersService;

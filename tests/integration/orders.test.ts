@@ -8,7 +8,7 @@ import categoriesFactory from '../factory/categories-factory';
 import ordersFactory from '../factory/orders-factory';
 import productsFactory from '../factory/products-factory';
 import ticketsFactory from '../factory/tickets-factory';
-import { cleanDb, generateTokenAndSession, generateValidToken } from '../utils';
+import { cleanDb, generateAdminTokenAndSession, generateTokenAndSession, generateValidToken } from '../utils';
 
 beforeAll(async () => {
   await init();
@@ -419,6 +419,118 @@ describe('DELETE /chart/:orderId', () => {
 
         expect(response.status).toBe(httpStatus.OK);
         expect(deletedOrder).toBeNull();
+      });
+    });
+  });
+});
+
+describe('GET /chart', () => {
+  it('should respond with status 401 when headers isnt given', async () => {
+    const response = await server.get('/chart');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if token isnt given', async () => {
+    await authFactory.createUserByName('Mesa 13', '123456');
+    const response = await server.get('/chart').set('Authorization', '');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if there is no active session with the given token', async () => {
+    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const token = generateValidToken(user.id);
+    const response = await server.get('/chart').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  describe('when token is valid', () => {
+    it('should respond with status 401 if user role isnt ADMIN', async () => {
+      const data = await generateTokenAndSession(faker.name.firstName());
+
+      const response = await server.get('/chart').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    describe('when user is admin', () => {
+      it('should respond with status 200', async () => {
+        const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+        const clientData = await generateTokenAndSession(faker.name.firstName());
+
+        await ticketsFactory.createReservedTicket(clientData.userId);
+
+        const response = await server.get('/chart').set('Authorization', `Bearer ${adminData.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+      });
+
+      it('should respond with status 200 and return empty array, if there is no order', async () => {
+        const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+        const clientData = await generateTokenAndSession(faker.name.firstName());
+        await ticketsFactory.createReservedTicket(clientData.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        await productsFactory.createSingleProduct(category.id);
+
+        const response = await server.get('/chart').set('Authorization', `Bearer ${adminData.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+        expect(response.body).toEqual([]);
+      });
+
+      it('should respond with status 200 and return empty array, if doesnt have order with status PREPARING', async () => {
+        const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+        const clientData = await generateTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(clientData.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        await ordersFactory.createSelectedAndDeliveredOrders(ticket.id, product.id);
+
+        const response = await server.get('/chart').set('Authorization', `Bearer ${adminData.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+        expect(response.body).toEqual([]);
+      });
+
+      it('should respond with status 200 and return orders array, when has 1 or more PREPARING orders', async () => {
+        const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+        const clientData = await generateTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(clientData.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        await ordersFactory.createDeliveredAndPreparingOrders(ticket.id, product.id);
+
+        const response = await server.get('/chart').set('Authorization', `Bearer ${adminData.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+        expect(response.body.length).toBe(2);
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              id: expect.any(Number),
+              ticketId: ticket.id,
+              productId: product.id,
+              totalValue: expect.any(Number),
+              amount: expect.any(Number),
+              optionals: expect.any(String),
+              status: 'PREPARING',
+              createdAt: expect.any(String),
+              Product: expect.objectContaining({
+                name: product.name,
+              }),
+              Ticket: {
+                User: {
+                  name: expect.any(String),
+                },
+              },
+            }),
+          ]),
+        );
       });
     });
   });

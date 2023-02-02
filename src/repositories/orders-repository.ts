@@ -30,7 +30,7 @@ async function getOrderById(orderId: number): Promise<Orders> {
   return prismaPG.orders.findUnique({
     where: {
       id: orderId,
-    }
+    },
   });
 }
 
@@ -38,10 +38,34 @@ async function deleteOrderById(orderId: number): Promise<void> {
   await prismaPG.orders.delete({
     where: {
       id: orderId,
-    }
+    },
   });
 }
 
-const ordersRepository = { saveNewOrder, getAllSelectedOrders, getOrderById, deleteOrderById };
+async function getAllPreparingOrders() {
+  return prismaPG.orders.findMany({
+    where: {
+      status: OrderStatus.PREPARING,
+    },
+    include: {
+      Product: {
+        select: {
+          name: true,
+        },
+      },
+      Ticket: {
+        select: {
+          User: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+const ordersRepository = { saveNewOrder, getAllSelectedOrders, getOrderById, deleteOrderById, getAllPreparingOrders };
 
 export default ordersRepository;
