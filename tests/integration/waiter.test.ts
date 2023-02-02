@@ -79,16 +79,16 @@ describe('POST /waiter', () => {
   });
 });
 
-describe('DELETE /waiter', () => {
+describe('DELETE /waiter/:userId', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.delete('/waiter');
+    const response = await server.delete('/waiter/1');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.delete('/waiter').set('Authorization', '');
+    const response = await server.delete('/waiter/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -96,7 +96,7 @@ describe('DELETE /waiter', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.delete('/waiter').set('Authorization', `Bearer ${token}`);
+    const response = await server.delete('/waiter/1').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -105,7 +105,7 @@ describe('DELETE /waiter', () => {
     it('should respond with status 401 if there is no active call with the given userId', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.delete('/waiter').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.delete(`/waiter/${data.userId}`).set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -115,7 +115,7 @@ describe('DELETE /waiter', () => {
       const data = await generateTokenAndSession(name);
       await waiterFactory.createActiveCall(data.userId, name);
 
-      const response = await server.delete('/waiter').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.delete(`/waiter/${data.userId}`).set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.OK);
     });
@@ -125,7 +125,7 @@ describe('DELETE /waiter', () => {
       const data = await generateTokenAndSession(name);
       await waiterFactory.createActiveCall(data.userId, name);
 
-      const response = await server.delete('/waiter').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.delete(`/waiter/${data.userId}`).set('Authorization', `Bearer ${data.token}`);
 
       const waiterCall: WithId<Document> = await mongoDB.collection('calls').findOne({ userId: data.userId });
 

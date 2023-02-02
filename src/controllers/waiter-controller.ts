@@ -21,10 +21,10 @@ export async function verifyAndCreateNewWaiterCall(req: Request, res: Response) 
 }
 
 export async function clearUserWaiterCall(req: Request, res: Response) {
-  const userId: number = res.locals.userId;
+  const userId: string = req.params.userId;
 
   try {
-    await waiterService.verifyAndDeleteWaiterCall(userId);
+    await waiterService.verifyAndDeleteWaiterCall(Number(userId));
     return res.sendStatus(httpStatus.OK);
   } catch (error) {
     if (error.name === 'UnauthorizedError') {
@@ -39,7 +39,7 @@ export async function verifyUserCallAndReturn(req: Request, res: Response) {
   const userId: number = res.locals.userId;
 
   try {
-    const activeUserCall: WithId<Document> = await waiterService.searchActiveUserCall(userId);
+    const activeUserCall: WithId<Document> = await waiterService.searchActiveUserCall(Number(userId));
     return res.status(httpStatus.OK).send(activeUserCall);
   } catch (error) {
     return res.sendStatus(httpStatus.BAD_REQUEST);

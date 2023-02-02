@@ -12,7 +12,7 @@ const waiterRouter = express.Router();
 waiterRouter
   .all('/*', authTokenMiddleware)
   .post('/', verifyAndCreateNewWaiterCall)
-  .delete('/', clearUserWaiterCall)
+  .delete('/:userId', clearUserWaiterCall)
   .get('/mycall', verifyUserCallAndReturn)
   .get('/calls', listAllActiveWaiterCalls);
 
