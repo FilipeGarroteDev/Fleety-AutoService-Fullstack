@@ -71,14 +71,19 @@ async function postWaiterCall() {
   return axios.post(`${BASE_URL}/waiter`, {}, config);
 }
 
-async function deleteWaiterCall() {
+async function deleteWaiterCall(userId) {
   const config = generateHeaders();
-  return axios.delete(`${BASE_URL}/waiter`, config);
+  return axios.delete(`${BASE_URL}/waiter/${userId}`, config);
 }
 
 async function getThisUserCall() {
   const config = generateHeaders();
   return axios.get(`${BASE_URL}/waiter/mycall`, config);
+}
+
+async function getAllUserCall() {
+  const config = generateHeaders();
+  return axios.get(`${BASE_URL}/waiter/calls`, config);
 }
 
 export {
@@ -97,4 +102,5 @@ export {
   postWaiterCall,
   deleteWaiterCall,
   getThisUserCall,
+  getAllUserCall,
 };
