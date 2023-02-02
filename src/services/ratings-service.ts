@@ -1,3 +1,4 @@
+import unauthorizedError from '@/errors/unauthorizedError';
 import { NewRatingEntity } from '@/protocols';
 import ratingsRepository from '@/repositories/ratings-repository';
 import { Ratings } from '@prisma/client';
@@ -12,8 +13,16 @@ async function createNewRating(userId: number, newRating: Omit<NewRatingEntity, 
   return rating;
 }
 
+async function verifyRoleAndListRatings(role: string): Promise<Ratings[]> {
+  if (role !== 'ADMIN') throw unauthorizedError();
+
+  const orders: Ratings[] = await ratingsRepository.getAllRatings();
+  return orders;
+}
+
 const ratingsService = {
   createNewRating,
+  verifyRoleAndListRatings,
 };
 
 export default ratingsService;

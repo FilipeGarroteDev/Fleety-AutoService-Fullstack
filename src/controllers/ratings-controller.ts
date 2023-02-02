@@ -15,3 +15,17 @@ export async function postNewUserAvaliation(req: Request, res: Response) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
+
+export async function searchAllUserRatings(req: Request, res: Response) {
+  const { role } = res.locals.userData as Record<string, string>;
+
+  try {
+    const ratings: Ratings[] = await ratingsService.verifyRoleAndListRatings(role);
+    return res.status(httpStatus.OK).send(ratings);
+  } catch (error) {
+    if (error.name === 'UnauthorizedError') {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
+    }
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+}

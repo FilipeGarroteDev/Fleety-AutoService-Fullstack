@@ -4,7 +4,8 @@ import faker from '@faker-js/faker';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import authFactory from '../factory/auth-factory';
-import { cleanDb, generateTokenAndSession, generateValidToken } from '../utils';
+import ratingsFactory from '../factory/ratings-factory';
+import { cleanDb, generateAdminTokenAndSession, generateTokenAndSession, generateValidToken } from '../utils';
 
 beforeAll(async () => {
   await init();
@@ -146,6 +147,84 @@ describe('POST /ratings', () => {
             userNote: storedRating[0].userNote,
             createdAt: expect.any(String),
           }),
+        );
+      });
+    });
+  });
+});
+
+describe('GET /ratings', () => {
+  it('should respond with status 401 when headers isnt given', async () => {
+    const response = await server.get('/ratings');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if token isnt given', async () => {
+    await authFactory.createUserByName('Mesa 13', '123456');
+    const response = await server.get('/ratings').set('Authorization', '');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if there is no active session with the given token', async () => {
+    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const token = generateValidToken(user.id);
+    const response = await server.get('/ratings').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  describe('when token is valid', () => {
+    it('should respond with status 401 if user role isnt ADMIN', async () => {
+      const data = await generateTokenAndSession(faker.name.firstName());
+
+      const response = await server.get('/ratings').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    describe('when user is admin', () => {
+      it('should respond with status 200', async () => {
+        const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+
+        const response = await server.get('/ratings').set('Authorization', `Bearer ${adminData.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+      });
+
+      it('should respond with status 200 and return empty array, if there is no order', async () => {
+        const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+        const clientData = await generateTokenAndSession(faker.name.firstName());
+
+        const response = await server.get('/ratings').set('Authorization', `Bearer ${adminData.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+        expect(response.body).toEqual([]);
+      });
+
+      it('should respond with status 200 and return orders array, when has 1 or more PREPARING orders', async () => {
+        const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+        const clientData = await generateTokenAndSession(faker.name.firstName());
+        await ratingsFactory.createSomeRatings(clientData.userId);
+
+        const response = await server.get('/ratings').set('Authorization', `Bearer ${adminData.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              userId: clientData.userId,
+              name: expect.any(String),
+              email: expect.any(String),
+              environmentRate: expect.any(Number),
+              foodRate: expect.any(Number),
+              beverageRate: expect.any(Number),
+              pricesRate: expect.any(Number),
+              serviceRate: expect.any(Number),
+              userNote: expect.any(String),
+            }),
+          ]),
         );
       });
     });

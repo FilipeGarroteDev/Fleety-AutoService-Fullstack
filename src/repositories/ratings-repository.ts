@@ -8,6 +8,10 @@ async function postRating(rating: NewRatingEntity): Promise<Ratings> {
   });
 }
 
-const ratingsRepository = { postRating };
+async function getAllRatings(): Promise<Ratings[]> {
+  return prismaPG.ratings.findMany({});
+}
+
+const ratingsRepository = { postRating, getAllRatings };
 
 export default ratingsRepository;
