@@ -91,6 +91,11 @@ async function getAllPreparingOrders() {
   return axios.get(`${BASE_URL}/chart`, config);
 }
 
+async function updateOrderStatus(id) {
+  const config = generateHeaders();
+  return axios.patch(`${BASE_URL}/chart/${id}`, {}, config);
+}
+
 export {
   getCategories,
   getCategoryProducts,
@@ -109,4 +114,5 @@ export {
   getThisUserCall,
   getAllUserCall,
   getAllPreparingOrders,
+  updateOrderStatus
 };
