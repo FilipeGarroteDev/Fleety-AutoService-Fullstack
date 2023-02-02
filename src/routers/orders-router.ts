@@ -1,4 +1,4 @@
-import { deleteActiveOrder, finishAndSendProductOrder, listAllPreparingOrders, listAllTicketOrders } from '@/controllers/orders-controller';
+import { deleteActiveOrder, deliverOrderUpdatingStatus, finishAndSendProductOrder, listAllPreparingOrders, listAllTicketOrders } from '@/controllers/orders-controller';
 import { authTokenMiddleware } from '@/middlewares/authToken-middleware';
 import validateSchema from '@/middlewares/schemas-middleware';
 import { OrdersBodySchema } from '@/schemas/orders-schema';
@@ -11,6 +11,7 @@ ordersRouter
   .get('/:ticketId', listAllTicketOrders)
   .delete('/:orderId', deleteActiveOrder)
   .get('/', listAllPreparingOrders)
+  .patch('/:orderId', deliverOrderUpdatingStatus)
   .all('/*', validateSchema(OrdersBodySchema))
   .post('/add', finishAndSendProductOrder);
 

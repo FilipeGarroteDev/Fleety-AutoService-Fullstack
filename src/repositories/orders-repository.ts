@@ -66,6 +66,24 @@ async function getAllPreparingOrders() {
   });
 }
 
-const ordersRepository = { saveNewOrder, getAllSelectedOrders, getOrderById, deleteOrderById, getAllPreparingOrders };
+async function updateOrderStatusById(orderId: number): Promise<void> {
+  await prismaPG.orders.update({
+    where: {
+      id: orderId,
+    },
+    data: {
+      status: OrderStatus.DELIVERED,
+    },
+  });
+}
+
+const ordersRepository = {
+  saveNewOrder,
+  getAllSelectedOrders,
+  getOrderById,
+  deleteOrderById,
+  getAllPreparingOrders,
+  updateOrderStatusById,
+};
 
 export default ordersRepository;

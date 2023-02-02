@@ -1,6 +1,7 @@
 import app, { init } from '@/app';
 import { prismaPG } from '@/config';
 import faker from '@faker-js/faker';
+import { OrderStatus } from '@prisma/client';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import authFactory from '../factory/auth-factory';
@@ -530,6 +531,124 @@ describe('GET /chart', () => {
               },
             }),
           ]),
+        );
+      });
+    });
+  });
+});
+
+describe('PATCH /chart/:orderId', () => {
+  it('should respond with status 401 when headers isnt given', async () => {
+    const response = await server.patch('/chart/1');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if token isnt given', async () => {
+    await authFactory.createUserByName('Mesa 13', '123456');
+    const response = await server.patch('/chart/1').set('Authorization', '');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if there is no active session with the given token', async () => {
+    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const token = generateValidToken(user.id);
+    const response = await server.patch('/chart/1').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  describe('when token is valid', () => {
+    it('should respond with status 422 if orderId has invalid format', async () => {
+      const data = await generateAdminTokenAndSession(faker.name.firstName());
+
+      const response = await server.patch('/chart/unknown').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it('should respond with status 404 if there is no order with given id', async () => {
+      const clientData = await generateTokenAndSession(faker.name.firstName());
+      const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+      await ticketsFactory.createReservedTicket(clientData.userId);
+
+      const response = await server.patch('/chart/999999999').set('Authorization', `Bearer ${adminData.token}`);
+
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
+
+    describe('when order is valid', () => {
+      it('should respond with status 401 if user role isnt ADMIN', async () => {
+        const clientData = await generateTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(clientData.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        const order = await ordersFactory.createOrderInAnotherTicket(ticket.id, product.id);
+
+        const response = await server.patch(`/chart/${order.id}`).set('Authorization', `Bearer ${clientData.token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+      });
+
+      it('should respond with status 401 if order status isnt PREPARING', async () => {
+        const clientData = await generateTokenAndSession(faker.name.firstName());
+        const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(clientData.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        const order = await ordersFactory.createOrderInAnotherTicket(ticket.id, product.id);
+
+        const response = await server.patch(`/chart/${order.id}`).set('Authorization', `Bearer ${adminData.token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+      });
+
+      it('should respond with status 200', async () => {
+        const clientData = await generateTokenAndSession(faker.name.firstName());
+        const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(clientData.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        const order = await ordersFactory.createSinglePreparingOrder(ticket.id, product.id);
+
+        const response = await server.patch(`/chart/${order.id}`).set('Authorization', `Bearer ${adminData.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+      });
+
+      it('should change order status PREPARING to DELIVERED', async () => {
+        const clientData = await generateTokenAndSession(faker.name.firstName());
+        const adminData = await generateAdminTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(clientData.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        const order = await ordersFactory.createSinglePreparingOrder(ticket.id, product.id);
+
+        const response = await server.patch(`/chart/${order.id}`).set('Authorization', `Bearer ${adminData.token}`);
+
+        const updatedOrder = await prismaPG.orders.findUnique({
+          where: {
+            id: order.id,
+          },
+        });
+
+        expect(response.status).toBe(httpStatus.OK);
+        expect(updatedOrder).toEqual(
+          expect.objectContaining({
+            id: order.id,
+            ticketId: ticket.id,
+            productId: product.id,
+            totalValue: expect.any(Number),
+            amount: expect.any(Number),
+            optionals: expect.any(String),
+            status: OrderStatus.DELIVERED,
+            createdAt: expect.any(Date),
+          }),
         );
       });
     });

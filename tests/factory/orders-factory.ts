@@ -163,12 +163,26 @@ async function createSelectedAndDeliveredOrders(ticketId: number, productId: num
   });
 }
 
+async function createSinglePreparingOrder(ticketId: number, productId: number) {
+  return await prismaPG.orders.create({
+    data: {
+      ticketId,
+      productId,
+      totalValue: faker.datatype.number({ max: 5000 }),
+      amount: faker.datatype.number({ max: 10 }),
+      optionals: faker.lorem.words(8),
+      status: OrderStatus.PREPARING,
+    },
+  });
+}
+
 const ordersFactory = {
   createDeliveredAndPreparingOrders,
   createOrderInAnotherTicket,
   createManySelectedOrders,
   createSelectedAndPreparingOrders,
-  createSelectedAndDeliveredOrders
+  createSelectedAndDeliveredOrders,
+  createSinglePreparingOrder
 };
 
 export default ordersFactory;

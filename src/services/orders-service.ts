@@ -52,8 +52,23 @@ async function searchAllOrdersWithPreparingStatus(role: string): Promise<OrderWi
   if (role !== 'ADMIN') throw unauthorizedError();
 
   const orders: OrderWithProductInfo[] = await ordersRepository.getAllPreparingOrders();
-  console.log(orders);
   return orders;
+}
+
+async function verifyAndUpdateOrderStatus(orderId: string, role: string): Promise<void> {
+  if (role !== 'ADMIN') throw unauthorizedError();
+
+  const validOrderId = Number(orderId);
+
+  if (!validOrderId) throw unprocessableEntityError();
+
+  const order: Orders = await ordersRepository.getOrderById(validOrderId);
+
+  if (!order) throw notFoundError();
+
+  if (order.status !== 'PREPARING') throw unauthorizedError();
+
+  await ordersRepository.updateOrderStatusById(validOrderId);
 }
 
 const ordersService = {
@@ -61,6 +76,7 @@ const ordersService = {
   searchOrdersByTicketId,
   validateAndDeleteSelectedOrder,
   searchAllOrdersWithPreparingStatus,
+  verifyAndUpdateOrderStatus,
 };
 
 export default ordersService;
