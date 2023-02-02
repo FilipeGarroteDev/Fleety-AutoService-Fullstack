@@ -86,6 +86,11 @@ async function getAllUserCall() {
   return axios.get(`${BASE_URL}/waiter/calls`, config);
 }
 
+async function getAllPreparingOrders() {
+  const config = generateHeaders();
+  return axios.get(`${BASE_URL}/chart`, config);
+}
+
 export {
   getCategories,
   getCategoryProducts,
@@ -103,4 +108,5 @@ export {
   deleteWaiterCall,
   getThisUserCall,
   getAllUserCall,
+  getAllPreparingOrders,
 };

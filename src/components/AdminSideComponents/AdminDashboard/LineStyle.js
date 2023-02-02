@@ -2,14 +2,15 @@ import styled from 'styled-components';
 
 export default styled.li`
   width: 100%;
-  padding: ${(props) => (props.order ? '10px 0' : '0')};
+  padding: ${(props) => (props.order ? '10px 20px' : '0')};
   height: ${(props) => (props.order ? 'auto' : '60px')};
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-align: center;
 
   > div {
-    width: ${(props) => (props.order ? '20%' : '15%')};
+    width: ${(props) => (props.order ? '10%' : '15%')};
     display: flex;
     justify-content: center;
 

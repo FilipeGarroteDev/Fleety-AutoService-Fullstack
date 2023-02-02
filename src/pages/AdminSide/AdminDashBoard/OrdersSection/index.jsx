@@ -2,66 +2,23 @@ import SectionTitle from '../../../../components/AdminSideComponents/AdminDashbo
 import SectionContainer from '../../../../components/AdminSideComponents/AdminDashboard/SectionContainer';
 import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
+import { useEffect, useState } from 'react';
+import { getAllPreparingOrders } from '../../../../services/axios';
 
 export default function OrdersSection() {
-  const table = 'Mesa 13';
+  const [ordersList, setOrdersList] = useState([]);
 
-  const ordersMock = [
-    {
-      id: 1,
-      ticketId: 1,
-      amount: 5,
-      optionals:
-        'Retirar: por gentileza, retirar a porra toda, desde salada até à carne. Ah, no bife acebolado, traz sem cebola\nAdicionais: 1x Ovo frito, 2x Bacon em fatia, 1x Maionese da casa, 1x Batata frita',
-      createdAt: Date.now(),
-      Product: {
-        name: 'Salada de tomate com bife acebolado.',
-      },
-    },
-    {
-      id: 2,
-      ticketId: 2,
-      amount: 1,
-      optionals: 'Adicionais: 1x Ovo frito, 2x Bacon em fatia, 1x Maionese da casa, 1x Batata frita',
-      createdAt: Date.now(),
-      Product: {
-        name: 'Salada de tomate com bife acebolado.',
-      },
-    },
-    {
-      id: 3,
-      ticketId: 3,
-      amount: 2,
-      optionals:
-        'Retirar: por gentileza, retirar a porra toda, desde salada até à carne. Ah, no bife acebolado, traz sem cebola\n',
-      createdAt: Date.now(),
-      Product: {
-        name: 'Salada de tomate com bife acebolado.',
-      },
-    },
-    {
-      id: 4,
-      ticketId: 4,
-      amount: 10,
-      optionals:
-        'Retirar: por gentileza, retirar a porra toda, desde salada até à carne. Ah, no bife acebolado, traz sem cebola\nAdicionais: 1x Ovo frito, 2x Bacon em fatia, 1x Maionese da casa, 1x Batata frita',
-      createdAt: Date.now(),
-      Product: {
-        name: 'Salada de tomate com bife acebolado.',
-      },
-    },
-    {
-      id: 5,
-      ticketId: 5,
-      amount: 5,
-      optionals:
-        'Retirar: por gentileza, retirar a porra toda, desde salada até à carne. Ah, no bife acebolado, traz sem cebola\nAdicionais: 1x Ovo frito, 2x Bacon em fatia, 1x Maionese da casa, 1x Batata frita',
-      createdAt: Date.now(),
-      Product: {
-        name: 'Salada de tomate com bife acebolado.',
-      },
-    },
-  ];
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const preparingOrders = await getAllPreparingOrders();
+        setOrdersList(preparingOrders.data);
+      } catch (error) {
+        alert('Algo deu errado com sua requisição. Por favor, atualize a página');
+      }
+    }
+    fetchData();
+  }, []);
 
   return (
     <SectionContainer>
@@ -72,7 +29,7 @@ export default function OrdersSection() {
       <SummaryContainer>
         <div>
           <h3>Em espera:</h3>
-          <strong>{ordersMock.length}</strong>
+          <strong>{ordersList.length}</strong>
         </div>
         <div>
           <h3>Entregues:</h3>
@@ -85,7 +42,7 @@ export default function OrdersSection() {
       </SummaryContainer>
       <OrdersQueue>
         <OrderLine header />
-        {ordersMock.map(({ id, ticketId, amount, optionals, createdAt, Product }) => (
+        {ordersList.map(({ id, ticketId, amount, optionals, createdAt, Product, Ticket }) => (
           <OrderLine
             id={id}
             ticketId={ticketId}
@@ -93,7 +50,7 @@ export default function OrdersSection() {
             optionals={optionals}
             createdAt={createdAt}
             name={Product.name}
-            table={table}
+            table={Ticket.User.name}
           />
         ))}
       </OrdersQueue>
