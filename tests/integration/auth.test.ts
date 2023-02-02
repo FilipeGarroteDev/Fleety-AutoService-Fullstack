@@ -2,7 +2,7 @@ import app, { init } from '@/app';
 import { prismaPG } from '@/config';
 import { SignUpBody } from '@/protocols';
 import faker from '@faker-js/faker';
-import { TicketStatus } from '@prisma/client';
+import { Roles, TicketStatus } from '@prisma/client';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import authFactory from '../factory/auth-factory';
@@ -20,7 +20,7 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe('POST /signup', () => {
+describe('POST /auth/signup', () => {
   describe('when body is invalid', () => {
     it('should respond with status 422 when body isnt given', async () => {
       const response = await server.post('/auth/signup').send({});
@@ -95,7 +95,7 @@ describe('POST /signup', () => {
   });
 });
 
-describe('POST /signin', () => {
+describe('POST /auth/signin', () => {
   describe('when body is invalid', () => {
     it('should respond with status 422 when body isnt given', async () => {
       const response = await server.post('/auth/signin').send({});
@@ -244,7 +244,7 @@ describe('POST /signin', () => {
   });
 });
 
-describe('GET /validate', () => {
+describe('GET /auth/validate', () => {
   it('should respond with status 401 when headers isnt given', async () => {
     const response = await server.get('/auth/validate');
 
@@ -286,5 +286,103 @@ describe('GET /validate', () => {
         name: user.name,
       }),
     );
+  });
+});
+
+describe('POST /auth/admin/signin', () => {
+  describe('when body is invalid', () => {
+    const generateInvalidBody = () => ({
+      name: faker.name.firstName(),
+      email: faker.internet.email(),
+      image: faker.internet.url(),
+    });
+
+    it('should respond with status 422 when body isnt given', async () => {
+      const response = await server.post('/auth/admin/signin').send({});
+
+      expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it('should respond with status 422, if sign up data is invalid', async () => {
+      const invalidSignInData = { [faker.lorem.word()]: faker.lorem.word() };
+
+      const response = await server.post('/auth/admin/signin').send(invalidSignInData);
+
+      expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it('should respond with status 422, if restaurant secret key doesnt given', async () => {
+      const invalidSignInData = generateInvalidBody();
+
+      const response = await server.post('/auth/admin/signin').send(invalidSignInData);
+
+      expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+  });
+  describe('when body is valid', () => {
+    const generateValidSigninBody = (restaurantSecretKey: string) => ({
+      name: faker.name.firstName(),
+      email: faker.internet.email(),
+      image: faker.internet.url(),
+      restaurantSecretKey,
+    });
+
+    it('should respond with status 403, if the restaurant secret key isnt correct', async () => {
+      const bodyWithWrongKey = generateValidSigninBody('unknown');
+
+      const response = await server.post('/auth/admin/signin').send(bodyWithWrongKey);
+
+      expect(response.status).toBe(httpStatus.FORBIDDEN);
+    });
+
+    it('should respond with status 401, if there is no registered admin', async () => {
+      const validBody = generateValidSigninBody(process.env.RESTAURANT_SECRET_KEY);
+
+      const response = await server.post('/auth/admin/signin').send(validBody);
+
+      expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    describe('when credentials are valid', () => {
+      it('should respond with status 200', async () => {
+        const validBody = generateValidSigninBody(process.env.RESTAURANT_SECRET_KEY);
+        await authFactory.createAdminByName(validBody.name, validBody.email, faker.lorem.word());
+        const response = await server.post('/auth/admin/signin').send(validBody);
+
+        expect(response.status).toBe(httpStatus.OK);
+      });
+
+      it('should respond with admin data and token', async () => {
+        const validBody = generateValidSigninBody(process.env.RESTAURANT_SECRET_KEY);
+        const admin = await authFactory.createAdminByName(validBody.name, validBody.email, faker.lorem.word());
+        const response = await server.post('/auth/admin/signin').send(validBody);
+
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            user: expect.objectContaining({
+              name: validBody.name,
+              image: validBody.image,
+              role: Roles.ADMIN,
+              id: admin.id,
+            }),
+            token: expect.any(String),
+          }),
+        );
+      });
+
+      it('should correctly save token on db', async () => {
+        const validBody = generateValidSigninBody(process.env.RESTAURANT_SECRET_KEY);
+        const admin = await authFactory.createAdminByName(validBody.name, validBody.email, faker.lorem.word());
+        const response = await server.post('/auth/admin/signin').send(validBody);
+
+        const session = await prismaPG.sessions.findFirst({
+          where: {
+            userId: admin.id,
+          },
+        });
+
+        expect(response.body.token).toEqual(session.token);
+      });
+    });
   });
 });

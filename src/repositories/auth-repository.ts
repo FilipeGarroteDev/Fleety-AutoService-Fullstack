@@ -32,11 +32,21 @@ async function getUserById(userId: number) {
   });
 }
 
+async function searchAdminByEmail(email: string) {
+  return prismaPG.users.findFirst({
+    where: {
+      email,
+      role: 'ADMIN',
+    },
+  });
+}
+
 const authRepository = {
   searchUser,
   insertNewUser,
   createNewSession,
   getUserById,
+  searchAdminByEmail,
 };
 
 export default authRepository;

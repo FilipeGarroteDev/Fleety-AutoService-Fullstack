@@ -1,4 +1,4 @@
-import { SignInBody, SignUpBody } from '@/protocols';
+import { AdminCredentials, SignInBody, SignUpBody } from '@/protocols';
 import authService from '@/services/auth-service';
 import { Users } from '@prisma/client';
 import { Request, Response } from 'express';
@@ -28,6 +28,23 @@ export async function signIn(req: Request, res: Response) {
   } catch (error) {
     if (error.name === 'UnauthorizedError') {
       res.status(httpStatus.UNAUTHORIZED).send(error.signInMessage);
+    } else {
+      res.sendStatus(httpStatus.BAD_REQUEST);
+    }
+  }
+}
+
+export async function adminSignIn(req: Request, res: Response) {
+  const signInData: AdminCredentials = req.body;
+
+  try {
+    const adminData = await authService.handleAdminLogin(signInData);
+    res.status(httpStatus.OK).send(adminData);
+  } catch (error) {
+    if (error.name === 'UnauthorizedError') {
+      res.sendStatus(httpStatus.UNAUTHORIZED);
+    } else if (error.name === 'ForbiddenError') {
+      res.sendStatus(httpStatus.FORBIDDEN);
     } else {
       res.sendStatus(httpStatus.BAD_REQUEST);
     }

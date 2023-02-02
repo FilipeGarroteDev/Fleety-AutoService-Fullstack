@@ -195,7 +195,7 @@ describe('GET /ratings', () => {
 
       it('should respond with status 200 and return empty array, if there is no order', async () => {
         const adminData = await generateAdminTokenAndSession(faker.name.firstName());
-        const clientData = await generateTokenAndSession(faker.name.firstName());
+        await generateTokenAndSession(faker.name.firstName());
 
         const response = await server.get('/ratings').set('Authorization', `Bearer ${adminData.token}`);
 

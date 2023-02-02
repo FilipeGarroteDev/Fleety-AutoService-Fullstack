@@ -1,6 +1,7 @@
 import conflictError from '@/errors/conflictError';
+import forbiddenError from '@/errors/forbiddenError';
 import unauthorizedError from '@/errors/unauthorizedError';
-import { SignInBody, SignUpBody } from '@/protocols';
+import { AdminCredentials, SignInBody, SignUpBody } from '@/protocols';
 import authRepository from '@/repositories/auth-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
 import { Tickets, Users } from '@prisma/client';
@@ -8,16 +9,15 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 async function searchUserAndSignUp(signUpData: SignUpBody) {
-  const { name, password, role } = signUpData;
-  const existentUser = await authRepository.searchUser(name);
+  const existentUser = await authRepository.searchUser(signUpData.name);
 
   if (existentUser) {
     throw conflictError();
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(signUpData.password, 10);
 
-  const user = await authRepository.insertNewUser({ name, role, password: hashedPassword });
+  const user = await authRepository.insertNewUser({ ...signUpData, password: hashedPassword });
   delete user.password;
   return user;
 }
@@ -38,7 +38,7 @@ async function validateCredentialAndSignIn(signInData: SignInBody) {
 
   const token = await createSession(existentUser.id);
   const ticket = await verifyAndCreateTicket(existentUser.id);
-  
+
   const clientAccountData = {
     user: {
       id: existentUser.id,
@@ -46,7 +46,7 @@ async function validateCredentialAndSignIn(signInData: SignInBody) {
       role: existentUser.role,
     },
     token,
-    ticket
+    ticket,
   };
 
   return clientAccountData;
@@ -75,10 +75,35 @@ async function getUserData(userId: number): Promise<Users> {
   return user;
 }
 
+async function handleAdminLogin(signInData: AdminCredentials) {
+  if (signInData.restaurantSecretKey !== process.env.RESTAURANT_SECRET_KEY) throw forbiddenError();
+
+  const existentUser = await authRepository.searchAdminByEmail(signInData.email);
+
+  if (!existentUser) {
+    throw unauthorizedError();
+  }
+
+  const token = await createSession(existentUser.id);
+
+  const adminAccountData = {
+    user: {
+      id: existentUser.id,
+      name: signInData.name,
+      image: signInData.image,
+      role: existentUser.role,
+    },
+    token,
+  };
+
+  return adminAccountData;
+}
+
 const authService = {
   searchUserAndSignUp,
   validateCredentialAndSignIn,
   getUserData,
+  handleAdminLogin,
 };
 
 export default authService;

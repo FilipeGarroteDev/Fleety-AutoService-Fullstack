@@ -13,12 +13,13 @@ async function createUserByName(name: string, password: string) {
   });
 }
 
-async function createAdminByName(name: string, password: string) {
+async function createAdminByName(name: string, email: string, password: string) {
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   return await prismaPG.users.create({
     data: {
       name,
+      email,
       password: hashedPassword,
       role: 'ADMIN',
     },

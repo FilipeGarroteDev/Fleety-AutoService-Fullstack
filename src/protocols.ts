@@ -70,3 +70,10 @@ export type PaymentBody = {
   cardIssuer: Issuers;
   cardLastDigits: string;
 };
+
+export type AdminCredentials = {
+  name: string;
+  email: string;
+  image: string;
+  restaurantSecretKey: string;
+};
