@@ -1,5 +1,6 @@
 import { prismaPG } from '@/config';
 import { RegisterUserBody } from '@/protocols';
+import { Users } from '@prisma/client';
 
 async function searchUser(name: string) {
   return prismaPG.users.findFirst({
@@ -41,12 +42,17 @@ async function searchAdminByEmail(email: string) {
   });
 }
 
+async function getAllUsers(): Promise<Users[]> {
+  return prismaPG.users.findMany({});
+}
+
 const authRepository = {
   searchUser,
   insertNewUser,
   createNewSession,
   getUserById,
   searchAdminByEmail,
+  getAllUsers,
 };
 
 export default authRepository;

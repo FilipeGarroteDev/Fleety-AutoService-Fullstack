@@ -28,9 +28,42 @@ async function createNewAdmin(name: string, email: string) {
   });
 }
 
+async function createManyUsers() {
+  return await prismaPG.users.createMany({
+    data: [
+      {
+        name: faker.name.firstName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+        image: faker.internet.url(),
+        role: 'CLIENT',
+      },
+      {
+        name: faker.name.firstName(),
+        password: faker.internet.password(),
+        image: faker.internet.url(),
+        role: 'CLIENT',
+      },
+      {
+        name: faker.name.firstName(),
+        password: faker.internet.password(),
+        role: 'CLIENT',
+      },
+      {
+        name: faker.name.firstName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+        image: faker.internet.url(),
+        role: 'ADMIN',
+      },
+    ],
+  });
+}
+
 const authFactory = {
   createUserByName,
   createNewAdmin,
+  createManyUsers
 };
 
 export default authFactory;

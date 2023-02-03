@@ -573,3 +573,67 @@ describe('POST /auth/admin/signin', () => {
     });
   });
 });
+
+describe('GET /auth/admin/users', () => {
+  it('should respond with status 401 when headers isnt given', async () => {
+    const response = await server.get('/auth/admin/users');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if token isnt given', async () => {
+    await authFactory.createNewAdmin(faker.name.firstName(), faker.internet.email());
+    const response = await server.get('/auth/admin/users').set('Authorization', '');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if there is no active session with the given token', async () => {
+    const admin = await authFactory.createNewAdmin(faker.name.firstName(), faker.internet.email());
+    const token = generateValidToken(admin.id);
+    const response = await server.get('/auth/admin/users').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  describe('when token is valid', () => {
+    it('should respond with status 401, if requester does not have admin role', async () => {
+      const data = await generateTokenAndSession(faker.name.firstName());
+
+      const response = await server.get('/auth/admin/users').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    it('should respond with status 200', async () => {
+      const data = await generateAdminTokenAndSession(faker.name.firstName());
+      await authFactory.createManyUsers();
+
+      const response = await server.get('/auth/admin/users').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.OK);
+    });
+
+    it('should respond with the active users list', async () => {
+      const data = await generateAdminTokenAndSession(faker.name.firstName());
+      await authFactory.createManyUsers();
+
+      const response = await server.get('/auth/admin/users').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.body.length).toBe(5);
+      expect(response.body).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(Number),
+            name: expect.any(String),
+            email: expect.any(String),
+            password: expect.any(String),
+            image: expect.any(String),
+            role: expect.any(String),
+            createdAt: expect.any(String),
+          }),
+        ]),
+      );
+    });
+  });
+});

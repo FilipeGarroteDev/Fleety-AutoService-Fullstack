@@ -109,11 +109,19 @@ async function handleAdminLogin(signInData: AdminCredentials) {
   return adminAccountData;
 }
 
+async function validateAndSearchAllUsers(role: string): Promise<Users[]> {
+  if (role !== 'ADMIN') throw unauthorizedError();
+
+  const users: Users[] = await authRepository.getAllUsers();
+  return users;
+}
+
 const authService = {
   validateDataAndRegisterUser,
   validateCredentialAndSignIn,
   getUserData,
   handleAdminLogin,
+  validateAndSearchAllUsers,
 };
 
 export default authService;
