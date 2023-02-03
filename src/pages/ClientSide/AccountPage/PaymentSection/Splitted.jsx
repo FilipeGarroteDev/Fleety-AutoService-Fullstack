@@ -1,14 +1,40 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import fleetyLogo from '../../../../assets/images/fleetyLogo.png';
+import CheckoutButton from '../../../../components/ClientSideComponents/AccountPage/CheckoutButton';
+import { postPayment } from '../../../../services/axios/checkout-connections';
 
-export default function Splitted() {
+export default function Splitted({ totalValue, setPaymentMethod }) {
+  const [ticket, setTicket] = useState({});
+
+  useEffect(() => {
+    const storageTicket = localStorage.getItem('ticket');
+    const parsedTicket = JSON.parse(storageTicket);
+    setTicket(parsedTicket);
+  }, []);
+
+  async function finishOrder() {
+    const paymentBody = {
+      totalValue: totalValue,
+      firstName: 'SPLITTED',
+      cardLastDigits: 'SPLT',
+      isSplitted: true,
+    };
+
+    try {
+      await postPayment(paymentBody, ticket.id);
+      setPaymentMethod('paymentSuccessful');
+    } catch (error) {
+      alert(error.response.data);
+    }
+  }
+
   return (
     <SplittedContainer>
       <span>
         Para ter uma experiência ainda melhor, clique no botão "Chamar o Garçom", localizado no menu superior, e
         finalizem o pagamento por pessoa.
       </span>
-      <img src={fleetyLogo} alt="logo" />
+      <CheckoutButton onClick={finishOrder}>Finalizar pedido</CheckoutButton>
     </SplittedContainer>
   );
 }

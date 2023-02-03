@@ -1,15 +1,12 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 import CreditCard from './CreditCard';
 import PaymentSuccessful from './PaymentSuccessful';
 import Splitted from './Splitted';
 
-export default function PaymentSection({ totalValue }) {
-  const [paymentMethod, setPaymentMethod] = useState('');
+export default function PaymentSection({ totalValue, paymentMethod, setPaymentMethod }) {
   const paymentOptions = {
-    paymentSuccessful: <PaymentSuccessful />,
     creditCard: <CreditCard totalValue={totalValue} setPaymentMethod={setPaymentMethod} />,
-    splitted: <Splitted />,
+    splitted: <Splitted totalValue={totalValue} setPaymentMethod={setPaymentMethod} />,
   };
 
   function renderSection(section) {
@@ -19,16 +16,22 @@ export default function PaymentSection({ totalValue }) {
 
   return (
     <Wrapper>
-      <h2>Pagamento</h2>
-      <PaymentOptions>
-        <Button onClick={() => renderSection('creditCard')} paymentMethod={paymentMethod} type="creditCard">
-          Pagar com o cartão de crédito
-        </Button>
-        <Button onClick={() => renderSection('splitted')} paymentMethod={paymentMethod} type="splitted">
-          Prefiro dividir a conta
-        </Button>
-      </PaymentOptions>
-      {paymentOptions[paymentMethod]}
+      {paymentMethod === 'paymentSuccessful' ? (
+        <PaymentSuccessful />
+      ) : (
+        <>
+          <h2>Pagamento</h2>
+          <PaymentOptions>
+            <Button onClick={() => renderSection('creditCard')} paymentMethod={paymentMethod} type="creditCard">
+              Pagar com o cartão de crédito
+            </Button>
+            <Button onClick={() => renderSection('splitted')} paymentMethod={paymentMethod} type="splitted">
+              Prefiro dividir a conta
+            </Button>
+          </PaymentOptions>
+          {paymentOptions[paymentMethod]}
+        </>
+      )}
     </Wrapper>
   );
 }

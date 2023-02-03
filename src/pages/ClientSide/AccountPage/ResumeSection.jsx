@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { BsCheckAll } from 'react-icons/bs';
+import { BiTime } from 'react-icons/bi';
 import styled from 'styled-components';
 import fleetyLogo from '../../../assets/images/fleetyLogo.png';
 
@@ -23,8 +25,8 @@ export default function ResumeSection({ finishedOrders, totalValue, setTotalValu
     <ResumeContainer>
       <h2>Resumo do pedido</h2>
       <ul>
-        {finishedOrders.map(({ id, amount, Product, totalValue }) => (
-          <OrderItem key={id} amount={amount} name={Product.name} value={totalValue} />
+        {finishedOrders.map(({ id, amount, Product, totalValue, status }) => (
+          <OrderItem key={id} amount={amount} name={Product.name} value={totalValue} status={status} />
         ))}
       </ul>
       <Subtotal>
@@ -65,13 +67,16 @@ export default function ResumeSection({ finishedOrders, totalValue, setTotalValu
   );
 }
 
-function OrderItem({ amount, name, value }) {
+function OrderItem({ amount, name, value, status }) {
   const formattedValue = (value / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   const formattedName = name[0].toUpperCase() + name.toLowerCase().slice(1);
 
   return (
-    <ItemStyle>
-      <p>{`${amount}x`}</p>
+    <ItemStyle status={status}>
+      <div>
+        {status === 'DELIVERED' ? <BsCheckAll /> : <BiTime />}
+        <p>{`${amount}x`}</p>
+      </div>
       <p>{formattedName}</p>
       <span>{formattedValue}</span>
     </ItemStyle>
@@ -125,15 +130,21 @@ const ItemStyle = styled.li`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  color: #312e2e;
+  color: ${(props) => (props.status === 'DELIVERED' ? '#275832' : '#312e2e')};
   font-size: 18px;
 
-  > p:nth-of-type(2) {
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  > p {
     width: 60%;
   }
 
   > span {
-    color: #275832;
+    color: ${(props) => (props.status === 'DELIVERED' ? '#275832' : '#312e2e')};
     font-size: 14px;
     font-weight: 700;
   }

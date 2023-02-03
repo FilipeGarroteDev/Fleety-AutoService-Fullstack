@@ -6,8 +6,9 @@ import PaymentSection from './PaymentSection/PaymentSection';
 import ResumeSection from './ResumeSection';
 
 export default function AccountPage() {
+  const [paymentMethod, setPaymentMethod] = useState('');
   const navigate = useNavigate();
-  const [userData, setUserData] = useState('');
+  const [userData, setUserData] = useState({});
   const [finishedOrders, setFinishedOrders] = useState([]);
   const [totalValue, setTotalValue] = useState(0);
 
@@ -32,15 +33,24 @@ export default function AccountPage() {
 
   return (
     <>
-      <OpacityStyle onClick={() => navigate('/')} />
+      <OpacityStyle
+        onClick={() => {
+          if (paymentMethod) {
+            localStorage.clear();
+            navigate('/signin');
+            return;
+          }
+          navigate('/');
+        }}
+      />
       <CheckoutWindow>
         <header>
           <h1>MINHA CONTA</h1>
           <span>{userData.name}</span>
         </header>
         <section>
-          <ResumeSection finishedOrders={finishedOrders} totalValue={totalValue} setTotalValue={setTotalValue}/>
-          <PaymentSection totalValue={totalValue}/>
+          <ResumeSection finishedOrders={finishedOrders} totalValue={totalValue} setTotalValue={setTotalValue} />
+          <PaymentSection totalValue={totalValue} paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
         </section>
       </CheckoutWindow>
     </>

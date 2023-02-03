@@ -12,7 +12,7 @@ export default function PaymentSuccessful() {
   }
 
   return (
-    <>
+    <Wrapper>
       <SuccessBox>
         <BsCheckCircleFill />
         <div>
@@ -26,9 +26,15 @@ export default function PaymentSuccessful() {
       <CheckoutButton logout onClick={clearDataAndLogout}>
         Logout
       </CheckoutButton>
-    </>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  padding-top: 25%;
+`;
 
 const SuccessBox = styled.div`
   width: 90%;

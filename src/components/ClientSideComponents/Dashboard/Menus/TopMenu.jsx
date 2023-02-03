@@ -3,31 +3,24 @@ import fleetyLogo from '../../../../assets/images/fleetyLogo.png';
 import { IoHandRight, IoWallet } from 'react-icons/io5';
 import { BsFillCartCheckFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { deleteWaiterCall, getThisUserCall, postWaiterCall } from '../../../../services/axios/waiter-connections';
+import { useQuery } from 'react-query';
 
 export default function TopMenu() {
-  const [userData, setUserData] = useState('');
+  const userData = JSON.parse(localStorage.getItem('user'));
   const [isWaiterCalled, setIsWaiterCalled] = useState(false);
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    setUserData(user);
-
-    async function fetchData() {
-      try {
-        const myCall = await getThisUserCall();
-        if (myCall.data) {
-          setIsWaiterCalled(true);
-        } else {
-          setIsWaiterCalled(false);
-        }
-      } catch (error) {
-        alert('Algo deu errado com sua requisição. Tente novamente.');
+  useQuery('mycall', () => {
+    return getThisUserCall().then((res) => {
+      if (res.data) {
+        setIsWaiterCalled(true);
+      } else {
+        setIsWaiterCalled(false);
       }
-    }
-    fetchData();
-  }, []);
+      return res.data;
+    });
+  });
 
   async function callWaiter() {
     if (isWaiterCalled) {

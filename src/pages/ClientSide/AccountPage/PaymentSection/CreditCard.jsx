@@ -35,6 +35,7 @@ export default function CreditCard({ totalValue, setPaymentMethod }) {
       firstName: card.name.split(' ')[0],
       cardIssuer: card.issuer,
       cardLastDigits: card.number.slice(12),
+      isSplitted: false,
     };
 
     try {
