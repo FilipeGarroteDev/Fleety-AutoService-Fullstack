@@ -5,7 +5,7 @@ import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard
 import { useState } from 'react';
 import { BiHide, BiShow } from 'react-icons/bi';
 import RegisterForm from './RegisterForm';
-import { getAllActiveUsers } from '../../../../services/axios';
+import { getAllActiveUsers } from '../../../../services/axios/users-connections';
 import { useQuery } from 'react-query';
 
 export default function RegisterTableSection() {

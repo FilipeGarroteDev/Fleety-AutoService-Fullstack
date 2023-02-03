@@ -1,6 +1,6 @@
 import SectionContainer from '../../../../components/AdminSideComponents/AdminDashboard/SectionContainer';
 import SectionTitle from '../../../../components/AdminSideComponents/AdminDashboard/SectionTitle';
-import { getAllUserCall } from '../../../../services/axios';
+import { getAllUserCall } from '../../../../services/axios/waiter-connections';
 import WaiterQueue from './WaiterQueue';
 import EmptyPage from '../../../../components/AdminSideComponents/AdminDashboard/EmptyPage';
 import { useQuery } from 'react-query';

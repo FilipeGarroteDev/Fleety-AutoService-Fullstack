@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { postNewUserData } from '../../../../services/axios';
+import { postNewUserData } from '../../../../services/axios/users-connections';
 
 export default function ConfirmBox({ type, setConfirmRegister, data, setData }) {
   const [restaurantSecretKey, setRestaurantSecretKey] = useState('');

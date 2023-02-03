@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { getCategories, getCategoryProducts } from '../../../../services/axios';
+import { getCategories } from '../../../../services/axios/categories-connections';
+import { getCategoryProducts } from '../../../../services/axios/products-connections';
 
 export default function CategoriesMenu({ setProducts }) {
   const { pathname } = useLocation();

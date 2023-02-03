@@ -1,6 +1,6 @@
 import SectionTitle from '../../../../components/AdminSideComponents/AdminDashboard/SectionTitle';
 import SectionContainer from '../../../../components/AdminSideComponents/AdminDashboard/SectionContainer';
-import { getAllPreparingOrders } from '../../../../services/axios';
+import { getAllPreparingOrders } from '../../../../services/axios/orders-connections';
 import { useQuery } from 'react-query';
 import SummaryContainer from './SummaryContainer';
 import OrdersQueue from './OrdersQueue';

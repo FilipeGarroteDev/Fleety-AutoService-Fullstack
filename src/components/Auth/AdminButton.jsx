@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { RiGoogleLine } from 'react-icons/ri';
 import { auth } from '../../services/firebase.js';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { adminSignIn } from '../../services/axios.js';
+import { adminSignIn } from '../../services/axios/auth-connections';
 import { useNavigate } from 'react-router-dom';
 
 export default function AdminButton() {

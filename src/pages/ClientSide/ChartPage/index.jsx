@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import EmptyPage from '../../../components/ClientSideComponents/Dashboard/FoodsAndDrinksPages/EmptyPage';
 import ProductCard from '../../../components/ClientSideComponents/Dashboard/FoodsAndDrinksPages/ProductCard';
-import { finishOrderAndUpdateStatus, listAllOrders } from '../../../services/axios';
+import { listAllOrders } from '../../../services/axios/orders-connections';
+import { finishOrderAndUpdateStatus } from '../../../services/axios/checkout-connections';
 import Home from '../ClientDashboard/Home';
 
 export default function ChartPage() {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { postRatings } from '../../../services/axios';
+import { postRatings } from '../../../services/axios/ratings-connections';
 import RateSection from './RateSection';
 import UserNoteSection from './UserNoteSection';
 

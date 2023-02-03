@@ -5,7 +5,7 @@ import Wrapper from '../../components/Auth/Wrapper';
 import fleetyLogo from '../../assets/images/fleetyLogo.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signIn } from '../../services/axios';
+import { signIn } from '../../services/axios/auth-connections';
 import styled from 'styled-components';
 import AdminButton from '../../components/Auth/AdminButton';
 

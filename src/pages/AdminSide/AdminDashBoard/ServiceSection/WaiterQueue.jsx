@@ -1,7 +1,7 @@
 import { BsFillStopwatchFill } from 'react-icons/bs';
 import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
-import { deleteWaiterCall } from '../../../../services/axios';
+import { deleteWaiterCall } from '../../../../services/axios/waiter-connections';
 
 export default function WaiterQueue({ callList }) {
   return (

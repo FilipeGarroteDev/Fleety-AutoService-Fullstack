@@ -5,7 +5,7 @@ import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard
 import { useState } from 'react';
 import RatingComponent from '../../../../common/MUI - components/Rating';
 import { useQuery } from 'react-query';
-import { getAllRatings } from '../../../../services/axios';
+import { getAllRatings } from '../../../../services/axios/ratings-connections';
 
 export default function ClientRatings() {
   const [ratingsSum, setRatingsSum] = useState({});

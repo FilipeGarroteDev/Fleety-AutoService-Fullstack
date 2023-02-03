@@ -3,7 +3,7 @@ import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import styled from 'styled-components';
 import CheckoutButton from '../../../../components/ClientSideComponents/AccountPage/CheckoutButton';
-import { postPayment } from '../../../../services/axios';
+import { postPayment } from '../../../../services/axios/checkout-connections';
 
 export default function CreditCard({ totalValue, setPaymentMethod }) {
   const [card, setCard] = useState({

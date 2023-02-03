@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { validateToken } from '../../services/axios';
+import { validateToken } from '../../services/axios/auth-connections';
 
 export default function ClientRouteProtector({ children }) {
   const navigate = useNavigate();

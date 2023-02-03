@@ -4,7 +4,8 @@ import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import AddItemsMenu from './AddItemsMenu';
 import WithdrawItemsMenu from './WithdrawItemsMenu';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getProductData, postOrder } from '../../../../services/axios';
+import { getProductData } from '../../../../services/axios/products-connections';
+import { postOrder } from '../../../../services/axios/orders-connections';
 
 export default function ProductPage() {
   const navigate = useNavigate();

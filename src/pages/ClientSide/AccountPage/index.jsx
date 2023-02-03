@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { listAllFinishedOrders } from '../../../services/axios';
+import { listAllFinishedOrders } from '../../../services/axios/checkout-connections';
 import PaymentSection from './PaymentSection/PaymentSection';
 import ResumeSection from './ResumeSection';
 

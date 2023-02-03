@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { IoTrash } from 'react-icons/io5';
-import { deleteActiveOrder } from '../../../../services/axios';
+import { deleteActiveOrder } from '../../../../services/axios/orders-connections';
 
 export default function ProductCard({
   name,

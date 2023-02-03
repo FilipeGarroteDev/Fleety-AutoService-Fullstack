@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
-import { updateOrderStatus } from '../../../../services/axios';
+import { updateOrderStatus } from '../../../../services/axios/orders-connections';
 
 export default function OrdersQueue({ data }) {
   return (
