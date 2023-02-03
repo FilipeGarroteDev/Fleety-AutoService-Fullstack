@@ -1,40 +1,16 @@
-import conflictError from '@/errors/conflictError';
 import forbiddenError from '@/errors/forbiddenError';
 import unauthorizedError from '@/errors/unauthorizedError';
-import { AdminCredentials, SignInBody, RegisterUserBody } from '@/protocols';
+import { AdminCredentials, SignInBody } from '@/protocols';
 import authRepository from '@/repositories/auth-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
-import { Roles, Tickets, Users } from '@prisma/client';
+import usersRepository from '@/repositories/users-repository';
+import { Tickets, Users } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-async function validateDataAndRegisterUser(signUpData: RegisterUserBody, role: string) {
-  if (role !== 'ADMIN') throw unauthorizedError();
-  if (signUpData.restaurantSecretKey !== process.env.RESTAURANT_SECRET_KEY) throw forbiddenError();
-
-  const existentUser = await authRepository.searchUser(signUpData.name);
-
-  if (existentUser) {
-    throw conflictError();
-  }
-
-  if (signUpData.role === Roles.ADMIN) {
-    const existentAdmin = await authRepository.searchAdminByEmail(signUpData.email);
-    if (existentAdmin) throw conflictError();
-  }
-
-  const hashedPassword = await bcrypt.hash(signUpData.password, 10);
-
-  delete signUpData.restaurantSecretKey;
-
-  const user = await authRepository.insertNewUser({ ...signUpData, password: hashedPassword });
-  delete user.password;
-  return user;
-}
-
 async function validateCredentialAndSignIn(signInData: SignInBody) {
   const { name, password } = signInData;
-  const existentUser = await authRepository.searchUser(name);
+  const existentUser = await usersRepository.searchUser(name);
 
   if (!existentUser) {
     throw unauthorizedError();
@@ -80,7 +56,7 @@ async function verifyAndCreateTicket(userId: number): Promise<Tickets> {
 }
 
 async function getUserData(userId: number): Promise<Users> {
-  const user = await authRepository.getUserById(userId);
+  const user = await usersRepository.getUserById(userId);
 
   return user;
 }
@@ -88,7 +64,7 @@ async function getUserData(userId: number): Promise<Users> {
 async function handleAdminLogin(signInData: AdminCredentials) {
   if (signInData.restaurantSecretKey !== process.env.RESTAURANT_SECRET_KEY) throw forbiddenError();
 
-  const existentUser = await authRepository.searchAdminByEmail(signInData.email);
+  const existentUser = await usersRepository.searchAdminByEmail(signInData.email);
 
   if (!existentUser) {
     throw unauthorizedError();
@@ -109,19 +85,10 @@ async function handleAdminLogin(signInData: AdminCredentials) {
   return adminAccountData;
 }
 
-async function validateAndSearchAllUsers(role: string): Promise<Users[]> {
-  if (role !== 'ADMIN') throw unauthorizedError();
-
-  const users: Users[] = await authRepository.getAllUsers();
-  return users;
-}
-
 const authService = {
-  validateDataAndRegisterUser,
   validateCredentialAndSignIn,
   getUserData,
   handleAdminLogin,
-  validateAndSearchAllUsers,
 };
 
 export default authService;

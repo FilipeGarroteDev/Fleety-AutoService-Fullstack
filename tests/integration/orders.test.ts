@@ -4,7 +4,7 @@ import faker from '@faker-js/faker';
 import { OrderStatus } from '@prisma/client';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
-import authFactory from '../factory/auth-factory';
+import authFactory from '../factory/users-factory';
 import categoriesFactory from '../factory/categories-factory';
 import ordersFactory from '../factory/orders-factory';
 import productsFactory from '../factory/products-factory';

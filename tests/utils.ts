@@ -1,7 +1,7 @@
 import { mongoDB, prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 import * as jwt from 'jsonwebtoken';
-import authFactory from './factory/auth-factory';
+import authFactory from './factory/users-factory';
 import { createSession } from './factory/sessions-factory';
 
 export async function cleanDb() {

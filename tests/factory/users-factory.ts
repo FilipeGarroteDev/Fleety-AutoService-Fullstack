@@ -60,10 +60,10 @@ async function createManyUsers() {
   });
 }
 
-const authFactory = {
+const usersFactory = {
   createUserByName,
   createNewAdmin,
   createManyUsers
 };
 
-export default authFactory;
+export default usersFactory;

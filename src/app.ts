@@ -10,6 +10,7 @@ import { ratingsRouter } from './routers/ratings-router';
 import { ordersRouter } from './routers/orders-router';
 import { checkoutRouter } from './routers/checkout-router';
 import { waiterRouter } from './routers/waiter-router';
+import usersRouter from './routers/users-router';
 
 loadEnvs();
 
@@ -19,6 +20,7 @@ app
   .use(express.json())
   .get('/health', async (req: Request, res: Response) => res.send('OK'))
   .use('/auth', authRouter)
+  .use('/users', usersRouter)
   .use('/categories', categoriesRouter)
   .use('/products', productsRouter)
   .use('/ratings', ratingsRouter)

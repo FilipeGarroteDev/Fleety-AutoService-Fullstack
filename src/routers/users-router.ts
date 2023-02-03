@@ -4,11 +4,11 @@ import { RegisterBodySchema } from '@/schemas/auth-schemas';
 import { authTokenMiddleware } from '@/middlewares/authToken-middleware';
 import { listAllActiveUsers, registerNewUser } from '@/controllers/users-controller';
 
-const authRouter = express.Router();
+const usersRouter = express.Router();
 
-authRouter
+usersRouter
   .all('/*', authTokenMiddleware)
-  .post('/admin/register', validateSchema(RegisterBodySchema), registerNewUser)
-  .get('/admin/users', listAllActiveUsers);
+  .post('/register', validateSchema(RegisterBodySchema), registerNewUser)
+  .get('/list', listAllActiveUsers);
 
-export default authRouter;
+export default usersRouter;

@@ -1,25 +1,23 @@
 import conflictError from '@/errors/conflictError';
 import forbiddenError from '@/errors/forbiddenError';
 import unauthorizedError from '@/errors/unauthorizedError';
-import { AdminCredentials, SignInBody, RegisterUserBody } from '@/protocols';
-import authRepository from '@/repositories/auth-repository';
-import ticketsRepository from '@/repositories/tickets-repository';
-import { Roles, Tickets, Users } from '@prisma/client';
+import { RegisterUserBody } from '@/protocols';
+import usersRepository from '@/repositories/users-repository';
+import { Roles, Users } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 async function validateDataAndRegisterUser(signUpData: RegisterUserBody, role: string) {
   if (role !== 'ADMIN') throw unauthorizedError();
   if (signUpData.restaurantSecretKey !== process.env.RESTAURANT_SECRET_KEY) throw forbiddenError();
 
-  const existentUser = await authRepository.searchUser(signUpData.name);
+  const existentUser = await usersRepository.searchUser(signUpData.name);
 
   if (existentUser) {
     throw conflictError();
   }
 
   if (signUpData.role === Roles.ADMIN) {
-    const existentAdmin = await authRepository.searchAdminByEmail(signUpData.email);
+    const existentAdmin = await usersRepository.searchAdminByEmail(signUpData.email);
     if (existentAdmin) throw conflictError();
   }
 
@@ -27,7 +25,7 @@ async function validateDataAndRegisterUser(signUpData: RegisterUserBody, role: s
 
   delete signUpData.restaurantSecretKey;
 
-  const user = await authRepository.insertNewUser({ ...signUpData, password: hashedPassword });
+  const user = await usersRepository.insertNewUser({ ...signUpData, password: hashedPassword });
   delete user.password;
   return user;
 }
@@ -35,7 +33,7 @@ async function validateDataAndRegisterUser(signUpData: RegisterUserBody, role: s
 async function validateAndSearchAllUsers(role: string): Promise<Users[]> {
   if (role !== 'ADMIN') throw unauthorizedError();
 
-  const users: Users[] = await authRepository.getAllUsers();
+  const users: Users[] = await usersRepository.getAllUsers();
   return users;
 }
 

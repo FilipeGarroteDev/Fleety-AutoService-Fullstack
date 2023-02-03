@@ -4,7 +4,7 @@ import faker from '@faker-js/faker';
 import httpStatus from 'http-status';
 import { Document, ObjectId, WithId } from 'mongodb';
 import supertest from 'supertest';
-import authFactory from '../factory/auth-factory';
+import authFactory from '../factory/users-factory';
 import waiterFactory from '../factory/waiter-factory';
 import { cleanDb, generateAdminTokenAndSession, generateTokenAndSession, generateValidToken } from '../utils';
 
