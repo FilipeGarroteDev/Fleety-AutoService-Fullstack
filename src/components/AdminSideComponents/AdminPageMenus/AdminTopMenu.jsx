@@ -13,7 +13,7 @@ export default function AdminTopMenu() {
     <Container>
       <h1>Fleety</h1>
       <h2>MyDashboard</h2>
-      <img src={String(userData.image)} alt="profileImg" />
+      <img src={String(userData?.image)} alt="profileImg" />
     </Container>
   );
 }

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { validateToken } from '../../services/axios/auth-connections';
 
@@ -6,22 +6,26 @@ export default function AdminRouteProtector({ children }) {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const user = await validateToken(token);
-        if (user.data.role === 'ADMIN') {
-          navigate('/admin');
-        } else if (user.data.role === 'CLIENT') {
-          navigate('/home');
-        }
-      } catch (error) {
-        localStorage.clear();
-        navigate('/signin');
-      }
-    }
-    fetchData();
-  }, []);
+  if (!token) navigate('/signin');
 
-  return <>{children}</>;
+  const { data, isError, isLoading } = useQuery('userData', () => {
+    return validateToken(token).then((res) => res.data);
+  });
+
+  if (isLoading) {
+    return <h1>LOADINGGGGGGGGGG</h1>;
+  }
+
+  if (isError) {
+    localStorage.clear();
+    navigate('/signin');
+  }
+
+  if (data.role === 'CLIENT') {
+    navigate('/');
+  }
+
+  if (data.role === 'ADMIN') {
+    return <>{children}</>;
+  }
 }

@@ -28,7 +28,7 @@ export default function ProductCard({
       alert('Seu pedido foi excluído do carrinho com sucesso!');
     } catch (error) {
       alert('Ocorreu um erro com sua requisição. Por gentileza, tente novamente!');
-      navigate('/home');
+      navigate('/');
     }
   }
 

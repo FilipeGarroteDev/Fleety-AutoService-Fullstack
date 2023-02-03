@@ -23,7 +23,7 @@ export default function AccountPage() {
         setFinishedOrders(promise.data);
       } catch (error) {
         alert('Não foi possível carregar suas informações. Por gentileza, tente novamente.');
-        navigate('/home');
+        navigate('/');
       }
     }
 
@@ -32,7 +32,7 @@ export default function AccountPage() {
 
   return (
     <>
-      <OpacityStyle onClick={() => navigate('/home')} />
+      <OpacityStyle onClick={() => navigate('/')} />
       <CheckoutWindow>
         <header>
           <h1>MINHA CONTA</h1>

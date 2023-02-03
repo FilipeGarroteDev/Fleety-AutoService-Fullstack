@@ -13,7 +13,7 @@ export default function RatingsPage() {
     try {
       await postRatings(ratingObject);
       alert('Sua opinião é muito importante para nós. Obrigado por colaborar!!');
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       alert('Algo deu errado. Você precisa preencher os campos corretamente. O campo "opinião pessoal" é opcional');
     }

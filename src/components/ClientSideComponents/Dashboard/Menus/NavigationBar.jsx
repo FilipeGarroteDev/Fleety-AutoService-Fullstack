@@ -10,7 +10,7 @@ export default function NavigationBar() {
   return (
     <Container>
       <ButtonsContainer>
-        <Link to="/home">
+        <Link to="/">
           <MenuButton page={page} name="home">
             <IoHome />
             <span>Home</span>

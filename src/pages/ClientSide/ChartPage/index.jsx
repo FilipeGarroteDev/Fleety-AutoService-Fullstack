@@ -23,7 +23,7 @@ export default function ChartPage() {
         setOrdersList(promise.data);
       } catch (error) {
         alert('Algo deu errado em sua requisição. Tente novamente mais tarde');
-        navigate('/home');
+        navigate('/');
       }
     }
 
@@ -62,10 +62,10 @@ export default function ChartPage() {
 
   return (
     <>
-      <OpacityStyle onClick={() => navigate('/home')} />
+      <OpacityStyle onClick={() => navigate('/')} />
       <Home />
       <ChartWindow>
-        <button onClick={() => navigate('/home')}>X</button>
+        <button onClick={() => navigate('/')}>X</button>
         <header>MEU PEDIDO</header>
         <OrderContainer>
           {ordersList.length === 0 ? (

@@ -51,7 +51,7 @@ export default function App() {
                 </ClientRouteProtector>
               }
             >
-              <Route path="home" element={<Home />} />
+              <Route path="" element={<Home />} />
               <Route path="foods/:categoryId?" element={<FoodsPage />} />
               <Route path="beverages/:categoryId?" element={<BeveragesPage />} />
               <Route path="product/:productId" element={<ProductPage />} />

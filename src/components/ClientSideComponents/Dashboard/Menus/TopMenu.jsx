@@ -50,7 +50,7 @@ export default function TopMenu() {
   return (
     <Container>
       <img src={fleetyLogo} alt="logo" />
-      <div>{userData.name}</div>
+      <div>{userData?.name}</div>
 
       <ButtonsContainer isWaiterCalled={isWaiterCalled}>
         <button onClick={callWaiter}>
