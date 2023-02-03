@@ -69,8 +69,9 @@ export type OrderWithProductInfo = {
 export type PaymentBody = {
   totalValue: number;
   firstName: string;
-  cardIssuer: Issuers;
+  cardIssuer?: Issuers;
   cardLastDigits: string;
+  isSplitted: boolean
 };
 
 export type AdminCredentials = {

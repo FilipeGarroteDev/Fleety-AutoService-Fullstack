@@ -410,6 +410,7 @@ describe('POST /checkout/payment/:ticketId', () => {
         firstName: faker.name.firstName(),
         cardIssuer: 'MASTERCARD',
         cardLastDigits: '4444',
+        isSplitted: false,
       });
 
       it('should respond with status 404 if given ticket id is invalid', async () => {
@@ -541,131 +542,271 @@ describe('POST /checkout/payment/:ticketId', () => {
         expect(response.status).toBe(httpStatus.FORBIDDEN);
       });
 
-      it('should respond with status 201 if payment is successful, with maximum possible tip value', async () => {
-        const data = await generateTokenAndSession(faker.name.firstName());
-        const ticket = await ticketsFactory.createReservedTicket(data.userId);
-        const foodType = await categoriesFactory.createFoodType();
-        const category = await categoriesFactory.createSingleCategory(foodType.id);
-        const product = await productsFactory.createSingleProduct(category.id);
-        await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
-        const totalOrdersValues = await checkoutFactory.sumOrdersValues();
-        const body = generateValidPayment(totalOrdersValues * 1.2);
+      describe('in credit card payment case', () => {
+        it('should respond with status 201 if payment is successful, with maximum possible tip value', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidPayment(totalOrdersValues * 1.2);
 
-        const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
-          .set('Authorization', `Bearer ${data.token}`)
-          .send(body);
+          const response = await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
 
-        expect(response.status).toBe(httpStatus.CREATED);
-      });
-
-      it('should respond with status 201 if payment is successful, with minimum possible tip value', async () => {
-        const data = await generateTokenAndSession(faker.name.firstName());
-        const ticket = await ticketsFactory.createReservedTicket(data.userId);
-        const foodType = await categoriesFactory.createFoodType();
-        const category = await categoriesFactory.createSingleCategory(foodType.id);
-        const product = await productsFactory.createSingleProduct(category.id);
-        await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
-        const totalOrdersValues = await checkoutFactory.sumOrdersValues();
-        const body = generateValidPayment(totalOrdersValues);
-
-        const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
-          .set('Authorization', `Bearer ${data.token}`)
-          .send(body);
-
-        expect(response.status).toBe(httpStatus.CREATED);
-      });
-
-      it('should respond with payment data', async () => {
-        const data = await generateTokenAndSession(faker.name.firstName());
-        const ticket = await ticketsFactory.createReservedTicket(data.userId);
-        const foodType = await categoriesFactory.createFoodType();
-        const category = await categoriesFactory.createSingleCategory(foodType.id);
-        const product = await productsFactory.createSingleProduct(category.id);
-        await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
-        const totalOrdersValues = await checkoutFactory.sumOrdersValues();
-        const body = generateValidPayment(totalOrdersValues);
-
-        const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
-          .set('Authorization', `Bearer ${data.token}`)
-          .send(body);
-
-        expect(response.body).toEqual(
-          expect.objectContaining({
-            id: expect.any(Number),
-            ticketId: ticket.id,
-            totalValue: body.totalValue,
-            firstName: body.firstName,
-            cardIssuer: body.cardIssuer,
-            cardLastDigits: body.cardLastDigits,
-            createdAt: expect.any(String),
-          }),
-        );
-      });
-
-      it('should save payment data on db', async () => {
-        const data = await generateTokenAndSession(faker.name.firstName());
-        const ticket = await ticketsFactory.createReservedTicket(data.userId);
-        const foodType = await categoriesFactory.createFoodType();
-        const category = await categoriesFactory.createSingleCategory(foodType.id);
-        const product = await productsFactory.createSingleProduct(category.id);
-        await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
-        const totalOrdersValues = await checkoutFactory.sumOrdersValues();
-        const body = generateValidPayment(totalOrdersValues);
-
-        const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
-          .set('Authorization', `Bearer ${data.token}`)
-          .send(body);
-
-        const paymentData = await prismaPG.payments.findFirst({
-          where: {
-            ticketId: ticket.id,
-          },
+          expect(response.status).toBe(httpStatus.CREATED);
         });
 
-        expect(paymentData).toEqual(
-          expect.objectContaining({
-            id: response.body.id,
-            ticketId: ticket.id,
-            totalValue: response.body.totalValue,
-            firstName: response.body.firstName,
-            cardIssuer: response.body.cardIssuer,
-            cardLastDigits: response.body.cardLastDigits,
-            createdAt: expect.any(Date),
-          }),
-        );
-      });
+        it('should respond with status 201 if payment is successful, with minimum possible tip value', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidPayment(totalOrdersValues);
 
-      it('should update ticket status to PAID', async () => {
-        const data = await generateTokenAndSession(faker.name.firstName());
-        const ticket = await ticketsFactory.createReservedTicket(data.userId);
-        const foodType = await categoriesFactory.createFoodType();
-        const category = await categoriesFactory.createSingleCategory(foodType.id);
-        const product = await productsFactory.createSingleProduct(category.id);
-        await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
-        const totalOrdersValues = await checkoutFactory.sumOrdersValues();
-        const body = generateValidPayment(totalOrdersValues);
+          const response = await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
 
-        const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
-          .set('Authorization', `Bearer ${data.token}`)
-          .send(body);
-
-        const ticketPaid = await prismaPG.tickets.findFirst({
-          where: {
-            id: ticket.id,
-          },
+          expect(response.status).toBe(httpStatus.CREATED);
         });
 
-        expect(response.status).toBe(httpStatus.CREATED);
-        expect(ticketPaid).toEqual(
-          expect.objectContaining({
-            status: TicketStatus.PAID,
-          }),
-        );
+        it('should respond with payment data', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidPayment(totalOrdersValues);
+
+          const response = await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              id: expect.any(Number),
+              ticketId: ticket.id,
+              totalValue: body.totalValue,
+              firstName: body.firstName,
+              cardIssuer: body.cardIssuer,
+              cardLastDigits: body.cardLastDigits,
+              createdAt: expect.any(String),
+            }),
+          );
+        });
+
+        it('should save payment data on db', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidPayment(totalOrdersValues);
+
+          const response = await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          const paymentData = await prismaPG.payments.findFirst({
+            where: {
+              ticketId: ticket.id,
+            },
+          });
+
+          expect(paymentData).toEqual(
+            expect.objectContaining({
+              id: response.body.id,
+              ticketId: ticket.id,
+              totalValue: response.body.totalValue,
+              firstName: response.body.firstName,
+              cardIssuer: response.body.cardIssuer,
+              cardLastDigits: response.body.cardLastDigits,
+              createdAt: expect.any(Date),
+            }),
+          );
+        });
+
+        it('should update ticket status to PAID', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidPayment(totalOrdersValues);
+
+          const response = await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          const ticketPaid = await prismaPG.tickets.findFirst({
+            where: {
+              id: ticket.id,
+            },
+          });
+
+          expect(response.status).toBe(httpStatus.CREATED);
+          expect(ticketPaid).toEqual(
+            expect.objectContaining({
+              status: TicketStatus.PAID,
+            }),
+          );
+        });
+      });
+
+      describe('in splitted payment case', () => {
+        const generateValidSplittedPayment = (totalValue: number) => ({
+          totalValue,
+          firstName: 'SPLITTED',
+          cardLastDigits: 'SPLT',
+          isSplitted: true,
+        });
+
+        it('should respond with status 201 if payment is successful, with maximum possible tip value', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidSplittedPayment(totalOrdersValues * 1.2);
+
+          const response = await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          expect(response.status).toBe(httpStatus.CREATED);
+        });
+
+        it('should respond with status 201 if payment is successful, with minimum possible tip value', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidSplittedPayment(totalOrdersValues);
+
+          const response = await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          expect(response.status).toBe(httpStatus.CREATED);
+        });
+
+        it('should respond with payment data', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidSplittedPayment(totalOrdersValues);
+
+          const response = await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              id: expect.any(Number),
+              ticketId: ticket.id,
+              totalValue: body.totalValue,
+              firstName: body.firstName,
+              cardIssuer: null,
+              cardLastDigits: body.cardLastDigits,
+              isSplitted: true,
+              createdAt: expect.any(String),
+            }),
+          );
+        });
+
+        it('should save payment data on db', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidSplittedPayment(totalOrdersValues);
+
+          await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          const paymentData = await prismaPG.payments.findFirst({
+            where: {
+              ticketId: ticket.id,
+            },
+          });
+
+          expect(paymentData).toEqual(
+            expect.objectContaining({
+              id: expect.any(Number),
+              ticketId: ticket.id,
+              totalValue: body.totalValue,
+              firstName: body.firstName,
+              cardIssuer: null,
+              cardLastDigits: body.cardLastDigits,
+              isSplitted: true,
+              createdAt: expect.any(Date),
+            }),
+          );
+        });
+
+        it('should update ticket status to PAID', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidSplittedPayment(totalOrdersValues);
+
+          const response = await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          const ticketPaid = await prismaPG.tickets.findFirst({
+            where: {
+              id: ticket.id,
+            },
+          });
+
+          expect(response.status).toBe(httpStatus.CREATED);
+          expect(ticketPaid).toEqual(
+            expect.objectContaining({
+              status: TicketStatus.PAID,
+            }),
+          );
+        });
       });
     });
   });

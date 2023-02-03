@@ -76,7 +76,7 @@ const checkoutRepository = {
   getAllFinishedOrders,
   getAllDeliveredOrders,
   postPaymentAndUpdateTicketStatus,
-  getAllActiveOrders
+  getAllActiveOrders,
 };
 
 export default checkoutRepository;

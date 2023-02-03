@@ -8,8 +8,9 @@ const CheckoutBodySchema = joi.object({
 const PaymentBodySchema = joi.object({
   totalValue: joi.number().required(),
   firstName: joi.string().required(),
-  cardIssuer: joi.string().valid('MASTERCARD', 'VISA').required(),
+  cardIssuer: joi.string().valid('MASTERCARD', 'VISA'),
   cardLastDigits: joi.string().min(4).max(4).required(),
+  isSplitted: joi.boolean(),
 });
 
 export { CheckoutBodySchema, PaymentBodySchema };

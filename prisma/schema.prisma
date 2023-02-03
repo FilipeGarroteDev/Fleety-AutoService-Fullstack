@@ -119,7 +119,8 @@ model Payments {
   Ticket         Tickets   @relation(fields: [ticketId], references: [id])
   totalValue     Int
   firstName      String
-  cardIssuer     Issuers
+  cardIssuer     Issuers? 
+  isSplitted     Boolean
   cardLastDigits String
   createdAt      DateTime @default(now())
 }
