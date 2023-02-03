@@ -5,55 +5,19 @@ import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard
 import { useState } from 'react';
 import { BiHide, BiShow } from 'react-icons/bi';
 import RegisterForm from './RegisterForm';
+import { getAllActiveUsers } from '../../../../services/axios';
+import { useQuery } from 'react-query';
 
 export default function RegisterTableSection() {
   const [clientData, setClientData] = useState({});
   const [adminData, setAdminData] = useState({});
+  const { data, isError, isLoading } = useQuery('users', () => {
+    return getAllActiveUsers().then((res) => res.data);
+  });
 
-  const mockedUsers = [
-    {
-      id: 1,
-      name: 'Mesa 01',
-      password: '123456',
-      role: 'CLIENT',
-      createdAt: Date.now(),
-    },
-    {
-      id: 2,
-      name: 'Mesa 02',
-      password: '123456',
-      role: 'CLIENT',
-      createdAt: Date.now(),
-    },
-    {
-      id: 3,
-      name: 'Mesa 03',
-      password: '123456',
-      role: 'CLIENT',
-      createdAt: Date.now(),
-    },
-    {
-      id: 4,
-      name: 'Mesa 04',
-      password: '123456',
-      role: 'CLIENT',
-      createdAt: Date.now(),
-    },
-    {
-      id: 5,
-      name: 'Mesa 05',
-      password: '123456',
-      role: 'CLIENT',
-      createdAt: Date.now(),
-    },
-    {
-      id: 6,
-      name: 'Mesa 06',
-      password: '123456',
-      role: 'CLIENT',
-      createdAt: Date.now(),
-    },
-  ];
+  if (isLoading) {
+    return <h1>LOADINGGGGGG</h1>;
+  }
 
   function handleClientRegister(e) {
     setClientData({
@@ -116,7 +80,7 @@ export default function RegisterTableSection() {
       </RegisterForm>
       <UsersList>
         <UserLine header />
-        {mockedUsers.map(({ id, name, role, createdAt }) => (
+        {data.map(({ id, name, role, createdAt }) => (
           <UserLine key={id} id={id} name={name} role={role} createdAt={createdAt} />
         ))}
       </UsersList>

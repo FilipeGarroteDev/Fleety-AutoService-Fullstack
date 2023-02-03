@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 
 export default function AdminTopMenu() {
-  const [userData, setUserData] = useState('');
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -13,7 +13,7 @@ export default function AdminTopMenu() {
     <Container>
       <h1>Fleety</h1>
       <h2>MyDashboard</h2>
-      <img src="https://nerdhits.com.br/wp-content/uploads/2022/12/road-of-naruto-1200x900.jpg" alt="profileImg" />
+      <img src={String(userData.image)} alt="profileImg" />
     </Container>
   );
 }

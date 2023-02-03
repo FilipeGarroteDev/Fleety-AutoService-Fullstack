@@ -40,6 +40,11 @@ async function postNewUserData(body) {
   return axios.post(`${BASE_URL}/auth/admin/register`, body, config);
 }
 
+async function getAllActiveUsers() {
+  const config = generateHeaders();
+  return axios.get(`${BASE_URL}/auth/admin/users`, config);
+}
+
 async function postRatings(body) {
   const config = generateHeaders();
   return axios.post(`${BASE_URL}/ratings`, body, config);
@@ -131,5 +136,6 @@ export {
   updateOrderStatus,
   getAllRatings,
   adminSignIn,
-  postNewUserData
+  postNewUserData,
+  getAllActiveUsers
 };
