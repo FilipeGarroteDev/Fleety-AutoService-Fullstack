@@ -1,11 +1,12 @@
 import joi from 'joi';
 
-const SignUpSchema = joi.object({
+const RegisterBodySchema = joi.object({
   role: joi.string().valid('CLIENT', 'ADMIN').required(),
   password: joi.string().required(),
   name: joi.string().required(),
   email: joi.string().allow(''),
   image: joi.string().allow(''),
+  restaurantSecretKey: joi.string().required(),
 });
 
 const SignInSchema = joi.object({
@@ -20,4 +21,4 @@ const AdminCredentialsSchema = joi.object({
   restaurantSecretKey: joi.string().required(),
 });
 
-export { SignUpSchema, SignInSchema, AdminCredentialsSchema };
+export { RegisterBodySchema, SignInSchema, AdminCredentialsSchema };

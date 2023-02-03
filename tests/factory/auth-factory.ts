@@ -1,4 +1,5 @@
 import { prismaPG } from '@/config';
+import faker from '@faker-js/faker';
 import bcrypt from 'bcrypt';
 
 async function createUserByName(name: string, password: string) {
@@ -13,7 +14,8 @@ async function createUserByName(name: string, password: string) {
   });
 }
 
-async function createAdminByName(name: string, email: string, password: string) {
+async function createNewAdmin(name: string, email: string) {
+  const password = faker.internet.password();
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   return await prismaPG.users.create({
@@ -28,7 +30,7 @@ async function createAdminByName(name: string, email: string, password: string) 
 
 const authFactory = {
   createUserByName,
-  createAdminByName,
+  createNewAdmin,
 };
 
 export default authFactory;

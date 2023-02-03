@@ -1,5 +1,5 @@
 import { prismaPG } from '@/config';
-import { SignUpBody } from '@/protocols';
+import { RegisterUserBody } from '@/protocols';
 
 async function searchUser(name: string) {
   return prismaPG.users.findFirst({
@@ -9,7 +9,7 @@ async function searchUser(name: string) {
   });
 }
 
-async function insertNewUser(body: SignUpBody) {
+async function insertNewUser(body: RegisterUserBody) {
   return prismaPG.users.create({
     data: body,
   });

@@ -1,18 +1,23 @@
-import { AdminCredentials, SignInBody, SignUpBody } from '@/protocols';
+import { AdminCredentials, SignInBody, RegisterUserBody } from '@/protocols';
 import authService from '@/services/auth-service';
 import { Users } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 
-export async function signUp(req: Request, res: Response) {
-  const signUpData: SignUpBody = req.body;
+export async function registerNewUser(req: Request, res: Response) {
+  const { role } = res.locals.userData as Record<string, string>;
+  const signUpData: RegisterUserBody = req.body;
 
   try {
-    const user = await authService.searchUserAndSignUp(signUpData);
+    const user = await authService.validateDataAndRegisterUser(signUpData, role);
     res.status(httpStatus.CREATED).send(user);
   } catch (error) {
     if (error.name === 'ConflictError') {
       res.sendStatus(httpStatus.CONFLICT);
+    } else if (error.name === 'ForbiddenError') {
+      res.sendStatus(httpStatus.FORBIDDEN);
+    } else if (error.name === 'UnauthorizedError') {
+      res.sendStatus(httpStatus.UNAUTHORIZED);
     } else {
       res.sendStatus(httpStatus.BAD_REQUEST);
     }

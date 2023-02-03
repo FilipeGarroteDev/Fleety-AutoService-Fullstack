@@ -15,10 +15,12 @@ export type ProductEntity = {
   Optionals: Optionals[];
 };
 
-export type SignUpBody = {
+export type RegisterUserBody = {
   name: string;
   password: string;
+  email?: string;
   role: 'CLIENT' | 'ADMIN';
+  restaurantSecretKey: string;
 };
 
 export type SignInBody = {

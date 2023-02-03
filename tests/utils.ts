@@ -16,7 +16,7 @@ export async function cleanDb() {
   await prismaPG.ratings.deleteMany({});
   await prismaPG.tickets.deleteMany({});
   await prismaPG.users.deleteMany({});
-  
+
   await mongoDB.collection('calls').deleteMany({});
 }
 
@@ -35,7 +35,7 @@ export async function generateTokenAndSession(name: string) {
 }
 
 export async function generateAdminTokenAndSession(name: string) {
-  const incomingUser = await authFactory.createAdminByName(name, faker.internet.email(), faker.internet.password());
+  const incomingUser = await authFactory.createNewAdmin(name, faker.internet.email());
   const token = jwt.sign({ userId: incomingUser.id }, process.env.JWT_SECRET);
 
   await createSession(incomingUser.id, token);
