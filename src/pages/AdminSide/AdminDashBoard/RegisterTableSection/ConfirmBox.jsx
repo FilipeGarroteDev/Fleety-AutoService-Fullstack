@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { postNewUserData } from '../../../../services/axios';
 
 export default function ConfirmBox({ type, setConfirmRegister, data, setData }) {
   const [restaurantSecretKey, setRestaurantSecretKey] = useState('');
 
-  function registerNewUser() {
+  async function registerNewUser() {
     const body = {
       ...data,
       role: type === 'admin' ? 'ADMIN' : 'CLIENT',
@@ -12,12 +13,14 @@ export default function ConfirmBox({ type, setConfirmRegister, data, setData }) 
     };
 
     try {
+      await postNewUserData(body);
       setData({
         name: '',
         password: '',
         email: '',
       });
       setConfirmRegister(false);
+      alert('Usuário criado com sucesso!');
     } catch (error) {
       alert(
         'Não foi possível cadastrar o usuário. Verifique se digitou a chave de segurança corretamente e tente novamente mais tarde.'

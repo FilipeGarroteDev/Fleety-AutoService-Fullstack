@@ -35,6 +35,11 @@ async function adminSignIn(body) {
   return axios.post(`${BASE_URL}/auth/admin/signin`, body);
 }
 
+async function postNewUserData(body) {
+  const config = generateHeaders();
+  return axios.post(`${BASE_URL}/auth/admin/register`, body, config);
+}
+
 async function postRatings(body) {
   const config = generateHeaders();
   return axios.post(`${BASE_URL}/ratings`, body, config);
@@ -125,5 +130,6 @@ export {
   getAllPreparingOrders,
   updateOrderStatus,
   getAllRatings,
-  adminSignIn
+  adminSignIn,
+  postNewUserData
 };
