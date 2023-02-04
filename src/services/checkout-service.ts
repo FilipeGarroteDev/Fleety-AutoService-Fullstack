@@ -7,6 +7,7 @@ import { CheckoutBodyEntity, OrderWithProductInfo, PaymentBody } from '@/protoco
 import checkoutRepository from '@/repositories/checkout-repository';
 import ordersRepository from '@/repositories/orders-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
+import waiterRepository from '@/repositories/waiter-repository';
 import { Orders, Payments, Tickets } from '@prisma/client';
 
 async function updateFinishedOrders(order: CheckoutBodyEntity): Promise<void> {
@@ -34,7 +35,7 @@ async function searchFinishedOrdersByTicketId(ticketId: string): Promise<OrderWi
   return finishedOrders;
 }
 
-async function payAndUpdateTicket(payment: PaymentBody, ticketId: string): Promise<[Tickets, Payments]> {
+async function payAndUpdateTicket(payment: PaymentBody, ticketId: string, name: string): Promise<[Tickets, Payments]> {
   const validTicketId = Number(ticketId);
 
   if (!validTicketId) throw unprocessableEntityError();
@@ -59,6 +60,10 @@ async function payAndUpdateTicket(payment: PaymentBody, ticketId: string): Promi
     payment,
     validTicketId,
   );
+
+  if (payment.isSplitted) {
+    await waiterRepository.createNewCall(ticket.userId, name);
+  }
 
   return newPayment;
 }

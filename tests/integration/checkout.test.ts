@@ -1,16 +1,17 @@
 import app, { init } from '@/app';
-import { prismaPG } from '@/config';
+import { mongoDB, prismaPG } from '@/config';
 import faker from '@faker-js/faker';
 import { OrderStatus, TicketStatus } from '@prisma/client';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
-import authFactory from '../factory/users-factory';
 import categoriesFactory from '../factory/categories-factory';
 import checkoutFactory from '../factory/checkout-factory';
 import ordersFactory from '../factory/orders-factory';
 import productsFactory from '../factory/products-factory';
 import ticketsFactory from '../factory/tickets-factory';
 import { cleanDb, generateTokenAndSession, generateValidToken } from '../utils';
+import usersFactory from '../factory/users-factory';
+import { ObjectId } from 'mongodb';
 
 beforeAll(async () => {
   await init();
@@ -30,14 +31,14 @@ describe('PATCH /checkout', () => {
   });
 
   it('should respond with status 401, if token isnt given', async () => {
-    await authFactory.createUserByName('Mesa 13', '123456');
+    await usersFactory.createUserByName('Mesa 13', '123456');
     const response = await server.patch('/checkout').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if there is no active session with the given token', async () => {
-    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
     const response = await server.patch('/checkout').set('Authorization', `Bearer ${token}`);
 
@@ -181,14 +182,14 @@ describe('GET /checkout/:ticketId', () => {
   });
 
   it('should respond with status 401, if token isnt given', async () => {
-    await authFactory.createUserByName('Mesa 13', '123456');
+    await usersFactory.createUserByName('Mesa 13', '123456');
     const response = await server.get('/checkout/ticketId').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if there is no active session with the given token', async () => {
-    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
     const response = await server.get('/checkout/ticketId').set('Authorization', `Bearer ${token}`);
 
@@ -324,14 +325,14 @@ describe('POST /checkout/payment/:ticketId', () => {
   });
 
   it('should respond with status 401, if token isnt given', async () => {
-    await authFactory.createUserByName('Mesa 13', '123456');
+    await usersFactory.createUserByName('Mesa 13', '123456');
     const response = await server.post('/checkout/payment/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if there is no active session with the given token', async () => {
-    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
     const response = await server.post('/checkout/payment/1').set('Authorization', `Bearer ${token}`);
 
@@ -754,10 +755,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const totalOrdersValues = await checkoutFactory.sumOrdersValues();
           const body = generateValidSplittedPayment(totalOrdersValues);
 
-          await server
-            .post(`/checkout/payment/${ticket.id}`)
-            .set('Authorization', `Bearer ${data.token}`)
-            .send(body);
+          await server.post(`/checkout/payment/${ticket.id}`).set('Authorization', `Bearer ${data.token}`).send(body);
 
           const paymentData = await prismaPG.payments.findFirst({
             where: {
@@ -804,6 +802,34 @@ describe('POST /checkout/payment/:ticketId', () => {
           expect(ticketPaid).toEqual(
             expect.objectContaining({
               status: TicketStatus.PAID,
+            }),
+          );
+        });
+
+        it('should create new waiter call', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidSplittedPayment(totalOrdersValues);
+
+          const response = await server
+            .post(`/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          const waiterCall = await mongoDB.collection('calls').findOne({ userId: data.userId });
+
+          expect(response.status).toBe(httpStatus.CREATED);
+          expect(waiterCall).toEqual(
+            expect.objectContaining({
+              _id: expect.any(ObjectId),
+              userId: data.userId,
+              table: expect.any(String),
+              createdAt: expect.any(Number),
             }),
           );
         });

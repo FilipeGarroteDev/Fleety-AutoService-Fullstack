@@ -41,9 +41,10 @@ export async function listAllFinishedOrders(req: Request, res: Response) {
 export async function checkAndFinishPayment(req: Request, res: Response) {
   const ticketId = req.params.ticketId;
   const paymentData: PaymentBody = req.body;
+  const { name } = res.locals.userData as Record<string, string>;
 
   try {
-    const payment: [Tickets, Payments] = await checkoutService.payAndUpdateTicket(paymentData, ticketId);
+    const payment: [Tickets, Payments] = await checkoutService.payAndUpdateTicket(paymentData, ticketId, name);
     return res.status(httpStatus.CREATED).send(payment[1]);
   } catch (error) {
     if (error.name === 'NotFoundError') {
