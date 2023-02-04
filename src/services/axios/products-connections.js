@@ -12,11 +12,13 @@ const generateHeaders = () => {
 };
 
 async function getCategoryProducts(categoryId) {
-  return axios.get(`${BASE_URL}/products/category/${categoryId}`);
+  const config = generateHeaders();
+  return axios.get(`${BASE_URL}/products/category/${categoryId}`, config);
 }
 
 async function getProductData(productId) {
-  return axios.get(`${BASE_URL}/products/${productId}`);
+  const config = generateHeaders();
+  return axios.get(`${BASE_URL}/products/${productId}`, config);
 }
 
 export {

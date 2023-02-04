@@ -12,7 +12,8 @@ const generateHeaders = () => {
 };
 
 async function getCategories(productType) {
-  return axios.get(`${BASE_URL}/categories/${productType}`);
+  const config = generateHeaders();
+  return axios.get(`${BASE_URL}/categories/${productType}`, config);
 }
 
 export {
