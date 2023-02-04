@@ -18,15 +18,15 @@ const app = express();
 app
   .use(cors())
   .use(express.json())
-  .get('/health', async (req: Request, res: Response) => res.send('OK'))
-  .use('/auth', authRouter)
-  .use('/users', usersRouter)
-  .use('/categories', categoriesRouter)
-  .use('/products', productsRouter)
-  .use('/ratings', ratingsRouter)
-  .use('/chart', ordersRouter)
-  .use('/checkout', checkoutRouter)
-  .use('/waiter', waiterRouter);
+  .get('/api/health', async (req: Request, res: Response) => res.send('OK'))
+  .use('/api/auth', authRouter)
+  .use('/api/users', usersRouter)
+  .use('/api/categories', categoriesRouter)
+  .use('/api/products', productsRouter)
+  .use('/api/ratings', ratingsRouter)
+  .use('/api/chart', ordersRouter)
+  .use('/api/checkout', checkoutRouter)
+  .use('/api/waiter', waiterRouter);
 
 export async function init(): Promise<Express> {
   connectDb();

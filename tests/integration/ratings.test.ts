@@ -17,16 +17,16 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe('POST /ratings', () => {
+describe('POST /api/ratings', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.post('/ratings');
+    const response = await server.post('/api/ratings');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.post('/ratings').set('Authorization', '');
+    const response = await server.post('/api/ratings').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -34,7 +34,7 @@ describe('POST /ratings', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.post('/ratings').set('Authorization', `Bearer ${token}`);
+    const response = await server.post('/api/ratings').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -53,7 +53,7 @@ describe('POST /ratings', () => {
     it('should respond with status 422 if there is no body given', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.post('/api/ratings').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -62,7 +62,7 @@ describe('POST /ratings', () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
       const response = await server
-        .post('/ratings')
+        .post('/api/ratings')
         .set('Authorization', `Bearer ${data.token}`)
         .send({ name: faker.name.firstName(), unknown: faker.lorem.word() });
 
@@ -73,7 +73,7 @@ describe('POST /ratings', () => {
       const data = await generateTokenAndSession(faker.name.firstName());
       const body = generateCompleteRating(0);
 
-      const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
+      const response = await server.post('/api/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -82,7 +82,7 @@ describe('POST /ratings', () => {
       const data = await generateTokenAndSession(faker.name.firstName());
       const body = generateCompleteRating(7);
 
-      const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
+      const response = await server.post('/api/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -97,7 +97,7 @@ describe('POST /ratings', () => {
         const data = await generateTokenAndSession(faker.name.firstName());
         const body = generateWithoutRatings();
 
-        const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.post('/api/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.CREATED);
         expect(response.body).toEqual(
@@ -120,7 +120,7 @@ describe('POST /ratings', () => {
       it('should respond with status 201, if user rating is a number between 1 and 5', async () => {
         const data = await generateTokenAndSession(faker.name.firstName());
         const body = generateCompleteRating(5);
-        const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.post('/api/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.CREATED);
       });
@@ -129,7 +129,7 @@ describe('POST /ratings', () => {
         const data = await generateTokenAndSession(faker.name.firstName());
         const body = generateCompleteRating(5);
 
-        const response = await server.post('/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.post('/api/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
         const storedRating = await prismaPG.ratings.findMany({});
 
@@ -153,16 +153,16 @@ describe('POST /ratings', () => {
   });
 });
 
-describe('GET /ratings', () => {
+describe('GET /api/ratings', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.get('/ratings');
+    const response = await server.get('/api/ratings');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.get('/ratings').set('Authorization', '');
+    const response = await server.get('/api/ratings').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -170,7 +170,7 @@ describe('GET /ratings', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.get('/ratings').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/ratings').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -179,7 +179,7 @@ describe('GET /ratings', () => {
     it('should respond with status 401 if user role isnt ADMIN', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.get('/ratings').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/ratings').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -188,7 +188,7 @@ describe('GET /ratings', () => {
       it('should respond with status 200', async () => {
         const adminData = await generateAdminTokenAndSession(faker.name.firstName());
 
-        const response = await server.get('/ratings').set('Authorization', `Bearer ${adminData.token}`);
+        const response = await server.get('/api/ratings').set('Authorization', `Bearer ${adminData.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
       });
@@ -197,7 +197,7 @@ describe('GET /ratings', () => {
         const adminData = await generateAdminTokenAndSession(faker.name.firstName());
         await generateTokenAndSession(faker.name.firstName());
 
-        const response = await server.get('/ratings').set('Authorization', `Bearer ${adminData.token}`);
+        const response = await server.get('/api/ratings').set('Authorization', `Bearer ${adminData.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body).toEqual([]);
@@ -208,7 +208,7 @@ describe('GET /ratings', () => {
         const clientData = await generateTokenAndSession(faker.name.firstName());
         await ratingsFactory.createSomeRatings(clientData.userId);
 
-        const response = await server.get('/ratings').set('Authorization', `Bearer ${adminData.token}`);
+        const response = await server.get('/api/ratings').set('Authorization', `Bearer ${adminData.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body).toEqual(

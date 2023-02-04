@@ -18,16 +18,16 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe('POST /waiter', () => {
+describe('POST /api/waiter', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.post('/waiter');
+    const response = await server.post('/api/waiter');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.post('/waiter').set('Authorization', '');
+    const response = await server.post('/api/waiter').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -35,7 +35,7 @@ describe('POST /waiter', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.post('/waiter').set('Authorization', `Bearer ${token}`);
+    const response = await server.post('/api/waiter').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -46,7 +46,7 @@ describe('POST /waiter', () => {
       const data = await generateTokenAndSession(name);
       await waiterFactory.createActiveCall(data.userId, name);
 
-      const response = await server.post('/waiter').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.post('/api/waiter').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.CONFLICT);
     });
@@ -54,7 +54,7 @@ describe('POST /waiter', () => {
     it('should respond with status 201 if waiter call is successful', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.post('/waiter').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.post('/api/waiter').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.CREATED);
     });
@@ -62,7 +62,7 @@ describe('POST /waiter', () => {
     it('should save waiter call on mongodb', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.post('/waiter').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.post('/api/waiter').set('Authorization', `Bearer ${data.token}`);
 
       const waiterCall: WithId<Document> = await mongoDB.collection('calls').findOne({ userId: data.userId });
 
@@ -79,16 +79,16 @@ describe('POST /waiter', () => {
   });
 });
 
-describe('DELETE /waiter/:userId', () => {
+describe('DELETE /api/waiter/:userId', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.delete('/waiter/1');
+    const response = await server.delete('/api/waiter/1');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.delete('/waiter/1').set('Authorization', '');
+    const response = await server.delete('/api/waiter/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -96,7 +96,7 @@ describe('DELETE /waiter/:userId', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.delete('/waiter/1').set('Authorization', `Bearer ${token}`);
+    const response = await server.delete('/api/waiter/1').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -105,7 +105,7 @@ describe('DELETE /waiter/:userId', () => {
     it('should respond with status 401 if there is no active call with the given userId', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.delete(`/waiter/${data.userId}`).set('Authorization', `Bearer ${data.token}`);
+      const response = await server.delete(`/api/waiter/${data.userId}`).set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -115,7 +115,7 @@ describe('DELETE /waiter/:userId', () => {
       const data = await generateTokenAndSession(name);
       await waiterFactory.createActiveCall(data.userId, name);
 
-      const response = await server.delete(`/waiter/${data.userId}`).set('Authorization', `Bearer ${data.token}`);
+      const response = await server.delete(`/api/waiter/${data.userId}`).set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.OK);
     });
@@ -125,7 +125,7 @@ describe('DELETE /waiter/:userId', () => {
       const data = await generateTokenAndSession(name);
       await waiterFactory.createActiveCall(data.userId, name);
 
-      const response = await server.delete(`/waiter/${data.userId}`).set('Authorization', `Bearer ${data.token}`);
+      const response = await server.delete(`/api/waiter/${data.userId}`).set('Authorization', `Bearer ${data.token}`);
 
       const waiterCall: WithId<Document> = await mongoDB.collection('calls').findOne({ userId: data.userId });
 
@@ -135,16 +135,16 @@ describe('DELETE /waiter/:userId', () => {
   });
 });
 
-describe('GET /waiter/mycall', () => {
+describe('GET /api/waiter/mycall', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.get('/waiter/mycall');
+    const response = await server.get('/api/waiter/mycall');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.get('/waiter/mycall').set('Authorization', '');
+    const response = await server.get('/api/waiter/mycall').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -152,7 +152,7 @@ describe('GET /waiter/mycall', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.get('/waiter/mycall').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/waiter/mycall').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -163,7 +163,7 @@ describe('GET /waiter/mycall', () => {
       const data = await generateTokenAndSession(name);
       await waiterFactory.createActiveCall(data.userId, name);
 
-      const response = await server.get('/waiter/mycall').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/waiter/mycall').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body).toEqual(
@@ -179,7 +179,7 @@ describe('GET /waiter/mycall', () => {
     it('should respond with status 200 if there is no call with the given userId, and return null', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.get('/waiter/mycall').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/waiter/mycall').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body).toEqual({});
@@ -187,16 +187,16 @@ describe('GET /waiter/mycall', () => {
   });
 });
 
-describe('GET /waiter/calls', () => {
+describe('GET /api/waiter/calls', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.get('/waiter/calls');
+    const response = await server.get('/api/waiter/calls');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.get('/waiter/calls').set('Authorization', '');
+    const response = await server.get('/api/waiter/calls').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -204,7 +204,7 @@ describe('GET /waiter/calls', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.get('/waiter/calls').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/waiter/calls').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -214,7 +214,7 @@ describe('GET /waiter/calls', () => {
       const name: string = faker.name.firstName();
       const data = await generateTokenAndSession(name);
 
-      const response = await server.get('/waiter/calls').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/waiter/calls').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -223,7 +223,7 @@ describe('GET /waiter/calls', () => {
       const name: string = faker.name.firstName();
       const data = await generateAdminTokenAndSession(name);
 
-      const response = await server.get('/waiter/calls').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/waiter/calls').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body).toEqual([]);
@@ -234,7 +234,7 @@ describe('GET /waiter/calls', () => {
       const data = await generateAdminTokenAndSession(name);
       await waiterFactory.createSomeActiveCalls();
 
-      const response = await server.get('/waiter/calls').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/waiter/calls').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body).toEqual(

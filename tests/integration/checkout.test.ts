@@ -23,16 +23,16 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe('PATCH /checkout', () => {
+describe('PATCH /api/checkout', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.patch('/checkout');
+    const response = await server.patch('/api/checkout');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await usersFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.patch('/checkout').set('Authorization', '');
+    const response = await server.patch('/api/checkout').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -40,7 +40,7 @@ describe('PATCH /checkout', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.patch('/checkout').set('Authorization', `Bearer ${token}`);
+    const response = await server.patch('/api/checkout').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -54,7 +54,7 @@ describe('PATCH /checkout', () => {
     it('should respond with status 422 if there is no body given', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.patch('/checkout').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.patch('/api/checkout').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -63,7 +63,7 @@ describe('PATCH /checkout', () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
       const response = await server
-        .patch('/checkout')
+        .patch('/api/checkout')
         .set('Authorization', `Bearer ${data.token}`)
         .send({ ticketId: faker.datatype.number(), unknown: faker.lorem.word() });
 
@@ -75,7 +75,7 @@ describe('PATCH /checkout', () => {
       const ticket = await ticketsFactory.createReservedTicket(data.userId);
       const body = generateInvalidCheckout(ticket.id);
 
-      const response = await server.patch('/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
+      const response = await server.patch('/api/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -91,7 +91,7 @@ describe('PATCH /checkout', () => {
         await ticketsFactory.createReservedTicket(data.userId);
         const body = generateValidCheckout(999999999);
 
-        const response = await server.patch('/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.patch('/api/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.NOT_FOUND);
       });
@@ -104,7 +104,7 @@ describe('PATCH /checkout', () => {
         await productsFactory.createSingleProduct(category.id);
         const body = generateValidCheckout(ticket.id);
 
-        const response = await server.patch('/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.patch('/api/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
       });
@@ -118,7 +118,7 @@ describe('PATCH /checkout', () => {
         await ordersFactory.createDeliveredAndPreparingOrders(ticket.id, product.id);
         const body = generateValidCheckout(ticket.id);
 
-        const response = await server.patch('/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.patch('/api/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
       });
@@ -132,7 +132,7 @@ describe('PATCH /checkout', () => {
         await ordersFactory.createManySelectedOrders(ticket.id, product.id);
         const body = generateValidCheckout(ticket.id);
 
-        const response = await server.patch('/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.patch('/api/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.OK);
       });
@@ -146,7 +146,7 @@ describe('PATCH /checkout', () => {
         await ordersFactory.createManySelectedOrders(ticket.id, product.id);
         const body = generateValidCheckout(ticket.id);
 
-        const response = await server.patch('/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.patch('/api/checkout').set('Authorization', `Bearer ${data.token}`).send(body);
 
         const storedPreparingOrders = await prismaPG.orders.findMany({
           where: {
@@ -174,16 +174,16 @@ describe('PATCH /checkout', () => {
   });
 });
 
-describe('GET /checkout/:ticketId', () => {
+describe('GET /api/checkout/:ticketId', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.get('/checkout/ticketId');
+    const response = await server.get('/api/checkout/ticketId');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await usersFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.get('/checkout/ticketId').set('Authorization', '');
+    const response = await server.get('/api/checkout/ticketId').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -191,7 +191,7 @@ describe('GET /checkout/:ticketId', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.get('/checkout/ticketId').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/checkout/ticketId').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -200,7 +200,7 @@ describe('GET /checkout/:ticketId', () => {
     it('should respond with status 422 if ticketId has invalid format', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.get('/checkout/unknown').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/checkout/unknown').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -209,7 +209,7 @@ describe('GET /checkout/:ticketId', () => {
       const data = await generateTokenAndSession(faker.name.firstName());
       await ticketsFactory.createReservedTicket(data.userId);
 
-      const response = await server.get('/checkout/999999999').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/checkout/999999999').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -219,7 +219,7 @@ describe('GET /checkout/:ticketId', () => {
         const data = await generateTokenAndSession(faker.name.firstName());
         const ticket = await ticketsFactory.createReservedTicket(data.userId);
 
-        const response = await server.get(`/checkout/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.get(`/api/checkout/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
       });
@@ -228,7 +228,7 @@ describe('GET /checkout/:ticketId', () => {
         const data = await generateTokenAndSession(faker.name.firstName());
         const ticket = await ticketsFactory.createReservedTicket(data.userId);
 
-        const response = await server.get(`/checkout/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.get(`/api/checkout/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body.length).toBe(0);
@@ -241,7 +241,7 @@ describe('GET /checkout/:ticketId', () => {
         const category = await categoriesFactory.createSingleCategory(foodType.id);
         await productsFactory.createSingleProduct(category.id);
 
-        const response = await server.get(`/checkout/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.get(`/api/checkout/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body.length).toBe(0);
@@ -260,7 +260,7 @@ describe('GET /checkout/:ticketId', () => {
         await ordersFactory.createOrderInAnotherTicket(secondTicketData.id, product.id);
 
         const response = await server
-          .get(`/checkout/${firstTicketData.id}`)
+          .get(`/api/checkout/${firstTicketData.id}`)
           .set('Authorization', `Bearer ${firstUserData.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
@@ -275,7 +275,7 @@ describe('GET /checkout/:ticketId', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         await ordersFactory.createManySelectedOrders(ticket.id, product.id);
 
-        const response = await server.get(`/checkout/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.get(`/api/checkout/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body.length).toBe(0);
@@ -289,7 +289,7 @@ describe('GET /checkout/:ticketId', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         await ordersFactory.createDeliveredAndPreparingOrders(ticket.id, product.id);
 
-        const response = await server.get(`/checkout/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.get(`/api/checkout/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body.length).toBe(4);
@@ -317,16 +317,16 @@ describe('GET /checkout/:ticketId', () => {
   });
 });
 
-describe('POST /checkout/payment/:ticketId', () => {
+describe('POST /api/checkout/payment/:ticketId', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.post('/checkout/payment/1');
+    const response = await server.post('/api/checkout/payment/1');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await usersFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.post('/checkout/payment/1').set('Authorization', '');
+    const response = await server.post('/api/checkout/payment/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -334,7 +334,7 @@ describe('POST /checkout/payment/:ticketId', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.post('/checkout/payment/1').set('Authorization', `Bearer ${token}`);
+    const response = await server.post('/api/checkout/payment/1').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -350,7 +350,7 @@ describe('POST /checkout/payment/:ticketId', () => {
     it('should respond with status 422 if there is no body given', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.post('/checkout/payment/1').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.post('/api/checkout/payment/1').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -359,7 +359,7 @@ describe('POST /checkout/payment/:ticketId', () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
       const response = await server
-        .post('/checkout/payment/1')
+        .post('/api/checkout/payment/1')
         .set('Authorization', `Bearer ${data.token}`)
         .send({ ticketId: faker.datatype.number(), unknown: faker.lorem.word() });
 
@@ -372,7 +372,7 @@ describe('POST /checkout/payment/:ticketId', () => {
       const body = generateInvalidPayment(faker.lorem.word(), '4455');
 
       const response = await server
-        .post(`/checkout/payment/${ticket.id}`)
+        .post(`/api/checkout/payment/${ticket.id}`)
         .set('Authorization', `Bearer ${data.token}`)
         .send(body);
 
@@ -385,7 +385,7 @@ describe('POST /checkout/payment/:ticketId', () => {
       const body = generateInvalidPayment('MASTERCARD', '123');
 
       const response = await server
-        .post(`/checkout/payment/${ticket.id}`)
+        .post(`/api/checkout/payment/${ticket.id}`)
         .set('Authorization', `Bearer ${data.token}`)
         .send(body);
 
@@ -398,7 +398,7 @@ describe('POST /checkout/payment/:ticketId', () => {
       const body = generateInvalidPayment('MASTERCARD', '12345');
 
       const response = await server
-        .post(`/checkout/payment/${ticket.id}`)
+        .post(`/api/checkout/payment/${ticket.id}`)
         .set('Authorization', `Bearer ${data.token}`)
         .send(body);
 
@@ -420,7 +420,7 @@ describe('POST /checkout/payment/:ticketId', () => {
         const body = generateValidPayment(faker.datatype.number());
 
         const response = await server
-          .post('/checkout/payment/unknown')
+          .post('/api/checkout/payment/unknown')
           .set('Authorization', `Bearer ${data.token}`)
           .send(body);
 
@@ -433,7 +433,7 @@ describe('POST /checkout/payment/:ticketId', () => {
         const body = generateValidPayment(faker.datatype.number());
 
         const response = await server
-          .post('/checkout/payment/999999999')
+          .post('/api/checkout/payment/999999999')
           .set('Authorization', `Bearer ${data.token}`)
           .send(body);
 
@@ -449,7 +449,7 @@ describe('POST /checkout/payment/:ticketId', () => {
         const body = generateValidPayment(faker.datatype.number());
 
         const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
+          .post(`/api/checkout/payment/${ticket.id}`)
           .set('Authorization', `Bearer ${data.token}`)
           .send(body);
 
@@ -466,7 +466,7 @@ describe('POST /checkout/payment/:ticketId', () => {
         const body = generateValidPayment(faker.datatype.number());
 
         const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
+          .post(`/api/checkout/payment/${ticket.id}`)
           .set('Authorization', `Bearer ${data.token}`)
           .send(body);
 
@@ -483,7 +483,7 @@ describe('POST /checkout/payment/:ticketId', () => {
         const body = generateValidPayment(faker.datatype.number());
 
         const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
+          .post(`/api/checkout/payment/${ticket.id}`)
           .set('Authorization', `Bearer ${data.token}`)
           .send(body);
 
@@ -500,7 +500,7 @@ describe('POST /checkout/payment/:ticketId', () => {
         const body = generateValidPayment(faker.datatype.number());
 
         const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
+          .post(`/api/checkout/payment/${ticket.id}`)
           .set('Authorization', `Bearer ${data.token}`)
           .send(body);
 
@@ -518,7 +518,7 @@ describe('POST /checkout/payment/:ticketId', () => {
         const body = generateValidPayment(totalOrdersValues - 100);
 
         const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
+          .post(`/api/checkout/payment/${ticket.id}`)
           .set('Authorization', `Bearer ${data.token}`)
           .send(body);
 
@@ -536,7 +536,7 @@ describe('POST /checkout/payment/:ticketId', () => {
         const body = generateValidPayment(totalOrdersValues * 1.25);
 
         const response = await server
-          .post(`/checkout/payment/${ticket.id}`)
+          .post(`/api/checkout/payment/${ticket.id}`)
           .set('Authorization', `Bearer ${data.token}`)
           .send(body);
 
@@ -555,7 +555,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const body = generateValidPayment(totalOrdersValues * 1.2);
 
           const response = await server
-            .post(`/checkout/payment/${ticket.id}`)
+            .post(`/api/checkout/payment/${ticket.id}`)
             .set('Authorization', `Bearer ${data.token}`)
             .send(body);
 
@@ -573,7 +573,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const body = generateValidPayment(totalOrdersValues);
 
           const response = await server
-            .post(`/checkout/payment/${ticket.id}`)
+            .post(`/api/checkout/payment/${ticket.id}`)
             .set('Authorization', `Bearer ${data.token}`)
             .send(body);
 
@@ -591,7 +591,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const body = generateValidPayment(totalOrdersValues);
 
           const response = await server
-            .post(`/checkout/payment/${ticket.id}`)
+            .post(`/api/checkout/payment/${ticket.id}`)
             .set('Authorization', `Bearer ${data.token}`)
             .send(body);
 
@@ -619,7 +619,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const body = generateValidPayment(totalOrdersValues);
 
           const response = await server
-            .post(`/checkout/payment/${ticket.id}`)
+            .post(`/api/checkout/payment/${ticket.id}`)
             .set('Authorization', `Bearer ${data.token}`)
             .send(body);
 
@@ -653,7 +653,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const body = generateValidPayment(totalOrdersValues);
 
           const response = await server
-            .post(`/checkout/payment/${ticket.id}`)
+            .post(`/api/checkout/payment/${ticket.id}`)
             .set('Authorization', `Bearer ${data.token}`)
             .send(body);
 
@@ -691,7 +691,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const body = generateValidSplittedPayment(totalOrdersValues * 1.2);
 
           const response = await server
-            .post(`/checkout/payment/${ticket.id}`)
+            .post(`/api/checkout/payment/${ticket.id}`)
             .set('Authorization', `Bearer ${data.token}`)
             .send(body);
 
@@ -709,7 +709,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const body = generateValidSplittedPayment(totalOrdersValues);
 
           const response = await server
-            .post(`/checkout/payment/${ticket.id}`)
+            .post(`/api/checkout/payment/${ticket.id}`)
             .set('Authorization', `Bearer ${data.token}`)
             .send(body);
 
@@ -727,7 +727,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const body = generateValidSplittedPayment(totalOrdersValues);
 
           const response = await server
-            .post(`/checkout/payment/${ticket.id}`)
+            .post(`/api/checkout/payment/${ticket.id}`)
             .set('Authorization', `Bearer ${data.token}`)
             .send(body);
 
@@ -755,7 +755,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const totalOrdersValues = await checkoutFactory.sumOrdersValues();
           const body = generateValidSplittedPayment(totalOrdersValues);
 
-          await server.post(`/checkout/payment/${ticket.id}`).set('Authorization', `Bearer ${data.token}`).send(body);
+          await server.post(`/api/checkout/payment/${ticket.id}`).set('Authorization', `Bearer ${data.token}`).send(body);
 
           const paymentData = await prismaPG.payments.findFirst({
             where: {
@@ -788,7 +788,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const body = generateValidSplittedPayment(totalOrdersValues);
 
           const response = await server
-            .post(`/checkout/payment/${ticket.id}`)
+            .post(`/api/checkout/payment/${ticket.id}`)
             .set('Authorization', `Bearer ${data.token}`)
             .send(body);
 
@@ -817,7 +817,7 @@ describe('POST /checkout/payment/:ticketId', () => {
           const body = generateValidSplittedPayment(totalOrdersValues);
 
           const response = await server
-            .post(`/checkout/payment/${ticket.id}`)
+            .post(`/api/checkout/payment/${ticket.id}`)
             .set('Authorization', `Bearer ${data.token}`)
             .send(body);
 

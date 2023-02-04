@@ -18,16 +18,16 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe('POST /users/register', () => {
+describe('POST /api/users/register', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.post('/users/register');
+    const response = await server.post('/api/users/register');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await usersFactory.createNewAdmin(faker.name.firstName(), faker.internet.email());
-    const response = await server.post('/users/register').set('Authorization', '');
+    const response = await server.post('/api/users/register').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -35,7 +35,7 @@ describe('POST /users/register', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const admin = await usersFactory.createNewAdmin(faker.name.firstName(), faker.internet.email());
     const token = generateValidToken(admin.id);
-    const response = await server.post('/users/register').set('Authorization', `Bearer ${token}`);
+    const response = await server.post('/api/users/register').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -44,7 +44,7 @@ describe('POST /users/register', () => {
     it('should respond with status 422 when body isnt given', async () => {
       const data = await generateAdminTokenAndSession(faker.name.firstName());
 
-      const response = await server.post('/users/register').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.post('/api/users/register').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -59,7 +59,7 @@ describe('POST /users/register', () => {
       };
 
       const response = await server
-        .post('/users/register')
+        .post('/api/users/register')
         .set('Authorization', `Bearer ${data.token}`)
         .send(invalidSignUpData);
 
@@ -76,7 +76,7 @@ describe('POST /users/register', () => {
       };
 
       const response = await server
-        .post('/users/register')
+        .post('/api/users/register')
         .set('Authorization', `Bearer ${data.token}`)
         .send(invalidSignUpData);
 
@@ -96,7 +96,7 @@ describe('POST /users/register', () => {
       const validBody = generateValidClientData(faker.lorem.word());
 
       const response = await server
-        .post('/users/register')
+        .post('/api/users/register')
         .set('Authorization', `Bearer ${data.token}`)
         .send(validBody);
 
@@ -108,7 +108,7 @@ describe('POST /users/register', () => {
       const validBody = generateValidClientData(faker.lorem.word());
 
       const response = await server
-        .post('/users/register')
+        .post('/api/users/register')
         .set('Authorization', `Bearer ${data.token}`)
         .send(validBody);
 
@@ -122,7 +122,7 @@ describe('POST /users/register', () => {
         await usersFactory.createUserByName(validBody.name, validBody.password);
 
         const response = await server
-          .post('/users/register')
+          .post('/api/users/register')
           .set('Authorization', `Bearer ${data.token}`)
           .send(validBody);
 
@@ -134,7 +134,7 @@ describe('POST /users/register', () => {
         const validBody = generateValidClientData(process.env.RESTAURANT_SECRET_KEY);
 
         const response = await server
-          .post('/users/register')
+          .post('/api/users/register')
           .set('Authorization', `Bearer ${data.token}`)
           .send(validBody);
 
@@ -153,7 +153,7 @@ describe('POST /users/register', () => {
         const validBody = generateValidClientData(process.env.RESTAURANT_SECRET_KEY);
 
         const response = await server
-          .post('/users/register')
+          .post('/api/users/register')
           .set('Authorization', `Bearer ${data.token}`)
           .send(validBody);
 
@@ -165,7 +165,7 @@ describe('POST /users/register', () => {
         const validBody = generateValidClientData(process.env.RESTAURANT_SECRET_KEY);
 
         const response = await server
-          .post('/users/register')
+          .post('/api/users/register')
           .set('Authorization', `Bearer ${data.token}`)
           .send(validBody);
 
@@ -200,7 +200,7 @@ describe('POST /users/register', () => {
         await usersFactory.createNewAdmin(validBody.name, faker.internet.email());
 
         const response = await server
-          .post('/users/register')
+          .post('/api/users/register')
           .set('Authorization', `Bearer ${data.token}`)
           .send(validBody);
 
@@ -213,7 +213,7 @@ describe('POST /users/register', () => {
         await usersFactory.createNewAdmin(faker.name.firstName(), validBody.email);
 
         const response = await server
-          .post('/users/register')
+          .post('/api/users/register')
           .set('Authorization', `Bearer ${data.token}`)
           .send(validBody);
 
@@ -225,7 +225,7 @@ describe('POST /users/register', () => {
         const validBody = generateValidAdminData(process.env.RESTAURANT_SECRET_KEY);
 
         const response = await server
-          .post('/users/register')
+          .post('/api/users/register')
           .set('Authorization', `Bearer ${data.token}`)
           .send(validBody);
 
@@ -245,7 +245,7 @@ describe('POST /users/register', () => {
         const validBody = generateValidAdminData(process.env.RESTAURANT_SECRET_KEY);
 
         const response = await server
-          .post('/users/register')
+          .post('/api/users/register')
           .set('Authorization', `Bearer ${data.token}`)
           .send(validBody);
 
@@ -257,7 +257,7 @@ describe('POST /users/register', () => {
         const validBody = generateValidAdminData(process.env.RESTAURANT_SECRET_KEY);
 
         const response = await server
-          .post('/users/register')
+          .post('/api/users/register')
           .set('Authorization', `Bearer ${data.token}`)
           .send(validBody);
 
@@ -280,16 +280,16 @@ describe('POST /users/register', () => {
   });
 });
 
-describe('GET /users/list', () => {
+describe('GET /api/users/list', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.get('/users/list');
+    const response = await server.get('/api/users/list');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await usersFactory.createNewAdmin(faker.name.firstName(), faker.internet.email());
-    const response = await server.get('/users/list').set('Authorization', '');
+    const response = await server.get('/api/users/list').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -297,7 +297,7 @@ describe('GET /users/list', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const admin = await usersFactory.createNewAdmin(faker.name.firstName(), faker.internet.email());
     const token = generateValidToken(admin.id);
-    const response = await server.get('/users/list').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/users/list').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -306,7 +306,7 @@ describe('GET /users/list', () => {
     it('should respond with status 401, if requester does not have admin role', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.get('/users/list').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/users/list').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -315,7 +315,7 @@ describe('GET /users/list', () => {
       const data = await generateAdminTokenAndSession(faker.name.firstName());
       await usersFactory.createManyUsers();
 
-      const response = await server.get('/users/list').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/users/list').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.OK);
     });
@@ -324,7 +324,7 @@ describe('GET /users/list', () => {
       const data = await generateAdminTokenAndSession(faker.name.firstName());
       await usersFactory.createManyUsers();
 
-      const response = await server.get('/users/list').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/users/list').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.body.length).toBe(5);
       expect(response.body).toEqual(

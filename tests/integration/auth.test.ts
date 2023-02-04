@@ -19,10 +19,10 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe('POST /auth/signin', () => {
+describe('POST /api/auth/signin', () => {
   describe('when body is invalid', () => {
     it('should respond with status 422 when body isnt given', async () => {
-      const response = await server.post('/auth/signin').send({});
+      const response = await server.post('/api/auth/signin').send({});
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -30,7 +30,7 @@ describe('POST /auth/signin', () => {
     it('should respond with status 422, if sign up data is invalid', async () => {
       const invalidSignInData = { [faker.lorem.word()]: faker.lorem.word() };
 
-      const response = await server.post('/auth/signin').send(invalidSignInData);
+      const response = await server.post('/api/auth/signin').send(invalidSignInData);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -44,7 +44,7 @@ describe('POST /auth/signin', () => {
     it('should respond with status 401, if there is no user for given unique name', async () => {
       const validBody = generateValidSigninBody();
 
-      const response = await server.post('/auth/signin').send(validBody);
+      const response = await server.post('/api/auth/signin').send(validBody);
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -53,7 +53,7 @@ describe('POST /auth/signin', () => {
       const validBody = generateValidSigninBody();
       await usersFactory.createUserByName(validBody.name, validBody.password);
 
-      const response = await server.post('/auth/signin').send({ name: validBody.name, password: faker.lorem.word() });
+      const response = await server.post('/api/auth/signin').send({ name: validBody.name, password: faker.lorem.word() });
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -62,7 +62,7 @@ describe('POST /auth/signin', () => {
       it('should respond with status 200', async () => {
         const validBody = generateValidSigninBody();
         await usersFactory.createUserByName(validBody.name, validBody.password);
-        const response = await server.post('/auth/signin').send(validBody);
+        const response = await server.post('/api/auth/signin').send(validBody);
 
         expect(response.status).toBe(httpStatus.OK);
       });
@@ -70,7 +70,7 @@ describe('POST /auth/signin', () => {
       it('should create reserved ticket, if there is no active ticket yet', async () => {
         const validBody = generateValidSigninBody();
         const user = await usersFactory.createUserByName(validBody.name, validBody.password);
-        const response = await server.post('/auth/signin').send(validBody);
+        const response = await server.post('/api/auth/signin').send(validBody);
 
         expect(response.body.ticket).toEqual(
           expect.objectContaining({
@@ -84,7 +84,7 @@ describe('POST /auth/signin', () => {
         const validBody = generateValidSigninBody();
         const user = await usersFactory.createUserByName(validBody.name, validBody.password);
         await ticketsFactory.createPaidTicket(user.id);
-        const response = await server.post('/auth/signin').send(validBody);
+        const response = await server.post('/api/auth/signin').send(validBody);
 
         expect(response.body.ticket).toEqual(
           expect.objectContaining({
@@ -98,7 +98,7 @@ describe('POST /auth/signin', () => {
         const validBody = generateValidSigninBody();
         const user = await usersFactory.createUserByName(validBody.name, validBody.password);
         const ticket = await ticketsFactory.createReservedTicket(user.id);
-        const response = await server.post('/auth/signin').send(validBody);
+        const response = await server.post('/api/auth/signin').send(validBody);
 
         const createdTickets = await prismaPG.tickets.findMany({});
 
@@ -116,7 +116,7 @@ describe('POST /auth/signin', () => {
         const validBody = generateValidSigninBody();
         const user = await usersFactory.createUserByName(validBody.name, validBody.password);
         await ticketsFactory.createReservedTicket(user.id);
-        const response = await server.post('/auth/signin').send(validBody);
+        const response = await server.post('/api/auth/signin').send(validBody);
 
         const ticket = await prismaPG.tickets.findFirst({
           where: {
@@ -137,7 +137,7 @@ describe('POST /auth/signin', () => {
       it('should respond with user data, token and ticket', async () => {
         const validBody = generateValidSigninBody();
         const createdUser = await usersFactory.createUserByName(validBody.name, validBody.password);
-        const response = await server.post('/auth/signin').send(validBody);
+        const response = await server.post('/api/auth/signin').send(validBody);
 
         expect(response.body).toEqual(
           expect.objectContaining({
@@ -154,7 +154,7 @@ describe('POST /auth/signin', () => {
       it('should correctly save token on db', async () => {
         const validBody = generateValidSigninBody();
         const createdUser = await usersFactory.createUserByName(validBody.name, validBody.password);
-        const response = await server.post('/auth/signin').send(validBody);
+        const response = await server.post('/api/auth/signin').send(validBody);
 
         const session = await prismaPG.sessions.findFirst({
           where: {
@@ -168,16 +168,16 @@ describe('POST /auth/signin', () => {
   });
 });
 
-describe('GET /auth/validate', () => {
+describe('GET /api/auth/validate', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.get('/auth/validate');
+    const response = await server.get('/api/auth/validate');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await usersFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.get('/auth/validate').set('Authorization', '');
+    const response = await server.get('/api/auth/validate').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -185,7 +185,7 @@ describe('GET /auth/validate', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.get('/auth/validate').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/auth/validate').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -194,7 +194,7 @@ describe('GET /auth/validate', () => {
     const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
     await createSession(user.id, token);
-    const response = await server.get('/auth/validate').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/auth/validate').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.OK);
   });
@@ -203,7 +203,7 @@ describe('GET /auth/validate', () => {
     const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
     await createSession(user.id, token);
-    const response = await server.get('/auth/validate').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/auth/validate').set('Authorization', `Bearer ${token}`);
 
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -213,7 +213,7 @@ describe('GET /auth/validate', () => {
   });
 });
 
-describe('POST /auth/admin/signin', () => {
+describe('POST /api/auth/admin/signin', () => {
   describe('when body is invalid', () => {
     const generateInvalidBody = () => ({
       name: faker.name.firstName(),
@@ -222,7 +222,7 @@ describe('POST /auth/admin/signin', () => {
     });
 
     it('should respond with status 422 when body isnt given', async () => {
-      const response = await server.post('/auth/admin/signin').send({});
+      const response = await server.post('/api/auth/admin/signin').send({});
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -230,7 +230,7 @@ describe('POST /auth/admin/signin', () => {
     it('should respond with status 422, if sign up data is invalid', async () => {
       const invalidSignInData = { [faker.lorem.word()]: faker.lorem.word() };
 
-      const response = await server.post('/auth/admin/signin').send(invalidSignInData);
+      const response = await server.post('/api/auth/admin/signin').send(invalidSignInData);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -238,7 +238,7 @@ describe('POST /auth/admin/signin', () => {
     it('should respond with status 422, if restaurant secret key doesnt given', async () => {
       const invalidSignInData = generateInvalidBody();
 
-      const response = await server.post('/auth/admin/signin').send(invalidSignInData);
+      const response = await server.post('/api/auth/admin/signin').send(invalidSignInData);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -254,7 +254,7 @@ describe('POST /auth/admin/signin', () => {
     it('should respond with status 403, if the restaurant secret key isnt correct', async () => {
       const bodyWithWrongKey = generateValidSigninBody('unknown');
 
-      const response = await server.post('/auth/admin/signin').send(bodyWithWrongKey);
+      const response = await server.post('/api/auth/admin/signin').send(bodyWithWrongKey);
 
       expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
@@ -262,7 +262,7 @@ describe('POST /auth/admin/signin', () => {
     it('should respond with status 401, if there is no registered admin', async () => {
       const validBody = generateValidSigninBody(process.env.RESTAURANT_SECRET_KEY);
 
-      const response = await server.post('/auth/admin/signin').send(validBody);
+      const response = await server.post('/api/auth/admin/signin').send(validBody);
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -271,7 +271,7 @@ describe('POST /auth/admin/signin', () => {
       it('should respond with status 200', async () => {
         const validBody = generateValidSigninBody(process.env.RESTAURANT_SECRET_KEY);
         await usersFactory.createNewAdmin(validBody.name, validBody.email);
-        const response = await server.post('/auth/admin/signin').send(validBody);
+        const response = await server.post('/api/auth/admin/signin').send(validBody);
 
         expect(response.status).toBe(httpStatus.OK);
       });
@@ -279,7 +279,7 @@ describe('POST /auth/admin/signin', () => {
       it('should respond with admin data and token', async () => {
         const validBody = generateValidSigninBody(process.env.RESTAURANT_SECRET_KEY);
         const admin = await usersFactory.createNewAdmin(validBody.name, validBody.email);
-        const response = await server.post('/auth/admin/signin').send(validBody);
+        const response = await server.post('/api/auth/admin/signin').send(validBody);
 
         expect(response.body).toEqual(
           expect.objectContaining({
@@ -297,7 +297,7 @@ describe('POST /auth/admin/signin', () => {
       it('should correctly save token on db', async () => {
         const validBody = generateValidSigninBody(process.env.RESTAURANT_SECRET_KEY);
         const admin = await usersFactory.createNewAdmin(validBody.name, validBody.email);
-        const response = await server.post('/auth/admin/signin').send(validBody);
+        const response = await server.post('/api/auth/admin/signin').send(validBody);
 
         const session = await prismaPG.sessions.findFirst({
           where: {

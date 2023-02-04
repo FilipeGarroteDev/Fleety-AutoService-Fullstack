@@ -21,16 +21,16 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe('POST /chart/add', () => {
+describe('POST /api/chart/add', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.post('/chart/add');
+    const response = await server.post('/api/chart/add');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.post('/chart/add').set('Authorization', '');
+    const response = await server.post('/api/chart/add').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -38,7 +38,7 @@ describe('POST /chart/add', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.post('/chart/add').set('Authorization', `Bearer ${token}`);
+    const response = await server.post('/api/chart/add').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -55,7 +55,7 @@ describe('POST /chart/add', () => {
     it('should respond with status 422 if there is no body given', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.post('/chart/add').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.post('/api/chart/add').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -64,7 +64,7 @@ describe('POST /chart/add', () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
       const response = await server
-        .post('/chart/add')
+        .post('/api/chart/add')
         .set('Authorization', `Bearer ${data.token}`)
         .send({ totalValue: faker.datatype.number(), unknown: faker.lorem.word() });
 
@@ -80,7 +80,7 @@ describe('POST /chart/add', () => {
       const body = generateCompleteOrder(ticket.id, product.id);
 
       const response = await server
-        .post('/chart/add')
+        .post('/api/chart/add')
         .set('Authorization', `Bearer ${data.token}`)
         .send({ ...body, status: 'unknown' });
 
@@ -104,7 +104,7 @@ describe('POST /chart/add', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         const body = generateCompleteOrder(0, product.id);
 
-        const response = await server.post('/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.post('/api/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.NOT_FOUND);
       });
@@ -117,7 +117,7 @@ describe('POST /chart/add', () => {
         await productsFactory.createSingleProduct(category.id);
         const body = generateCompleteOrder(ticket.id, 0);
 
-        const response = await server.post('/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.post('/api/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.NOT_FOUND);
       });
@@ -130,7 +130,7 @@ describe('POST /chart/add', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         const body = generateWithoutOptionals(ticket.id, product.id);
 
-        const response = await server.post('/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.post('/api/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.CREATED);
       });
@@ -143,7 +143,7 @@ describe('POST /chart/add', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         const body = generateCompleteOrder(ticket.id, product.id);
 
-        const response = await server.post('/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.post('/api/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
 
         expect(response.status).toBe(httpStatus.CREATED);
         expect(response.body).toEqual(
@@ -168,7 +168,7 @@ describe('POST /chart/add', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         const body = generateCompleteOrder(ticket.id, product.id);
 
-        const response = await server.post('/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
+        const response = await server.post('/api/chart/add').set('Authorization', `Bearer ${data.token}`).send(body);
 
         const order = await prismaPG.orders.findFirst({});
 
@@ -189,16 +189,16 @@ describe('POST /chart/add', () => {
   });
 });
 
-describe('GET /chart/:ticketId', () => {
+describe('GET /api/chart/:ticketId', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.get('/chart/1');
+    const response = await server.get('/api/chart/1');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.get('/chart/1').set('Authorization', '');
+    const response = await server.get('/api/chart/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -206,7 +206,7 @@ describe('GET /chart/:ticketId', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.get('/chart/1').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/chart/1').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -215,7 +215,7 @@ describe('GET /chart/:ticketId', () => {
     it('should respond with status 422 if ticketId has invalid format', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.get('/chart/unknown').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/chart/unknown').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -224,7 +224,7 @@ describe('GET /chart/:ticketId', () => {
       const data = await generateTokenAndSession(faker.name.firstName());
       await ticketsFactory.createReservedTicket(data.userId);
 
-      const response = await server.get('/chart/999999999').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/chart/999999999').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -234,7 +234,7 @@ describe('GET /chart/:ticketId', () => {
         const data = await generateTokenAndSession(faker.name.firstName());
         const ticket = await ticketsFactory.createReservedTicket(data.userId);
 
-        const response = await server.get(`/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.get(`/api/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
       });
@@ -243,7 +243,7 @@ describe('GET /chart/:ticketId', () => {
         const data = await generateTokenAndSession(faker.name.firstName());
         const ticket = await ticketsFactory.createReservedTicket(data.userId);
 
-        const response = await server.get(`/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.get(`/api/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body.length).toBe(0);
@@ -256,7 +256,7 @@ describe('GET /chart/:ticketId', () => {
         const category = await categoriesFactory.createSingleCategory(foodType.id);
         await productsFactory.createSingleProduct(category.id);
 
-        const response = await server.get(`/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.get(`/api/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body.length).toBe(0);
@@ -275,7 +275,7 @@ describe('GET /chart/:ticketId', () => {
         await ordersFactory.createOrderInAnotherTicket(secondTicketData.id, product.id);
 
         const response = await server
-          .get(`/chart/${firstTicketData.id}`)
+          .get(`/api/chart/${firstTicketData.id}`)
           .set('Authorization', `Bearer ${firstUserData.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
@@ -290,7 +290,7 @@ describe('GET /chart/:ticketId', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         await ordersFactory.createDeliveredAndPreparingOrders(ticket.id, product.id);
 
-        const response = await server.get(`/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.get(`/api/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body.length).toBe(0);
@@ -304,7 +304,7 @@ describe('GET /chart/:ticketId', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         await ordersFactory.createSelectedAndPreparingOrders(ticket.id, product.id);
 
-        const response = await server.get(`/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.get(`/api/chart/${ticket.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body).toEqual(
@@ -331,16 +331,16 @@ describe('GET /chart/:ticketId', () => {
   });
 });
 
-describe('DELETE /chart/:orderId', () => {
+describe('DELETE /api/chart/:orderId', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.delete('/chart/1');
+    const response = await server.delete('/api/chart/1');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.delete('/chart/1').set('Authorization', '');
+    const response = await server.delete('/api/chart/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -348,7 +348,7 @@ describe('DELETE /chart/:orderId', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.delete('/chart/1').set('Authorization', `Bearer ${token}`);
+    const response = await server.delete('/api/chart/1').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -357,7 +357,7 @@ describe('DELETE /chart/:orderId', () => {
     it('should respond with status 422 if orderId has invalid format', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.delete('/chart/unknown').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.delete('/api/chart/unknown').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -366,7 +366,7 @@ describe('DELETE /chart/:orderId', () => {
       const data = await generateTokenAndSession(faker.name.firstName());
       await ticketsFactory.createReservedTicket(data.userId);
 
-      const response = await server.delete('/chart/999999999').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.delete('/api/chart/999999999').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -383,7 +383,7 @@ describe('DELETE /chart/:orderId', () => {
       const product = await productsFactory.createSingleProduct(category.id);
       const order = await ordersFactory.createOrderInAnotherTicket(secondTicketData.id, product.id);
 
-      const response = await server.delete(`/chart/${order.id}`).set('Authorization', `Bearer ${firstUserData.token}`);
+      const response = await server.delete(`/api/chart/${order.id}`).set('Authorization', `Bearer ${firstUserData.token}`);
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -397,7 +397,7 @@ describe('DELETE /chart/:orderId', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         const order = await ordersFactory.createOrderInAnotherTicket(ticket.id, product.id);
 
-        const response = await server.delete(`/chart/${order.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.delete(`/api/chart/${order.id}`).set('Authorization', `Bearer ${data.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
       });
@@ -410,7 +410,7 @@ describe('DELETE /chart/:orderId', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         const order = await ordersFactory.createOrderInAnotherTicket(ticket.id, product.id);
 
-        const response = await server.delete(`/chart/${order.id}`).set('Authorization', `Bearer ${data.token}`);
+        const response = await server.delete(`/api/chart/${order.id}`).set('Authorization', `Bearer ${data.token}`);
 
         const deletedOrder = await prismaPG.orders.findUnique({
           where: {
@@ -425,16 +425,16 @@ describe('DELETE /chart/:orderId', () => {
   });
 });
 
-describe('GET /chart', () => {
+describe('GET /api/chart', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.get('/chart');
+    const response = await server.get('/api/chart');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.get('/chart').set('Authorization', '');
+    const response = await server.get('/api/chart').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -442,7 +442,7 @@ describe('GET /chart', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.get('/chart').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/chart').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -451,7 +451,7 @@ describe('GET /chart', () => {
     it('should respond with status 401 if user role isnt ADMIN', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
 
-      const response = await server.get('/chart').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/chart').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -463,7 +463,7 @@ describe('GET /chart', () => {
 
         await ticketsFactory.createReservedTicket(clientData.userId);
 
-        const response = await server.get('/chart').set('Authorization', `Bearer ${adminData.token}`);
+        const response = await server.get('/api/chart').set('Authorization', `Bearer ${adminData.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
       });
@@ -476,7 +476,7 @@ describe('GET /chart', () => {
         const category = await categoriesFactory.createSingleCategory(foodType.id);
         await productsFactory.createSingleProduct(category.id);
 
-        const response = await server.get('/chart').set('Authorization', `Bearer ${adminData.token}`);
+        const response = await server.get('/api/chart').set('Authorization', `Bearer ${adminData.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body).toEqual([]);
@@ -491,7 +491,7 @@ describe('GET /chart', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         await ordersFactory.createSelectedAndDeliveredOrders(ticket.id, product.id);
 
-        const response = await server.get('/chart').set('Authorization', `Bearer ${adminData.token}`);
+        const response = await server.get('/api/chart').set('Authorization', `Bearer ${adminData.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body).toEqual([]);
@@ -506,7 +506,7 @@ describe('GET /chart', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         await ordersFactory.createDeliveredAndPreparingOrders(ticket.id, product.id);
 
-        const response = await server.get('/chart').set('Authorization', `Bearer ${adminData.token}`);
+        const response = await server.get('/api/chart').set('Authorization', `Bearer ${adminData.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body.length).toBe(2);
@@ -537,16 +537,16 @@ describe('GET /chart', () => {
   });
 });
 
-describe('PATCH /chart/:orderId', () => {
+describe('PATCH /api/chart/:orderId', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.patch('/chart/1');
+    const response = await server.patch('/api/chart/1');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await authFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.patch('/chart/1').set('Authorization', '');
+    const response = await server.patch('/api/chart/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -554,7 +554,7 @@ describe('PATCH /chart/:orderId', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await authFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.patch('/chart/1').set('Authorization', `Bearer ${token}`);
+    const response = await server.patch('/api/chart/1').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -563,7 +563,7 @@ describe('PATCH /chart/:orderId', () => {
     it('should respond with status 422 if orderId has invalid format', async () => {
       const data = await generateAdminTokenAndSession(faker.name.firstName());
 
-      const response = await server.patch('/chart/unknown').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.patch('/api/chart/unknown').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -573,7 +573,7 @@ describe('PATCH /chart/:orderId', () => {
       const adminData = await generateAdminTokenAndSession(faker.name.firstName());
       await ticketsFactory.createReservedTicket(clientData.userId);
 
-      const response = await server.patch('/chart/999999999').set('Authorization', `Bearer ${adminData.token}`);
+      const response = await server.patch('/api/chart/999999999').set('Authorization', `Bearer ${adminData.token}`);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -587,7 +587,7 @@ describe('PATCH /chart/:orderId', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         const order = await ordersFactory.createOrderInAnotherTicket(ticket.id, product.id);
 
-        const response = await server.patch(`/chart/${order.id}`).set('Authorization', `Bearer ${clientData.token}`);
+        const response = await server.patch(`/api/chart/${order.id}`).set('Authorization', `Bearer ${clientData.token}`);
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
       });
@@ -601,7 +601,7 @@ describe('PATCH /chart/:orderId', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         const order = await ordersFactory.createOrderInAnotherTicket(ticket.id, product.id);
 
-        const response = await server.patch(`/chart/${order.id}`).set('Authorization', `Bearer ${adminData.token}`);
+        const response = await server.patch(`/api/chart/${order.id}`).set('Authorization', `Bearer ${adminData.token}`);
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
       });
@@ -615,7 +615,7 @@ describe('PATCH /chart/:orderId', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         const order = await ordersFactory.createSinglePreparingOrder(ticket.id, product.id);
 
-        const response = await server.patch(`/chart/${order.id}`).set('Authorization', `Bearer ${adminData.token}`);
+        const response = await server.patch(`/api/chart/${order.id}`).set('Authorization', `Bearer ${adminData.token}`);
 
         expect(response.status).toBe(httpStatus.OK);
       });
@@ -629,7 +629,7 @@ describe('PATCH /chart/:orderId', () => {
         const product = await productsFactory.createSingleProduct(category.id);
         const order = await ordersFactory.createSinglePreparingOrder(ticket.id, product.id);
 
-        const response = await server.patch(`/chart/${order.id}`).set('Authorization', `Bearer ${adminData.token}`);
+        const response = await server.patch(`/api/chart/${order.id}`).set('Authorization', `Bearer ${adminData.token}`);
 
         const updatedOrder = await prismaPG.orders.findUnique({
           where: {

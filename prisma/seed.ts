@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { beveragesCategories, foodCategories, foodTypes, optionals, productsList } from './entitiesContainer';
 const prisma = new PrismaClient();
+import bcrypt from 'bcrypt';
+
 
 async function mainSeed() {
   //creating product types (id 1: foods, id 2: beverages)
@@ -91,7 +93,7 @@ async function mainSeed() {
       await prisma.optionals.create({
         data: {
           name: optionals[i].name,
-          value: optionals[i].value
+          value: optionals[i].value,
         },
       });
     }
@@ -141,6 +143,26 @@ async function mainSeed() {
           image: product.image,
         },
       });
+    });
+  }
+
+  //creating admin (name: test, pass: test)
+  const hasAdmin = await prisma.users.findUnique({
+    where: {
+      name: 'test',
+    },
+  });
+
+  if (!hasAdmin) {
+    const password = bcrypt.hashSync("test", 10);
+    await prisma.users.create({
+      data: {
+        name: "test",
+        email: "admin@test.com",
+        password,
+        role: 'ADMIN',
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_IBtRpItnMqL7irvC06TiixZnmZjPL1Eeue2Fxv0xg6jYpf9GA-ipdmW2Y58bv326KC8&usqp=CAU",
+      },
     });
   }
 }

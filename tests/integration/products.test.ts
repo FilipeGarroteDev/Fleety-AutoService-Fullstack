@@ -17,16 +17,16 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe('GET /products/category/:categoryId', () => {
+describe('GET /api/products/category/:categoryId', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.get('/products/category/1');
+    const response = await server.get('/api/products/category/1');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await usersFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.get('/products/category/1').set('Authorization', '');
+    const response = await server.get('/api/products/category/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -34,7 +34,7 @@ describe('GET /products/category/:categoryId', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.get('/products/category/1').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/products/category/1').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -42,7 +42,7 @@ describe('GET /products/category/:categoryId', () => {
   describe('when token is valid', () => {
     it('should respond with status 422, if params is invalid', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
-      const response = await server.get('/products/category/unknown').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/products/category/unknown').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -51,7 +51,7 @@ describe('GET /products/category/:categoryId', () => {
       const data = await generateTokenAndSession(faker.name.firstName());
       await categoriesFactory.createFoodType();
 
-      const response = await server.get('/products/category/99999999').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/products/category/99999999').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -63,7 +63,7 @@ describe('GET /products/category/:categoryId', () => {
       const categories = await categoriesFactory.getCategoriesIds();
       await productsFactory.createProductsOnDiffCategory(categories[0].id, categories[1].id);
 
-      const response = await server.get(`/products/category/${categories[0].id}`).set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get(`/api/products/category/${categories[0].id}`).set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body.length).toBe(3);
@@ -83,16 +83,16 @@ describe('GET /products/category/:categoryId', () => {
   });
 });
 
-describe('GET /products/:productId', () => {
+describe('GET /api/products/:productId', () => {
   it('should respond with status 401 when headers isnt given', async () => {
-    const response = await server.get('/products/1');
+    const response = await server.get('/api/products/1');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if token isnt given', async () => {
     await usersFactory.createUserByName('Mesa 13', '123456');
-    const response = await server.get('/products/1').set('Authorization', '');
+    const response = await server.get('/api/products/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -100,7 +100,7 @@ describe('GET /products/:productId', () => {
   it('should respond with status 401, if there is no active session with the given token', async () => {
     const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
-    const response = await server.get('/products/1').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/api/products/1').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -108,7 +108,7 @@ describe('GET /products/:productId', () => {
   describe('when token is valid', () => {
     it('should respond with status 422, if params is invalid', async () => {
       const data = await generateTokenAndSession(faker.name.firstName());
-      const response = await server.get('/products/unknown').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/products/unknown').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -118,7 +118,7 @@ describe('GET /products/:productId', () => {
       const type = await categoriesFactory.createFoodType();
       await categoriesFactory.createCategories(type.id);
 
-      const response = await server.get('/products/99999999').set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get('/api/products/99999999').set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -133,7 +133,7 @@ describe('GET /products/:productId', () => {
       await productsFactory.populeOptionalsCategoryTable(optionals, categories[0].id, categories[1].id);
       const product = await productsFactory.createSingleProduct(categories[0].id);
 
-      const response = await server.get(`/products/${product.id}`).set('Authorization', `Bearer ${data.token}`);
+      const response = await server.get(`/api/products/${product.id}`).set('Authorization', `Bearer ${data.token}`);
 
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body.Optionals.length).toBe(3);
