@@ -4,6 +4,7 @@ import Reset from './common/Reset';
 import AdminRouteProtector from './common/RouteProtector/AdminRouteProtector';
 import ClientRouteProtector from './common/RouteProtector/ClientRouteProtector';
 import AdminDashboard from './pages/AdminSide/AdminDashBoard';
+import BillingSection from './pages/AdminSide/AdminDashBoard/BillingSection';
 import ClientRatings from './pages/AdminSide/AdminDashBoard/ClientRatings';
 import OrdersSection from './pages/AdminSide/AdminDashBoard/OrdersSection';
 import RegisterTableSection from './pages/AdminSide/AdminDashBoard/RegisterTableSection';
@@ -41,6 +42,7 @@ export default function App() {
               <Route path="orders-queue" element={<OrdersSection />} />
               <Route path="ratings-overview" element={<ClientRatings />} />
               <Route path="register" element={<RegisterTableSection />} />
+              <Route path="billing" element={<BillingSection />} />
             </Route>
 
             <Route

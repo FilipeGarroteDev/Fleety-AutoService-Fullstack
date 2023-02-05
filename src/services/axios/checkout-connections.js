@@ -26,8 +26,14 @@ async function postPayment(body, ticketId) {
   return axios.post(`${BASE_URL}/checkout/payment/${ticketId}`, body, config);
 }
 
+async function listAllPaidTickets() {
+  const config = generateHeaders();
+  return axios.get(`${BASE_URL}/checkout/payment/billing`, config);
+}
+
 export {
   finishOrderAndUpdateStatus,
   listAllFinishedOrders,
   postPayment,
+  listAllPaidTickets
 };
