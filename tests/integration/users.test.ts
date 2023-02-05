@@ -5,6 +5,11 @@ import faker from '@faker-js/faker';
 import { Roles } from '@prisma/client';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
+import categoriesFactory from '../factory/categories-factory';
+import checkoutFactory from '../factory/checkout-factory';
+import productsFactory from '../factory/products-factory';
+import ratingsFactory from '../factory/ratings-factory';
+import ticketsFactory from '../factory/tickets-factory';
 import usersFactory from '../factory/users-factory';
 import { cleanDb, generateAdminTokenAndSession, generateTokenAndSession, generateValidToken } from '../utils';
 
@@ -340,6 +345,79 @@ describe('GET /api/users/list', () => {
           }),
         ]),
       );
+    });
+  });
+});
+
+describe('DELETE /api/users/:userId', () => {
+  it('should respond with status 401 when headers isnt given', async () => {
+    const response = await server.delete('/api/users/1');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if token isnt given', async () => {
+    await usersFactory.createNewAdmin(faker.name.firstName(), faker.internet.email());
+    const response = await server.delete('/api/users/1').set('Authorization', '');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if there is no active session with the given token', async () => {
+    const admin = await usersFactory.createNewAdmin(faker.name.firstName(), faker.internet.email());
+    const token = generateValidToken(admin.id);
+    const response = await server.delete('/api/users/1').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  describe('when token is valid', () => {
+    it('should respond with status 401, if requester does not have admin role', async () => {
+      const data = await generateTokenAndSession(faker.name.firstName());
+
+      const response = await server.delete('/api/users/list').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.FORBIDDEN);
+    });
+
+    it('should respond with status 422 if orderId has invalid format', async () => {
+      const data = await generateAdminTokenAndSession(faker.name.firstName());
+
+      const response = await server.delete('/api/users/unknown').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it('should respond with status 404 if there is no order with given id', async () => {
+      const data = await generateAdminTokenAndSession(faker.name.firstName());
+
+      const response = await server.delete('/api/users/999999999').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
+
+    it('should respond with status 200, if user hasnt another entity', async () => {
+      const data = await generateAdminTokenAndSession(faker.name.firstName());
+      const user = await usersFactory.createUserByName(faker.name.firstName(), faker.internet.password());
+
+      const response = await server.delete(`/api/users/${user.id}`).set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.OK);
+    });
+
+    it('should respond with status 200, if user has other entities', async () => {
+      const data = await generateAdminTokenAndSession(faker.name.firstName());
+      const user = await usersFactory.createUserByName(faker.name.firstName(), faker.internet.password());
+      const ticket = await ticketsFactory.createReservedTicket(user.id);
+      const foodType = await categoriesFactory.createFoodType();
+      const category = await categoriesFactory.createSingleCategory(foodType.id);
+      const product = await productsFactory.createSingleProduct(category.id);
+      await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+      await ratingsFactory.createSomeRatings(user.id);
+
+      const response = await server.delete(`/api/users/${user.id}`).set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.OK);
     });
   });
 });
