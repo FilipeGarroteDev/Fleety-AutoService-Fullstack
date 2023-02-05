@@ -7,7 +7,7 @@ import { useQuery } from 'react-query';
 import { getAllRatings } from '../../../../services/axios/ratings-connections';
 import EmptyPage from '../../../../components/AdminSideComponents/AdminDashboard/EmptyPage';
 import AveragesContainers from './AveragesContainers';
-import LoadingPage from '../../../../components/LoadingPage';
+import dayjs from 'dayjs';
 
 export default function ClientRatings() {
   const [ratingsSum, setRatingsSum] = useState({});
@@ -79,12 +79,14 @@ export default function ClientRatings() {
 }
 
 function OrderLine({ name, email, userNote, createdAt, header }) {
+  const date = dayjs(createdAt).format('DD/MM/YYYY');
+
   return (
     <LineStyle order>
       <div>{header ? <h2>Nome do Cliente</h2> : <span>{name}</span>}</div>
       <div>{header ? <h2>E-mail</h2> : <span>{email}</span>}</div>
       <div>{header ? <h2>Observações</h2> : <span>{userNote}</span>}</div>
-      <div>{header ? <h2>Entrada</h2> : <span>{createdAt}</span>}</div>
+      <div>{header ? <h2>Entrada</h2> : <span>{date}</span>}</div>
     </LineStyle>
   );
 }

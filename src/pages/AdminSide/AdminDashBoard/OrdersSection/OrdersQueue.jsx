@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
 import { updateOrderStatus } from '../../../../services/axios/orders-connections';
@@ -22,6 +23,11 @@ export default function OrdersQueue({ data }) {
 }
 
 function OrderLine({ id, ticketId, amount, optionals, createdAt, name, header, table }) {
+  const date = dayjs(createdAt).format('DD/MM/YY');
+  const hour = dayjs(createdAt).format('HH:mm');
+
+  const timeDiff = dayjs(Date.now() - dayjs(createdAt)).format('mm:ss');
+
   async function deliverOrder() {
     try {
       await updateOrderStatus(id);
@@ -36,8 +42,8 @@ function OrderLine({ id, ticketId, amount, optionals, createdAt, name, header, t
       <div>{header ? <h2>Nº Comanda</h2> : <span>{ticketId}</span>}</div>
       <div>{header ? <h2>Item</h2> : <span>{`${amount}x ${name}`}</span>}</div>
       <div>{header ? <h2>Observações</h2> : <span>{optionals}</span>}</div>
-      <div>{header ? <h2>Entrada</h2> : <span>{createdAt}</span>}</div>
-      <div>{header ? <h2>Tempo de espera</h2> : <span>15m</span>}</div>
+      <div>{header ? <h2>Entrada</h2> : <span>{`${hour} - ${date}`}</span>}</div>
+      <div>{header ? <h2>Tempo de espera</h2> : <span>{`${timeDiff}`}</span>}</div>
       <div>{header ? '' : <button onClick={deliverOrder}>Entregar</button>}</div>
     </LineStyle>
   );

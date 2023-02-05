@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { BsFillStopwatchFill } from 'react-icons/bs';
 import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
@@ -15,6 +16,11 @@ export default function WaiterQueue({ callList }) {
 }
 
 function WaiterQueueLine({ table, createdAt, userId, header }) {
+  const date = dayjs(createdAt).format('DD/MM/YY');
+  const hour = dayjs(createdAt).format('HH:mm');
+
+  const timeDiff = dayjs(Date.now() - dayjs(createdAt)).format('mm:ss');
+
   async function finishCall() {
     try {
       await deleteWaiterCall(userId);
@@ -27,7 +33,8 @@ function WaiterQueueLine({ table, createdAt, userId, header }) {
     <LineStyle>
       <div>{header ? '' : <BsFillStopwatchFill />}</div>
       <div>{header ? <h2>Mesa solicitante</h2> : <h3>{table}</h3>}</div>
-      <div>{header ? <h2>Hora da chamada</h2> : <span>{createdAt}</span>}</div>
+      <div>{header ? <h2>Hora da chamada</h2> : <span>{`${hour} - ${date}`}</span>}</div>
+      <div>{header ? <h2>Tempo de espera</h2> : <span>{`${timeDiff}`}</span>}</div>
       <div>{header ? '' : <button onClick={finishCall}>Finalizar</button>}</div>
     </LineStyle>
   );

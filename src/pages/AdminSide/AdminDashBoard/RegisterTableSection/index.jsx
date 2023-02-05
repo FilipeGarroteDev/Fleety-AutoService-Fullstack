@@ -7,12 +7,12 @@ import { BiHide, BiShow } from 'react-icons/bi';
 import RegisterForm from './RegisterForm';
 import { getAllActiveUsers } from '../../../../services/axios/users-connections';
 import { useQuery } from 'react-query';
-import LoadingPage from '../../../../components/LoadingPage';
+import dayjs from 'dayjs';
 
 export default function RegisterTableSection() {
   const [clientData, setClientData] = useState({});
   const [adminData, setAdminData] = useState({});
-  const { data, isError, isLoading } = useQuery('users', () => {
+  const { data, isLoading } = useQuery('users', () => {
     return getAllActiveUsers().then((res) => res.data);
   });
 
@@ -90,6 +90,8 @@ export default function RegisterTableSection() {
 }
 
 function UserLine({ id, name, role, createdAt, header }) {
+  const date = dayjs(createdAt).format('DD/MM/YYYY');
+
   const [isHidden, setIsHidden] = useState(true);
   const objectLiterals = {
     true: <BiShow onClick={() => setIsHidden(!isHidden)} />,
@@ -102,7 +104,7 @@ function UserLine({ id, name, role, createdAt, header }) {
       <div>{header ? <h2>ID</h2> : <h3>{!isHidden ? id : '------'}</h3>}</div>
       <div>{header ? <h2>Mesa</h2> : <span>{!isHidden ? name : '------'}</span>}</div>
       <div>{header ? <h2>Privilégio</h2> : <span>{!isHidden ? role : '------'}</span>}</div>
-      <div>{header ? <h2>Data de criação</h2> : <span>{!isHidden ? createdAt : '------'}</span>}</div>
+      <div>{header ? <h2>Data de criação</h2> : <span>{!isHidden ? date : '------'}</span>}</div>
       <div>{header ? '' : <button>Excluir</button>}</div>
     </LineStyle>
   );

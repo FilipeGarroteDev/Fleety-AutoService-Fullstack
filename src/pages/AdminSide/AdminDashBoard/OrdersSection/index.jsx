@@ -2,10 +2,9 @@ import SectionTitle from '../../../../components/AdminSideComponents/AdminDashbo
 import SectionContainer from '../../../../components/AdminSideComponents/AdminDashboard/SectionContainer';
 import { getAllPreparingOrders } from '../../../../services/axios/orders-connections';
 import { useQuery } from 'react-query';
-import SummaryContainer from './SummaryContainer';
 import OrdersQueue from './OrdersQueue';
 import EmptyPage from '../../../../components/AdminSideComponents/AdminDashboard/EmptyPage';
-import LoadingPage from '../../../../components/LoadingPage';
+import styled from 'styled-components';
 
 export default function OrdersSection() {
   const { data, isLoading, isError } = useQuery(
@@ -33,7 +32,12 @@ export default function OrdersSection() {
         <></>
       ) : (
         <>
-          <SummaryContainer data={data} />
+          <SummaryContainer>
+            <div>
+              <h3>Em espera:</h3>
+              <strong>{`${data.length} ${data.length > 1 ? 'pedidos' : 'pedido'}`}</strong>
+            </div>
+          </SummaryContainer>
           {data.length === 0 ? (
             <EmptyPage>
               <span>
@@ -49,3 +53,36 @@ export default function OrdersSection() {
     </SectionContainer>
   );
 }
+
+const SummaryContainer = styled.section`
+  width: 100%;
+  height: 70px;
+  padding: 0 150px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  > div {
+    height: 100%;
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 0 30px;
+    box-shadow: 0 2px 10px 3px rgba(0, 0, 0, 0.2);
+
+    > h3 {
+      font-size: 22px;
+      font-weight: 400;
+      color: #3f6ad8;
+    }
+
+    > strong {
+      font-size: 28px;
+      font-weight: 400;
+      text-align: start;
+    }
+  }
+`;
