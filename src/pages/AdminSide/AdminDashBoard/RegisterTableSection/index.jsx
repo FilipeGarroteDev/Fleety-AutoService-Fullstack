@@ -7,6 +7,7 @@ import { BiHide, BiShow } from 'react-icons/bi';
 import RegisterForm from './RegisterForm';
 import { getAllActiveUsers } from '../../../../services/axios/users-connections';
 import { useQuery } from 'react-query';
+import LoadingPage from '../../../../components/LoadingPage';
 
 export default function RegisterTableSection() {
   const [clientData, setClientData] = useState({});
@@ -16,7 +17,7 @@ export default function RegisterTableSection() {
   });
 
   if (isLoading) {
-    return <h1>LOADINGGGGGG</h1>;
+    return <></>;
   }
 
   function handleClientRegister(e) {

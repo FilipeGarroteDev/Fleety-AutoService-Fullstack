@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import SummaryContainer from './SummaryContainer';
 import OrdersQueue from './OrdersQueue';
 import EmptyPage from '../../../../components/AdminSideComponents/AdminDashboard/EmptyPage';
+import LoadingPage from '../../../../components/LoadingPage';
 
 export default function OrdersSection() {
   const { data, isLoading, isError } = useQuery(
@@ -29,7 +30,7 @@ export default function OrdersSection() {
         <span>Abaixo estão listados os pedidos pendentes de entrega.</span>
       </SectionTitle>
       {isLoading ? (
-        <div>LOADINGGGGGGGGGGGGG!!!</div>
+        <></>
       ) : (
         <>
           <SummaryContainer data={data} />

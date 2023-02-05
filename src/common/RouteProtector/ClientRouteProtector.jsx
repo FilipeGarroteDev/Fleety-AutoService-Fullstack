@@ -1,5 +1,6 @@
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import LoadingPage from '../../components/LoadingPage';
 import { validateToken } from '../../services/axios/auth-connections';
 
 export default function ClientRouteProtector({ children }) {
@@ -13,7 +14,7 @@ export default function ClientRouteProtector({ children }) {
   });
 
   if (isLoading) {
-    return <h1>LOADINGGGGGGGGGG</h1>;
+    return <LoadingPage />;
   }
 
   if (isError) {

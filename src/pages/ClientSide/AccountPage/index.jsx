@@ -35,7 +35,7 @@ export default function AccountPage() {
     <>
       <OpacityStyle
         onClick={() => {
-          if (paymentMethod) {
+          if (paymentMethod === 'paymentSuccessful') {
             localStorage.clear();
             navigate('/signin');
             return;

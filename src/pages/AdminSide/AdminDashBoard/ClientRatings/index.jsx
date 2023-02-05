@@ -7,6 +7,7 @@ import { useQuery } from 'react-query';
 import { getAllRatings } from '../../../../services/axios/ratings-connections';
 import EmptyPage from '../../../../components/AdminSideComponents/AdminDashboard/EmptyPage';
 import AveragesContainers from './AveragesContainers';
+import LoadingPage from '../../../../components/LoadingPage';
 
 export default function ClientRatings() {
   const [ratingsSum, setRatingsSum] = useState({});
@@ -49,7 +50,7 @@ export default function ClientRatings() {
   );
 
   if (isLoading) {
-    return <h1>LOADINGGGGGGGGGGG!</h1>;
+    return <></>;
   }
 
   return (
