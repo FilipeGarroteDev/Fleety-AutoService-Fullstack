@@ -37,12 +37,50 @@ async function getAllUsers(): Promise<Users[]> {
   return prismaPG.users.findMany({});
 }
 
+async function deleteAllUsersEntities(userId: number) {
+  await prismaPG.sessions.deleteMany({
+    where: {
+      userId,
+    },
+  });
+  await prismaPG.ratings.deleteMany({
+    where: {
+      userId,
+    },
+  });
+  await prismaPG.payments.deleteMany({
+    where: {
+      Ticket: {
+        userId,
+      },
+    },
+  });
+  await prismaPG.orders.deleteMany({
+    where: {
+      Ticket: {
+        userId,
+      },
+    },
+  });
+  await prismaPG.tickets.deleteMany({
+    where: {
+      userId,
+    },
+  });
+  await prismaPG.users.delete({
+    where: {
+      id: userId,
+    },
+  });
+}
+
 const usersRepository = {
   searchUser,
   insertNewUser,
   getUserById,
   searchAdminByEmail,
   getAllUsers,
+  deleteAllUsersEntities,
 };
 
 export default usersRepository;

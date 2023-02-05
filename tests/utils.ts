@@ -19,6 +19,7 @@ export async function cleanDb() {
 
   await mongoDB.collection('calls').deleteMany({});
   await mongoDB.collection('billing').deleteMany({});
+  await mongoDB.collection('ratings').deleteMany({});
 }
 
 export function generateValidToken(userId: number) {

@@ -1,11 +1,12 @@
 import app, { init } from '@/app';
-import { prismaPG } from '@/config';
+import { mongoDB } from '@/config';
 import faker from '@faker-js/faker';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import authFactory from '../factory/users-factory';
 import ratingsFactory from '../factory/ratings-factory';
 import { cleanDb, generateAdminTokenAndSession, generateTokenAndSession, generateValidToken } from '../utils';
+import { ObjectId } from 'mongodb';
 
 beforeAll(async () => {
   await init();
@@ -99,11 +100,13 @@ describe('POST /api/ratings', () => {
 
         const response = await server.post('/api/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
+        const ratings = await mongoDB.collection('ratings').findOne({ userId: data.userId });
         expect(response.status).toBe(httpStatus.CREATED);
-        expect(response.body).toEqual(
+
+        expect(ratings).toEqual(
           expect.objectContaining({
-            id: expect.any(Number),
-            userId: expect.any(Number),
+            _id: expect.any(ObjectId),
+            userId: data.userId,
             name: body.name,
             email: body.email,
             environmentRate: 1,
@@ -112,7 +115,7 @@ describe('POST /api/ratings', () => {
             pricesRate: 1,
             serviceRate: 1,
             userNote: body.userNote,
-            createdAt: expect.any(String),
+            createdAt: expect.any(Date),
           }),
         );
       });
@@ -122,30 +125,47 @@ describe('POST /api/ratings', () => {
         const body = generateCompleteRating(5);
         const response = await server.post('/api/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
+        const ratings = await mongoDB.collection('ratings').findOne({ userId: data.userId });
         expect(response.status).toBe(httpStatus.CREATED);
+
+        expect(ratings).toEqual(
+          expect.objectContaining({
+            _id: expect.any(ObjectId),
+            userId: data.userId,
+            name: body.name,
+            email: body.email,
+            environmentRate: 5,
+            foodRate: 4,
+            beverageRate: 5,
+            pricesRate: 4,
+            serviceRate: 5,
+            userNote: body.userNote,
+            createdAt: expect.any(Date),
+          }),
+        );
       });
 
       it('should save rating body on db', async () => {
         const data = await generateTokenAndSession(faker.name.firstName());
         const body = generateCompleteRating(5);
 
-        const response = await server.post('/api/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
+        await server.post('/api/ratings').set('Authorization', `Bearer ${data.token}`).send(body);
 
-        const storedRating = await prismaPG.ratings.findMany({});
+        const ratings = await mongoDB.collection('ratings').findOne({ userId: data.userId });
 
-        expect(response.body).toEqual(
+        expect(ratings).toEqual(
           expect.objectContaining({
-            id: expect.any(Number),
+            _id: expect.any(ObjectId),
             userId: expect.any(Number),
-            name: storedRating[0].name,
-            email: storedRating[0].email,
-            environmentRate: storedRating[0].environmentRate,
-            foodRate: storedRating[0].foodRate,
-            beverageRate: storedRating[0].beverageRate,
-            pricesRate: storedRating[0].pricesRate,
-            serviceRate: storedRating[0].serviceRate,
-            userNote: storedRating[0].userNote,
-            createdAt: expect.any(String),
+            name: ratings.name,
+            email: ratings.email,
+            environmentRate: ratings.environmentRate,
+            foodRate: ratings.foodRate,
+            beverageRate: ratings.beverageRate,
+            pricesRate: ratings.pricesRate,
+            serviceRate: ratings.serviceRate,
+            userNote: ratings.userNote,
+            createdAt: expect.any(Date),
           }),
         );
       });

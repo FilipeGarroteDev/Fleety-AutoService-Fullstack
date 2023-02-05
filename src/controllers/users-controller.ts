@@ -42,3 +42,23 @@ export async function listAllActiveUsers(req: Request, res: Response) {
     }
   }
 }
+
+export async function deleteUser(req: Request, res: Response) {
+  const { userId } = req.params as Record<string, string>;
+  const { role } = res.locals.userData as Record<string, string>;
+
+  try {
+    await usersService.deleteUserById(userId, role);
+    res.sendStatus(httpStatus.OK);
+  } catch (error) {
+    if (error.name === 'NotFoundError') {
+      res.sendStatus(httpStatus.NOT_FOUND);
+    } else if (error.name === 'ForbiddenError') {
+      res.sendStatus(httpStatus.FORBIDDEN);
+    } else if (error.name === 'UnprocessableEntityError') {
+      res.sendStatus(httpStatus.UNPROCESSABLE_ENTITY);
+    } else {
+      res.sendStatus(httpStatus.BAD_REQUEST);
+    }
+  }
+}

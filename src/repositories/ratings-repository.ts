@@ -1,15 +1,13 @@
-import { prismaPG } from '@/config';
+import { mongoDB } from '@/config';
 import { NewRatingEntity } from '@/protocols';
-import { Ratings } from '@prisma/client';
+import { Document, InsertOneResult, WithId } from 'mongodb';
 
-async function postRating(rating: NewRatingEntity): Promise<Ratings> {
-  return prismaPG.ratings.create({
-    data: rating,
-  });
+async function postRating(rating: NewRatingEntity): Promise<InsertOneResult<Document>> {
+  return mongoDB.collection('ratings').insertOne(rating);
 }
 
-async function getAllRatings(): Promise<Ratings[]> {
-  return prismaPG.ratings.findMany({});
+async function getAllRatings(): Promise<WithId<Document>[]> {
+  return mongoDB.collection('ratings').find({}).toArray();
 }
 
 const ratingsRepository = { postRating, getAllRatings };

@@ -1,6 +1,8 @@
 import conflictError from '@/errors/conflictError';
 import forbiddenError from '@/errors/forbiddenError';
+import notFoundError from '@/errors/notFoundError';
 import unauthorizedError from '@/errors/unauthorizedError';
+import unprocessableEntityError from '@/errors/unprocessableEntityError';
 import { RegisterUserBody } from '@/protocols';
 import usersRepository from '@/repositories/users-repository';
 import { Roles, Users } from '@prisma/client';
@@ -37,9 +39,25 @@ async function validateAndSearchAllUsers(role: string): Promise<Users[]> {
   return users;
 }
 
+async function deleteUserById(userId: string, role: string) {
+  if (role !== 'ADMIN') throw forbiddenError();
+  const validUserId = Number(userId);
+
+  if (!validUserId) throw unprocessableEntityError();
+
+  const existentUser = await usersRepository.getUserById(validUserId);
+
+  if (!existentUser) {
+    throw notFoundError();
+  }
+
+  await usersRepository.deleteAllUsersEntities(validUserId);
+}
+
 const usersService = {
   validateDataAndRegisterUser,
   validateAndSearchAllUsers,
+  deleteUserById,
 };
 
 export default usersService;

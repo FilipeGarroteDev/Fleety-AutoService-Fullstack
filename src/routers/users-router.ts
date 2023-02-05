@@ -2,13 +2,14 @@ import express from 'express';
 import validateSchema from '@/middlewares/schemas-middleware';
 import { RegisterBodySchema } from '@/schemas/auth-schemas';
 import { authTokenMiddleware } from '@/middlewares/authToken-middleware';
-import { listAllActiveUsers, registerNewUser } from '@/controllers/users-controller';
+import { deleteUser, listAllActiveUsers, registerNewUser } from '@/controllers/users-controller';
 
 const usersRouter = express.Router();
 
 usersRouter
   .all('/*', authTokenMiddleware)
   .post('/register', validateSchema(RegisterBodySchema), registerNewUser)
-  .get('/list', listAllActiveUsers);
+  .get('/list', listAllActiveUsers)
+  .delete('/:userId', deleteUser);
 
 export default usersRouter;

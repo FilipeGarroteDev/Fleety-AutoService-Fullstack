@@ -19,7 +19,6 @@ model Users {
   role       Roles
   createdAt  DateTime     @default(now())
   Tickets    Tickets[]
-  Ratings    Ratings[]
   Sessions   Sessions[]
 }
 
@@ -128,19 +127,4 @@ model Payments {
 enum Issuers {
   MASTERCARD
   VISA
-}
-
-model Ratings {
-  id                Int         @id @default(autoincrement())
-  userId            Int
-  User              Users       @relation(fields: [userId], references: [id])
-  name              String      @db.VarChar(255) 
-  email             String      @db.VarChar(255)
-  environmentRate   Int         @default(1)
-  foodRate          Int         @default(1)
-  beverageRate      Int         @default(1)
-  pricesRate        Int         @default(1)
-  serviceRate       Int         @default(1)
-  userNote          String?     @default("")
-  createdAt         DateTime    @default(now())
 }
