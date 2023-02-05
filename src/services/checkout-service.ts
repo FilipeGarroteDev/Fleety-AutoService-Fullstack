@@ -9,6 +9,7 @@ import ordersRepository from '@/repositories/orders-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
 import waiterRepository from '@/repositories/waiter-repository';
 import { Orders, Payments, Tickets } from '@prisma/client';
+import { Document, WithId } from 'mongodb';
 
 async function updateFinishedOrders(order: CheckoutBodyEntity): Promise<void> {
   const ticket = await ticketsRepository.getTicketById(order.ticketId);
@@ -80,10 +81,18 @@ function calculateTotalValue(orders: Orders[], totalValue: number) {
   return false;
 }
 
+async function searchPaidTickets(role: string): Promise<WithId<Document>[]> {
+  if (role !== 'ADMIN') throw forbiddenError();
+
+  const finishedTickets: WithId<Document>[] = await checkoutRepository.getFinishedTicketsList();
+  return finishedTickets;
+}
+
 const checkoutService = {
   updateFinishedOrders,
   searchFinishedOrdersByTicketId,
   payAndUpdateTicket,
+  searchPaidTickets,
 };
 
 export default checkoutService;

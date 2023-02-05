@@ -18,6 +18,7 @@ export async function cleanDb() {
   await prismaPG.users.deleteMany({});
 
   await mongoDB.collection('calls').deleteMany({});
+  await mongoDB.collection('billing').deleteMany({});
 }
 
 export function generateValidToken(userId: number) {

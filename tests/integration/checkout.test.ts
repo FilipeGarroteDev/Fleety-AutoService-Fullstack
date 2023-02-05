@@ -9,7 +9,7 @@ import checkoutFactory from '../factory/checkout-factory';
 import ordersFactory from '../factory/orders-factory';
 import productsFactory from '../factory/products-factory';
 import ticketsFactory from '../factory/tickets-factory';
-import { cleanDb, generateTokenAndSession, generateValidToken } from '../utils';
+import { cleanDb, generateAdminTokenAndSession, generateTokenAndSession, generateValidToken } from '../utils';
 import usersFactory from '../factory/users-factory';
 import { ObjectId } from 'mongodb';
 
@@ -896,6 +896,107 @@ describe('POST /api/checkout/payment/:ticketId', () => {
             }),
           );
         });
+      });
+    });
+  });
+});
+
+describe('GET /api/checkout/payment/billing', () => {
+  it('should respond with status 401 when headers isnt given', async () => {
+    const response = await server.get('/api/checkout/payment/billing');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if token isnt given', async () => {
+    await usersFactory.createUserByName('Mesa 13', '123456');
+    const response = await server.get('/api/checkout/payment/billing').set('Authorization', '');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status 401, if there is no active session with the given token', async () => {
+    const user = await usersFactory.createUserByName('Mesa 13', '123456');
+    const token = generateValidToken(user.id);
+    const response = await server.get('/api/checkout/payment/billing').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  describe('when token is valid', () => {
+    it('should respond with status 401 if user role isnt ADMIN', async () => {
+      const data = await generateTokenAndSession(faker.name.firstName());
+
+      const response = await server.get('/api/checkout/payment/billing').set('Authorization', `Bearer ${data.token}`);
+
+      expect(response.status).toBe(httpStatus.FORBIDDEN);
+    });
+
+    describe('when user is admin', () => {
+      const generateFinishedTicket = (ticketId: number, totalValue: number) => ({
+        ticketId,
+        totalValue,
+        isSplitted: true,
+        createdAt: new Date(),
+      });
+
+      it('should respond with status 200', async () => {
+        const data = await generateAdminTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(data.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+        const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+        const body = generateFinishedTicket(ticket.id, totalOrdersValues);
+        await ticketsFactory.createFinishedTicket(body);
+
+        const response = await server.get('/api/checkout/payment/billing').set('Authorization', `Bearer ${data.token}`);
+
+        expect(response.status).toEqual(httpStatus.OK);
+      });
+
+      it('should respond with status 200 and return empty array, if there is no order', async () => {
+        const data = await generateAdminTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(data.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+        const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+        generateFinishedTicket(ticket.id, totalOrdersValues);
+
+        const response = await server.get('/api/checkout/payment/billing').set('Authorization', `Bearer ${data.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+        expect(response.body).toEqual([]);
+      });
+
+      it('should respond with status 200 and return finished tickets array', async () => {
+        const data = await generateAdminTokenAndSession(faker.name.firstName());
+        const ticket = await ticketsFactory.createReservedTicket(data.userId);
+        const foodType = await categoriesFactory.createFoodType();
+        const category = await categoriesFactory.createSingleCategory(foodType.id);
+        const product = await productsFactory.createSingleProduct(category.id);
+        await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+        const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+        const body = generateFinishedTicket(ticket.id, totalOrdersValues);
+        await ticketsFactory.createFinishedTicket(body);
+
+        const response = await server.get('/api/checkout/payment/billing').set('Authorization', `Bearer ${data.token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              _id: expect.any(String),
+              ticketId: ticket.id,
+              totalValue: totalOrdersValues,
+              isSplitted: true,
+              createdAt: expect.any(String),
+            }),
+          ]),
+        );
       });
     });
   });

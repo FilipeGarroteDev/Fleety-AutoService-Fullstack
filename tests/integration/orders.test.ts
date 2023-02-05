@@ -4,7 +4,7 @@ import faker from '@faker-js/faker';
 import { OrderStatus } from '@prisma/client';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
-import authFactory from '../factory/users-factory';
+import usersFactory from '../factory/users-factory';
 import categoriesFactory from '../factory/categories-factory';
 import ordersFactory from '../factory/orders-factory';
 import productsFactory from '../factory/products-factory';
@@ -29,14 +29,14 @@ describe('POST /api/chart/add', () => {
   });
 
   it('should respond with status 401, if token isnt given', async () => {
-    await authFactory.createUserByName('Mesa 13', '123456');
+    await usersFactory.createUserByName('Mesa 13', '123456');
     const response = await server.post('/api/chart/add').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if there is no active session with the given token', async () => {
-    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
     const response = await server.post('/api/chart/add').set('Authorization', `Bearer ${token}`);
 
@@ -197,14 +197,14 @@ describe('GET /api/chart/:ticketId', () => {
   });
 
   it('should respond with status 401, if token isnt given', async () => {
-    await authFactory.createUserByName('Mesa 13', '123456');
+    await usersFactory.createUserByName('Mesa 13', '123456');
     const response = await server.get('/api/chart/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if there is no active session with the given token', async () => {
-    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
     const response = await server.get('/api/chart/1').set('Authorization', `Bearer ${token}`);
 
@@ -339,14 +339,14 @@ describe('DELETE /api/chart/:orderId', () => {
   });
 
   it('should respond with status 401, if token isnt given', async () => {
-    await authFactory.createUserByName('Mesa 13', '123456');
+    await usersFactory.createUserByName('Mesa 13', '123456');
     const response = await server.delete('/api/chart/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if there is no active session with the given token', async () => {
-    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
     const response = await server.delete('/api/chart/1').set('Authorization', `Bearer ${token}`);
 
@@ -433,14 +433,14 @@ describe('GET /api/chart', () => {
   });
 
   it('should respond with status 401, if token isnt given', async () => {
-    await authFactory.createUserByName('Mesa 13', '123456');
+    await usersFactory.createUserByName('Mesa 13', '123456');
     const response = await server.get('/api/chart').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if there is no active session with the given token', async () => {
-    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
     const response = await server.get('/api/chart').set('Authorization', `Bearer ${token}`);
 
@@ -545,14 +545,14 @@ describe('PATCH /api/chart/:orderId', () => {
   });
 
   it('should respond with status 401, if token isnt given', async () => {
-    await authFactory.createUserByName('Mesa 13', '123456');
+    await usersFactory.createUserByName('Mesa 13', '123456');
     const response = await server.patch('/api/chart/1').set('Authorization', '');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   it('should respond with status 401, if there is no active session with the given token', async () => {
-    const user = await authFactory.createUserByName('Mesa 13', '123456');
+    const user = await usersFactory.createUserByName('Mesa 13', '123456');
     const token = generateValidToken(user.id);
     const response = await server.patch('/api/chart/1').set('Authorization', `Bearer ${token}`);
 

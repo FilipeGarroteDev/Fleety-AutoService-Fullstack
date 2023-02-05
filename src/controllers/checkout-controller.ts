@@ -3,6 +3,7 @@ import checkoutService from '@/services/checkout-service';
 import { Payments, Tickets } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { Document, WithId } from 'mongodb';
 
 export async function updateOrderStatusAndSendToCheckout(req: Request, res: Response) {
   const body: CheckoutBodyEntity = req.body;
@@ -71,6 +72,21 @@ export async function checkAndFinishPayment(req: Request, res: Response) {
       return res
         .status(httpStatus.BAD_REQUEST)
         .send('Houve um erro inesperado. Por gentileza, tente novamente ou chame o garçom.');
+    }
+  }
+}
+
+export async function listPaidTickets(req: Request, res: Response) {
+  const { role } = res.locals.userData as Record<string, string>;
+
+  try {
+    const finishedTickets: WithId<Document>[] = await checkoutService.searchPaidTickets(role);
+    return res.status(httpStatus.OK).send(finishedTickets);
+  } catch (error) {
+    if (error.name === 'ForbiddenError') {
+      return res.sendStatus(httpStatus.FORBIDDEN);
+    } else {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
     }
   }
 }

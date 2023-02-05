@@ -80,6 +80,10 @@ async function saveFinishedTicket({ ticketId, totalValue, isSplitted, createdAt 
   });
 }
 
+async function getFinishedTicketsList() {
+  return await mongoDB.collection('billing').find({}).toArray();
+}
+
 const checkoutRepository = {
   updateManyOrders,
   getAllFinishedOrders,
@@ -87,6 +91,7 @@ const checkoutRepository = {
   postPaymentAndUpdateTicketStatus,
   getAllActiveOrders,
   saveFinishedTicket,
+  getFinishedTicketsList,
 };
 
 export default checkoutRepository;
