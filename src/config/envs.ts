@@ -7,7 +7,7 @@ export function loadEnvs() {
   if (process.env.NODE_ENV === 'test') {
     path = '.env.test';
   } else if (process.env.NODE_ENV === 'development') {
-    path = '.env';
+    path = '.env.development';
   }
 
   const currentEnvs = dotenv.config({ path });
