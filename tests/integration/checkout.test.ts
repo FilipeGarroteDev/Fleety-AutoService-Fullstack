@@ -670,6 +670,36 @@ describe('POST /api/checkout/payment/:ticketId', () => {
             }),
           );
         });
+
+        it('should save finished ticket on mongoDB', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidPayment(totalOrdersValues);
+
+          await server
+            .post(`/api/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          const paymentData = await mongoDB.collection('billing').findOne({
+            ticketId: ticket.id,
+          });
+
+          expect(paymentData).toEqual(
+            expect.objectContaining({
+              _id: expect.any(ObjectId),
+              ticketId: ticket.id,
+              totalValue: body.totalValue,
+              isSplitted: false,
+              createdAt: expect.any(Date),
+            }),
+          );
+        });
       });
 
       describe('in splitted payment case', () => {
@@ -755,7 +785,10 @@ describe('POST /api/checkout/payment/:ticketId', () => {
           const totalOrdersValues = await checkoutFactory.sumOrdersValues();
           const body = generateValidSplittedPayment(totalOrdersValues);
 
-          await server.post(`/api/checkout/payment/${ticket.id}`).set('Authorization', `Bearer ${data.token}`).send(body);
+          await server
+            .post(`/api/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
 
           const paymentData = await prismaPG.payments.findFirst({
             where: {
@@ -830,6 +863,36 @@ describe('POST /api/checkout/payment/:ticketId', () => {
               userId: data.userId,
               table: expect.any(String),
               createdAt: expect.any(Number),
+            }),
+          );
+        });
+
+        it('should save finished ticket on mongoDB', async () => {
+          const data = await generateTokenAndSession(faker.name.firstName());
+          const ticket = await ticketsFactory.createReservedTicket(data.userId);
+          const foodType = await categoriesFactory.createFoodType();
+          const category = await categoriesFactory.createSingleCategory(foodType.id);
+          const product = await productsFactory.createSingleProduct(category.id);
+          await checkoutFactory.createDeliveredOrders(ticket.id, product.id);
+          const totalOrdersValues = await checkoutFactory.sumOrdersValues();
+          const body = generateValidSplittedPayment(totalOrdersValues);
+
+          await server
+            .post(`/api/checkout/payment/${ticket.id}`)
+            .set('Authorization', `Bearer ${data.token}`)
+            .send(body);
+
+          const paymentData = await mongoDB.collection('billing').findOne({
+            ticketId: ticket.id,
+          });
+
+          expect(paymentData).toEqual(
+            expect.objectContaining({
+              _id: expect.any(ObjectId),
+              ticketId: ticket.id,
+              totalValue: body.totalValue,
+              isSplitted: true,
+              createdAt: expect.any(Date),
             }),
           );
         });

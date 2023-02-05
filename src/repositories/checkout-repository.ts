@@ -1,4 +1,4 @@
-import { prismaPG } from '@/config';
+import { mongoDB, prismaPG } from '@/config';
 import { CheckoutBodyEntity, OrderWithProductInfo, PaymentBody } from '@/protocols';
 import { Orders, OrderStatus, Payments, Tickets, TicketStatus } from '@prisma/client';
 
@@ -71,12 +71,22 @@ async function getAllActiveOrders(ticketId: number): Promise<Orders[]> {
   });
 }
 
+async function saveFinishedTicket({ ticketId, totalValue, isSplitted, createdAt }: Payments) {
+  return await mongoDB.collection('billing').insertOne({
+    ticketId,
+    totalValue,
+    isSplitted,
+    createdAt,
+  });
+}
+
 const checkoutRepository = {
   updateManyOrders,
   getAllFinishedOrders,
   getAllDeliveredOrders,
   postPaymentAndUpdateTicketStatus,
   getAllActiveOrders,
+  saveFinishedTicket,
 };
 
 export default checkoutRepository;

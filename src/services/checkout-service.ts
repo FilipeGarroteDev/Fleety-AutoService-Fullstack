@@ -65,6 +65,8 @@ async function payAndUpdateTicket(payment: PaymentBody, ticketId: string, name: 
     await waiterRepository.createNewCall(ticket.userId, name);
   }
 
+  await checkoutRepository.saveFinishedTicket(newPayment[1]);
+
   return newPayment;
 }
 
