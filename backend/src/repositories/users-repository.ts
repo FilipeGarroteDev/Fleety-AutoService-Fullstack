@@ -43,11 +43,6 @@ async function deleteAllUsersEntities(userId: number) {
       userId,
     },
   });
-  await prismaPG.ratings.deleteMany({
-    where: {
-      userId,
-    },
-  });
   await prismaPG.payments.deleteMany({
     where: {
       Ticket: {
