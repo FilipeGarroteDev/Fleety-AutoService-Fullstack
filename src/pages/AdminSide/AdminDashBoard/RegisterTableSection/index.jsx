@@ -5,7 +5,7 @@ import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard
 import { useState } from 'react';
 import { BiHide, BiShow } from 'react-icons/bi';
 import RegisterForm from './RegisterForm';
-import { getAllActiveUsers } from '../../../../services/axios/users-connections';
+import { deleteUser, getAllActiveUsers } from '../../../../services/axios/users-connections';
 import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
 
@@ -98,6 +98,16 @@ function UserLine({ id, name, role, createdAt, header }) {
     false: <BiHide onClick={() => setIsHidden(!isHidden)} />,
   };
 
+  async function deleteSelectedUser() {
+    try {
+      await deleteUser(id);
+      alert('Usuário excluído com sucesso!');
+    } catch (error) {
+      alert('Não foi possível deletar o usuário. Tente novamente mais tarde');
+      return;
+    }
+  }
+
   return (
     <LineStyle order>
       <div>{header ? '' : objectLiterals[isHidden]}</div>
@@ -105,7 +115,7 @@ function UserLine({ id, name, role, createdAt, header }) {
       <div>{header ? <h2>Mesa</h2> : <span>{!isHidden ? name : '------'}</span>}</div>
       <div>{header ? <h2>Privilégio</h2> : <span>{!isHidden ? role : '------'}</span>}</div>
       <div>{header ? <h2>Data de criação</h2> : <span>{!isHidden ? date : '------'}</span>}</div>
-      <div>{header ? '' : <button>Excluir</button>}</div>
+      <div>{header ? '' : <button onClick={deleteSelectedUser}>Excluir</button>}</div>
     </LineStyle>
   );
 }

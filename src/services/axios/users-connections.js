@@ -21,7 +21,13 @@ async function getAllActiveUsers() {
   return axios.get(`${BASE_URL}/users/list`, config);
 }
 
+async function deleteUser(userId) {
+  const config = generateHeaders();
+  return axios.delete(`${BASE_URL}/users/${userId}`, config);
+}
+
 export {
   postNewUserData,
   getAllActiveUsers,
+  deleteUser
 };
