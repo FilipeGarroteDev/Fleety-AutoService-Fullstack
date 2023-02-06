@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import loading from '../assets/images/loading.gif';
+import clientLoading from '../assets/images/clientLoading.gif';
+import adminLoading from '../assets/images/adminLoading.gif';
 
-export default function LoadingPage() {
+export default function LoadingPage({ admin }) {
   return (
-    <Wrapper >
+    <Wrapper admin={admin}>
       <div>
-        <img src={loading} alt="loading" />
+        <img src={admin ? adminLoading : clientLoading} alt="loading" />
         <h1>Fleety</h1>
         <h2>Carregando...</h2>
       </div>
@@ -19,7 +20,7 @@ const Wrapper = styled.main`
   position: absolute;
   top: 0;
   left: 0;
-  background-color: #544e4e;
+  background-color: ${(props) => (props.admin ? '#f0f3f5' : '#544e4e')};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,11 +37,11 @@ const Wrapper = styled.main`
     > h1 {
       font-family: 'Playball', sans-serif;
       font-size: 60px;
-      color: #d9d9d9;
+      color: ${(props) => (props.admin ? '#3f6ad8' : '#d9d9d9')};
     }
     > h2 {
       font-size: 22px;
-      color: #d9d9d9;
+      color: ${(props) => (props.admin ? '#3f6ad8' : '#d9d9d9')};
     }
   }
 `;

@@ -7,18 +7,18 @@ import { deleteWaiterCall } from '../../../../services/axios/waiter-connections'
 import { ThreeDots } from 'react-loader-spinner';
 import { useState } from 'react';
 
-export default function WaiterQueue({ callList }) {
+export default function WaiterQueue({ callList, refetch }) {
   return (
     <TableStyle>
       <WaiterQueueLine header={true} />
       {callList.map(({ id, userId, table, createdAt }) => (
-        <WaiterQueueLine key={id} table={table} createdAt={createdAt} userId={userId} />
+        <WaiterQueueLine key={id} table={table} createdAt={createdAt} userId={userId} refetch={refetch} />
       ))}
     </TableStyle>
   );
 }
 
-function WaiterQueueLine({ table, createdAt, userId, header }) {
+function WaiterQueueLine({ table, createdAt, userId, header, refetch }) {
   const [isClicked, setIsClicked] = useState(false);
 
   const date = dayjs(createdAt).format('DD/MM/YY');
@@ -33,6 +33,7 @@ function WaiterQueueLine({ table, createdAt, userId, header }) {
       await deleteWaiterCall(userId);
       toast.success('O garçom está a caminho!', { theme: 'light' });
       setIsClicked(false);
+      refetch();
     } catch (error) {
       toast.error('Algo deu errado. Atualize a página e tente novamente.', { theme: 'light' });
       setIsClicked(false);

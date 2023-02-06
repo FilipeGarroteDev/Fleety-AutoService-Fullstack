@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import ConfirmBox from './ConfirmBox';
 
-export default function RegisterForm({ children, type, clientData, setClientData, adminData, setAdminData }) {
+export default function RegisterForm({ children, type, clientData, setClientData, adminData, setAdminData, refetch }) {
   const [confirmRegister, setConfirmRegister] = useState(false);
 
   return (
@@ -13,6 +13,7 @@ export default function RegisterForm({ children, type, clientData, setClientData
           setConfirmRegister={setConfirmRegister}
           data={clientData ? clientData : adminData}
           setData={setClientData ? setClientData : setAdminData}
+          refetch={refetch}
         />
       ) : (
         ''

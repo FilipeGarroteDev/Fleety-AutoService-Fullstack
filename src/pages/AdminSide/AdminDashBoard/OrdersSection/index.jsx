@@ -7,7 +7,7 @@ import EmptyPage from '../../../../components/AdminSideComponents/AdminDashboard
 import styled from 'styled-components';
 
 export default function OrdersSection() {
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, refetch } = useQuery(
     'orders',
     () => {
       return getAllPreparingOrders().then((res) => res.data);
@@ -46,7 +46,7 @@ export default function OrdersSection() {
               </span>
             </EmptyPage>
           ) : (
-            <OrdersQueue data={data} />
+            <OrdersQueue data={data} refetch={refetch}/>
           )}
         </>
       )}

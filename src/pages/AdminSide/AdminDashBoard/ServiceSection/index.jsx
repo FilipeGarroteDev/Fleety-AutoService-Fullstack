@@ -6,7 +6,7 @@ import EmptyPage from '../../../../components/AdminSideComponents/AdminDashboard
 import { useQuery } from 'react-query';
 
 export default function ServiceSection() {
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     'calls',
     () => {
       return getAllUserCall().then((res) => res.data);
@@ -31,7 +31,7 @@ export default function ServiceSection() {
           </span>
         </EmptyPage>
       ) : (
-        <WaiterQueue callList={data}/>
+        <WaiterQueue callList={data} refetch={refetch}/>
       )}
     </SectionContainer>
   );

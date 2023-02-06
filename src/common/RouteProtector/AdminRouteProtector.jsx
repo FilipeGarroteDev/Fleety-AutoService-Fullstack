@@ -14,7 +14,7 @@ export default function AdminRouteProtector({ children }) {
   });
 
   if (isLoading) {
-    return <></>;
+    return <LoadingPage admin/>;
   }
 
   if (isError) {

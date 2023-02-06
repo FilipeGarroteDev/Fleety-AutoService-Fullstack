@@ -6,7 +6,7 @@ import { updateOrderStatus } from '../../../../services/axios/orders-connections
 import { ThreeDots } from 'react-loader-spinner';
 import { useState } from 'react';
 
-export default function OrdersQueue({ data }) {
+export default function OrdersQueue({ data, refetch }) {
   return (
     <Wrapper>
       <OrderLine header />
@@ -19,13 +19,14 @@ export default function OrdersQueue({ data }) {
           createdAt={createdAt}
           name={Product.name}
           table={Ticket.User.name}
+          refetch={refetch}
         />
       ))}
     </Wrapper>
   );
 }
 
-function OrderLine({ id, ticketId, amount, optionals, createdAt, name, header, table }) {
+function OrderLine({ id, ticketId, amount, optionals, createdAt, name, header, table, refetch }) {
   const [isClicked, setIsClicked] = useState(false);
   const date = dayjs(createdAt).format('DD/MM/YY');
   const hour = dayjs(createdAt).format('HH:mm');
@@ -39,6 +40,7 @@ function OrderLine({ id, ticketId, amount, optionals, createdAt, name, header, t
       await updateOrderStatus(id);
       toast.success('O pedido está a caminho do cliente!', { theme: 'light' });
       setIsClicked(false);
+      refetch();
     } catch (error) {
       toast.error('Algo deu errado. Atualize a página e tente novamente.', { theme: 'light' });
       setIsClicked(false);

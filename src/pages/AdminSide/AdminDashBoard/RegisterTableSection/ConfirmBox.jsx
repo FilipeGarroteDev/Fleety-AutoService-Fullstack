@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { postNewUserData } from '../../../../services/axios/users-connections';
 import { ThreeDots } from 'react-loader-spinner';
 
-export default function ConfirmBox({ type, setConfirmRegister, data, setData }) {
+export default function ConfirmBox({ type, setConfirmRegister, data, setData, refetch }) {
   const [restaurantSecretKey, setRestaurantSecretKey] = useState('');
   const [isClicked, setIsClicked] = useState(false);
 
@@ -27,6 +27,7 @@ export default function ConfirmBox({ type, setConfirmRegister, data, setData }) 
       setConfirmRegister(false);
       toast.success('Usuário criado com sucesso!', { theme: 'light' });
       setIsClicked(false);
+      refetch();
     } catch (error) {
       toast.error(
         'Não foi possível cadastrar o usuário. Verifique se digitou a chave de segurança corretamente e tente novamente mais tarde.',

@@ -14,7 +14,7 @@ import { ThreeDots } from 'react-loader-spinner';
 export default function RegisterTableSection() {
   const [clientData, setClientData] = useState({});
   const [adminData, setAdminData] = useState({});
-  const { data, isLoading } = useQuery('users', () => {
+  const { data, isLoading, refetch } = useQuery('users', () => {
     return getAllActiveUsers().then((res) => res.data);
   });
 
@@ -42,7 +42,7 @@ export default function RegisterTableSection() {
         <h1>Cadastro de nova mesa</h1>
         <span>Abaixo é possível cadastrar nova mesa, bem como visualizar as mesas cadastradas e ativas.</span>
       </SectionTitle>
-      <RegisterForm type="cliente" clientData={clientData} setClientData={setClientData}>
+      <RegisterForm type="cliente" clientData={clientData} setClientData={setClientData} refetch={refetch}>
         <input
           name="name"
           value={clientData.name}
@@ -58,7 +58,7 @@ export default function RegisterTableSection() {
           onChange={handleClientRegister}
         />
       </RegisterForm>
-      <RegisterForm type="admin" adminData={adminData} setAdminData={setAdminData}>
+      <RegisterForm type="admin" adminData={adminData} setAdminData={setAdminData} refetch={refetch}>
         <input
           name="name"
           value={adminData.name}
@@ -84,14 +84,14 @@ export default function RegisterTableSection() {
       <UsersList>
         <UserLine header />
         {data.map(({ id, name, role, createdAt }) => (
-          <UserLine key={id} id={id} name={name} role={role} createdAt={createdAt} />
+          <UserLine key={id} id={id} name={name} role={role} createdAt={createdAt} refetch={refetch} />
         ))}
       </UsersList>
     </SectionContainer>
   );
 }
 
-function UserLine({ id, name, role, createdAt, header }) {
+function UserLine({ id, name, role, createdAt, header, refetch }) {
   const date = dayjs(createdAt).format('DD/MM/YYYY');
   const [isClicked, setIsClicked] = useState(false);
 
@@ -108,6 +108,7 @@ function UserLine({ id, name, role, createdAt, header }) {
       await deleteUser(id);
       toast.success('Usuário excluído com sucesso!', { theme: 'light' });
       setIsClicked(false);
+      refetch();
     } catch (error) {
       toast.error('Não foi possível deletar o usuário. Tente novamente mais tarde', { theme: 'light' });
       setIsClicked(false);
