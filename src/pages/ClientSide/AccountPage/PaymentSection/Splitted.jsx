@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import CheckoutButton from '../../../../components/ClientSideComponents/AccountPage/CheckoutButton';
 import { postPayment } from '../../../../services/axios/checkout-connections';
@@ -24,7 +26,7 @@ export default function Splitted({ totalValue, setPaymentMethod }) {
       await postPayment(paymentBody, ticket.id);
       setPaymentMethod('paymentSuccessful');
     } catch (error) {
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   }
 

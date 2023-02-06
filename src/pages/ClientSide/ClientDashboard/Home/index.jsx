@@ -63,6 +63,11 @@ const Banner = styled.div`
     mask-image: linear-gradient(to top, #0000001f, #000000df);
     -webkit-mask-image: linear-gradient(to top, #0000001f, #000000df);
   }
+
+  &:hover {
+      cursor: pointer;
+      filter: brightness(1.1)
+    }
 `;
 
 const CarouselButtons = styled.nav`

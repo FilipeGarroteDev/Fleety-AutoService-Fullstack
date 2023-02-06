@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { postNewUserData } from '../../../../services/axios/users-connections';
 
@@ -20,11 +21,9 @@ export default function ConfirmBox({ type, setConfirmRegister, data, setData }) 
         email: '',
       });
       setConfirmRegister(false);
-      alert('Usuário criado com sucesso!');
+      toast.success('Usuário criado com sucesso!', { theme: 'light' });
     } catch (error) {
-      alert(
-        'Não foi possível cadastrar o usuário. Verifique se digitou a chave de segurança corretamente e tente novamente mais tarde.'
-      );
+      toast.error('Não foi possível cadastrar o usuário. Verifique se digitou a chave de segurança corretamente e tente novamente mais tarde.', { theme: 'light' });
       setRestaurantSecretKey('');
     }
   }

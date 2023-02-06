@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { listAllFinishedOrders } from '../../../services/axios/checkout-connections';
 import PaymentSection from './PaymentSection/PaymentSection';
@@ -23,7 +24,7 @@ export default function AccountPage() {
         const promise = await listAllFinishedOrders(ticket.id);
         setFinishedOrders(promise.data);
       } catch (error) {
-        alert('Não foi possível carregar suas informações. Por gentileza, tente novamente.');
+        toast.error('Não foi possível carregar suas informações. Por gentileza, tente novamente.');
         navigate('/');
       }
     }

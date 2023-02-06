@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { BsFillStopwatchFill } from 'react-icons/bs';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
 import { deleteWaiterCall } from '../../../../services/axios/waiter-connections';
@@ -24,8 +25,9 @@ function WaiterQueueLine({ table, createdAt, userId, header }) {
   async function finishCall() {
     try {
       await deleteWaiterCall(userId);
+      toast.success('O garçom está a caminho!', { theme: 'light' });
     } catch (error) {
-      alert('Algo deu errado. Atualize a página e tente novamente.');
+      toast.error('Algo deu errado. Atualize a página e tente novamente.', { theme: 'light' });
     }
   }
 

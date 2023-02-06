@@ -6,6 +6,7 @@ import WithdrawItemsMenu from './WithdrawItemsMenu';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getProductData } from '../../../../services/axios/products-connections';
 import { postOrder } from '../../../../services/axios/orders-connections';
+import { toast } from 'react-toastify';
 
 export default function ProductPage() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function ProductPage() {
         const product = await getProductData(productId);
         setProductData(product.data);
       } catch (error) {
-        alert(error.response.data);
+        toast.error(error.response.data);
       }
     }
     fetchData();
@@ -62,10 +63,10 @@ export default function ProductPage() {
 
     try {
       await postOrder(body);
-      alert('Pedido realizado com sucesso. Você já pode visualizá-lo no menu "Meu Pedido"');
+      toast.success('Pedido realizado com sucesso. Você já pode visualizá-lo no menu "Meu Pedido"');
       navigate('/chart');
     } catch (error) {
-      alert('Algo deu errado com o seu pedido, por gentileza, refaça a operação');
+      toast.error('Algo deu errado com o seu pedido, por gentileza, refaça a operação');
     }
   }
 
@@ -111,6 +112,7 @@ const Wrapper = styled.main`
   > h2 {
     font-size: 26px;
     color: #d9d9d9;
+    margin-bottom: 50px;
   }
 `;
 
@@ -178,6 +180,11 @@ const FinishOrderSection = styled.footer`
     > svg {
       color: #d9d9d9;
       font-size: 40px;
+
+      &:hover {
+        cursor: pointer;
+        filter: brightness(0.7);
+      }
     }
 
     > strong {
@@ -206,5 +213,11 @@ const FinishOrderSection = styled.footer`
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.95);
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+    }
   }
 `;

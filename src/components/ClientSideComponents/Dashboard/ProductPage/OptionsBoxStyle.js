@@ -14,7 +14,6 @@ export default styled.section`
   font-size: 20px;
   font-weight: 700;
   margin-top: 25px;
-  transition: all 0.3s;
   overflow: hidden;
 
   > .closed {
@@ -23,17 +22,21 @@ export default styled.section`
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.8)
+    }
   }
 
   > .opened {
     display: flex;
-    height: ${(props) => (props.isClicked ? '205px' : '0')};
+    height: ${(props) => (props.isClicked ? 'auto' : '0')};
     width: 100%;
-    transition: all 1s;
 
     > textarea {
       width: 100%;
-      height: 80%;
+      height: 70%;
       background-color: #655d5d;
       border-radius: 15px;
       border: 1px solid #d9d9d9;
@@ -42,6 +45,7 @@ export default styled.section`
       font-size: 20px;
       color: #d9d9d9;
       padding: 15px;
+      margin-bottom: 25px;
 
       ::placeholder {
         font-size: 16px;

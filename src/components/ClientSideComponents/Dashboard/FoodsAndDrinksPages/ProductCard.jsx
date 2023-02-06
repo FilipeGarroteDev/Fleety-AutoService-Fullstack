@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { IoTrash } from 'react-icons/io5';
 import { deleteActiveOrder } from '../../../../services/axios/orders-connections';
+import { toast } from 'react-toastify';
 
 export default function ProductCard({
   name,
@@ -19,46 +20,43 @@ export default function ProductCard({
   const navigate = useNavigate();
   const formattedValue = (value / 100).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
   const formattedDescription =
-    description?.split(' ').length > 10 ? description.split(' ').splice(0, 10).join(' ') + ' (...)' : description;
+    description?.split(' ').length > 15 ? description.split(' ').splice(0, 15).join(' ') + ' (...)' : description;
 
   async function deleteProduct() {
     try {
       await deleteActiveOrder(orderId);
       setRerender(!rerender);
-      alert('Seu pedido foi excluído do carrinho com sucesso!');
+      toast.success('Seu pedido foi excluído do carrinho com sucesso!');
     } catch (error) {
-      alert('Ocorreu um erro com sua requisição. Por gentileza, tente novamente!');
+      toast.error('Ocorreu um erro com sua requisição. Por gentileza, tente novamente!');
       navigate('/');
     }
   }
 
   return (
-    <CardStyle chart={chart}>
-      <img src={image} alt="productImage" onClick={() => navigate(`/product/${id}`)} />
-      <div onClick={() => navigate(`/product/${id}`)}>
-        <h2>{chart ? `${amount}x ${name}` : name}</h2>
-        <h4>{optionals ? '+ observações' : formattedDescription}</h4>
-      </div>
-      <aside onClick={() => navigate(`/product/${id}`)}>
-        <span>{formattedValue}</span>
-      </aside>
-      {chart ? (
-        <button onClick={deleteProduct}>
-          <IoTrash />
-          Excluir Pedido
-        </button>
-      ) : (
-        ''
-      )}
-    </CardStyle>
+    <>
+      <CardStyle chart={chart}>
+        <img src={image} alt="productImage" onClick={() => navigate(`/product/${id}`)} />
+        <div onClick={() => navigate(`/product/${id}`)}>
+          <h2>{chart ? `${amount}x ${name}` : name}</h2>
+          <h4>{optionals ? '+ observações' : formattedDescription}</h4>
+        </div>
+        <aside onClick={() => navigate(`/product/${id}`)}>
+          {chart ? '' : <p>A partir de:</p>}
+          <span>{formattedValue}</span>
+        </aside>
+        {chart ? <IoTrash onClick={deleteProduct} /> : ''}
+      </CardStyle>
+    </>
   );
 }
 
 const CardStyle = styled.div`
-  width: ${(props) => (props.chart ? '90%' : '80%')};
-  height: ${(props) => (props.chart ? '90px' : '120px')};
-  border-radius: 15px;
+  width: ${(props) => (props.chart ? '100%' : '95%')};
+  height: ${(props) => (props.chart ? '90px' : '130px')};
   background-color: #2f2c2c;
+  border-radius: 5px;
+  position: relative;
   overflow: hidden;
   display: flex;
   flex-shrink: 0;
@@ -87,35 +85,36 @@ const CardStyle = styled.div`
 
   > aside {
     display: flex;
+    flex-direction: column;
     width: 25%;
     height: 100%;
     justify-content: flex-end;
     align-items: flex-end;
     padding: 20px;
+    color: #ffffff;
 
     > span {
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 700;
       color: #65cf7c;
     }
   }
 
-  > button {
-    background-color: #9b4646;
-    border: none;
-    box-shadow: 2px 0 10px 5px rgba(211, 152, 152, 0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 11px;
-    z-index: 10;
+  > svg {
+    color: #eb9696;
+    font-size: 20px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
 
-    > svg {
-      font-size: 22px;
+    &:hover {
+      cursor: pointer;
+      color: red;
     }
   }
+
+  &:hover {
+      cursor: pointer;
+      filter: brightness(1.1)
+    }
 `;

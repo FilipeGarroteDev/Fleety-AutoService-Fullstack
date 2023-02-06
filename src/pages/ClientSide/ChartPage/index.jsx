@@ -6,6 +6,7 @@ import ProductCard from '../../../components/ClientSideComponents/Dashboard/Food
 import { listAllOrders } from '../../../services/axios/orders-connections';
 import { finishOrderAndUpdateStatus } from '../../../services/axios/checkout-connections';
 import Home from '../ClientDashboard/Home';
+import { toast } from 'react-toastify';
 
 export default function ChartPage() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function ChartPage() {
         const promise = await listAllOrders(storedTicket.id);
         setOrdersList(promise.data);
       } catch (error) {
-        alert('Algo deu errado em sua requisição. Tente novamente mais tarde');
+        toast.error('Algo deu errado em sua requisição. Tente novamente mais tarde');
         navigate('/');
       }
     }
@@ -49,12 +50,12 @@ export default function ChartPage() {
 
     try {
       await finishOrderAndUpdateStatus(body);
-      alert(
+      toast.success(
         'Seu pedido foi enviado para a cozinha! Você já consegue visualizá-lo no menu "Minha Conta". Fique à vontade para escolher mais itens! :)'
       );
       navigate('/foods');
     } catch (error) {
-      alert(
+      toast.error(
         'Ocorreu um erro com seu pedido. Certifique-se de que seu pedido não está vazio ou, caso o erro persista, chame o garçom.'
       );
     }
@@ -122,6 +123,10 @@ const OpacityStyle = styled.main`
   opacity: 0.5;
   z-index: 2;
   padding-left: 14%;
+
+  &:hover {
+    cursor: crosshair;
+  }
 `;
 
 const ChartWindow = styled.section`
@@ -134,7 +139,7 @@ const ChartWindow = styled.section`
     }
   }
 
-  width: 50%;
+  width: 35%;
   height: 100vh;
   background-color: #a39d9d;
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.8);
@@ -157,6 +162,11 @@ const ChartWindow = styled.section`
     color: #292727;
     font-size: 26px;
     font-weight: 700;
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.7)
+    }
   }
 
   > header {
@@ -207,6 +217,12 @@ const ChartWindow = styled.section`
       color: #292727;
       font-weight: 700;
       font-size: 16px;
+
+      &:hover {
+      cursor: pointer;
+      filter: brightness(0.95);
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+    }
     }
   }
 `;
@@ -215,12 +231,12 @@ const OrderContainer = styled.div`
   width: 100%;
   height: 71.5%;
   display: flex;
-  margin-top: 12.5%;
+  margin-top: 17.5%;
   padding-top: 3%;
-  padding-left: 5%;
   padding-bottom: 5%;
+  padding-left: 5%;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   overflow-y: scroll;
 
   &::-webkit-scrollbar-track {

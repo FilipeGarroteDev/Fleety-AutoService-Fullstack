@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { postRatings } from '../../../services/axios/ratings-connections';
 import RateSection from './RateSection';
@@ -12,10 +13,10 @@ export default function RatingsPage() {
   async function sendRatings() {
     try {
       await postRatings(ratingObject);
-      alert('Sua opinião é muito importante para nós. Obrigado por colaborar!!');
+      toast.success('Sua opinião é muito importante para nós. Obrigado por colaborar!!');
       navigate('/');
     } catch (error) {
-      alert('Algo deu errado. Você precisa preencher os campos corretamente. O campo "opinião pessoal" é opcional');
+      toast.error('Algo deu errado. Você precisa preencher os campos corretamente. O campo "opinião pessoal" é opcional');
     }
   }
 

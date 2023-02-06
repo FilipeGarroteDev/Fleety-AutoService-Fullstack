@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { signIn } from '../../services/axios/auth-connections';
 import styled from 'styled-components';
 import AdminButton from '../../components/Auth/AdminButton';
+import { toast } from 'react-toastify';
 
 export default function SigninPage() {
   const [signInData, setSignInData] = useState({});
@@ -33,7 +34,7 @@ export default function SigninPage() {
         navigate('/admin');
       }
     } catch (error) {
-      alert('Não foi possível realizar o login. Verifique os campos preenchidos!');
+      toast.error('Não foi possível realizar o login. Verifique os campos preenchidos!');
     }
   }
 

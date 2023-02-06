@@ -8,6 +8,7 @@ import RegisterForm from './RegisterForm';
 import { deleteUser, getAllActiveUsers } from '../../../../services/axios/users-connections';
 import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
 
 export default function RegisterTableSection() {
   const [clientData, setClientData] = useState({});
@@ -101,9 +102,9 @@ function UserLine({ id, name, role, createdAt, header }) {
   async function deleteSelectedUser() {
     try {
       await deleteUser(id);
-      alert('Usuário excluído com sucesso!');
+      toast.success('Usuário excluído com sucesso!', { theme: 'light' });
     } catch (error) {
-      alert('Não foi possível deletar o usuário. Tente novamente mais tarde');
+      toast.error('Não foi possível deletar o usuário. Tente novamente mais tarde', { theme: 'light' });
       return;
     }
   }

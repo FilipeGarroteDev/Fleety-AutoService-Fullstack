@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { deleteWaiterCall, getThisUserCall, postWaiterCall } from '../../../../services/axios/waiter-connections';
 import { useQuery } from 'react-query';
+import { toast } from 'react-toastify';
 
 export default function TopMenu() {
   const userData = JSON.parse(localStorage.getItem('user'));
@@ -28,14 +29,14 @@ export default function TopMenu() {
         await deleteWaiterCall(userData.id);
         setIsWaiterCalled(false);
       } catch (error) {
-        alert('Algo deu errado com sua requisição. Tente novamente.');
+        toast.error('Algo deu errado com sua requisição. Tente novamente.');
       }
     } else {
       try {
         await postWaiterCall();
         setIsWaiterCalled(true);
       } catch (error) {
-        alert('Algo deu errado com sua requisição. Tente novamente.');
+        toast.error('Algo deu errado com sua requisição. Tente novamente.');
       }
     }
   }
@@ -149,6 +150,11 @@ const ButtonsContainer = styled.nav`
 
     > span {
       color: ${(props) => (props.isWaiterCalled ? '#292727' : '#dea12a')};
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: #121111;
     }
   }
 `;

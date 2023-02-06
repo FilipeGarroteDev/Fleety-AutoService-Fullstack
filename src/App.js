@@ -1,5 +1,7 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Reset from './common/Reset';
 import AdminRouteProtector from './common/RouteProtector/AdminRouteProtector';
 import ClientRouteProtector from './common/RouteProtector/ClientRouteProtector';
@@ -25,6 +27,18 @@ export default function App() {
   return (
     <>
       <Reset />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>

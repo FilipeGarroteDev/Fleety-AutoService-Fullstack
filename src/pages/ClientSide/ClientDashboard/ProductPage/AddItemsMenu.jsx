@@ -84,6 +84,7 @@ const ExtraItemsList = styled.ul`
   gap: 15px;
   border-top: 1px solid #807b7b;
   padding-top: 15px;
+  margin-bottom: 25px;
 
   > li {
     display: flex;
@@ -130,6 +131,11 @@ const ExtraItemsList = styled.ul`
           display: flex;
           align-items: center;
           justify-content: center;
+
+          &:hover {
+            cursor: pointer;
+            filter: brightness(0.7);
+          }
         }
 
         > strong {

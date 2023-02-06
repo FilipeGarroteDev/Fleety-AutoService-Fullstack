@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { getCategories } from '../../../../services/axios/categories-connections';
 import { getCategoryProducts } from '../../../../services/axios/products-connections';
@@ -15,7 +16,7 @@ export default function CategoriesMenu({ setProducts }) {
         const promise = await getCategories(page);
         setCategories(promise.data);
       } catch (error) {
-        alert('Houve um erro com a sua requisição');
+        toast.error('Houve um erro com sua requisição, tente novamente mais tarde.');
       }
     }
     fetchData();
@@ -39,7 +40,7 @@ function CategoryOption({ category, setProducts, page }) {
       setProducts(products.data);
       navigate(`/${page}/${category.id}`);
     } catch (error) {
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   }
 

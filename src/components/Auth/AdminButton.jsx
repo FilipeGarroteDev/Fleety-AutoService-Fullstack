@@ -4,6 +4,7 @@ import { auth } from '../../services/firebase.js';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { adminSignIn } from '../../services/axios/auth-connections';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function AdminButton() {
   const navigate = useNavigate();
@@ -26,7 +27,9 @@ export default function AdminButton() {
       localStorage.setItem('user', JSON.stringify(promise.data.user));
       navigate('/admin/waiter-queue');
     } catch (error) {
-      alert('Você não possui permissão de administrador. Tente novamente.');
+      toast.error('Você não possui permissão de administrador. Tente novamente.', {
+        theme: 'light',
+      });
     }
   }
 

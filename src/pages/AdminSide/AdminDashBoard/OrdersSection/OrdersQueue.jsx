@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
 import { updateOrderStatus } from '../../../../services/axios/orders-connections';
@@ -31,8 +32,9 @@ function OrderLine({ id, ticketId, amount, optionals, createdAt, name, header, t
   async function deliverOrder() {
     try {
       await updateOrderStatus(id);
+      toast.success('O pedido está a caminho do cliente!', { theme: 'light' });
     } catch (error) {
-      alert('Algo deu errado. Atualize a página e tente novamente.');
+      toast.error('Algo deu errado. Atualize a página e tente novamente.', { theme: 'light' });
     }
   }
 
