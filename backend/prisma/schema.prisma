@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique @db.VarChar(255) 
+  email      String?       @default("")
+  password   String       @db.VarChar(255) 
+  image      String?       @default("")
+  role       Roles
+  createdAt  DateTime     @default(now())
+  Tickets    Tickets[]
+  Sessions   Sessions[]
+}
+
+enum Roles {
+  ADMIN
+  CLIENT
+}
+
+model Sessions {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  User      Users     @relation(fields: [userId], references: [id])
+  token     String
+  createdAt DateTime  @default(now())
+}
+
+model Optionals {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  value      Int
+  Optionals_Categories  Optionals_Category[]
+}
+
+model ProductCategories {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique @db.VarChar(255)
+  image      String
+  typeId     Int
+  Type       ProductTypes @relation(fields: [typeId], references: [id])
+  Products   Products[]
+  Optionals_Categories  Optionals_Category[]
+}
+
+model ProductTypes {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique @db.VarChar(255)
+  Categories ProductCategories[]
+}
+
+model Products {
+  id            Int                   @id @default(autoincrement())
+  name          String                @unique @db.VarChar(255)
+  categoryId    Int      
+  Category      ProductCategories     @relation(fields: [categoryId], references: [id])
+  description   String     
+  value         Int     
+  image         String
+  Orders        Orders[]
+}
+
+model Optionals_Category {
+  id         Int          @id @default(autoincrement())
+  optionalId Int
+  Optionals  Optionals    @relation(fields: [optionalId], references: [id])
+  categoryId Int
+  Categories ProductCategories  @relation(fields: [categoryId], references: [id])
+
+}
+
+model Tickets {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  User      Users     @relation(fields: [userId], references: [id])
+  status    TicketStatus
+  createdAt DateTime  @default(now())
+  Orders    Orders[]
+  Payments    Payments[]
+}
+
+enum TicketStatus {
+  RESERVED
+  PAID
+}
+
+model Orders {
+  id          Int         @id @default(autoincrement())
+  ticketId    Int
+  Ticket      Tickets     @relation(fields: [ticketId], references: [id])                
+  productId   Int
+  Product     Products    @relation(fields: [productId], references: [id])                      
+  totalValue  Int
+  amount      Int
+  optionals   String?      @default("")
+  status      OrderStatus     
+  createdAt   DateTime    @default(now())
+}
+
+enum OrderStatus {
+  SELECTED
+  PREPARING
+  DELIVERED
+}
+
+model Payments {
+  id             Int      @id @default(autoincrement())
+  ticketId       Int
+  Ticket         Tickets   @relation(fields: [ticketId], references: [id])
+  totalValue     Int
+  firstName      String
+  cardIssuer     Issuers? 
+  isSplitted     Boolean
+  cardLastDigits String
+  createdAt      DateTime @default(now())
+}
+
+enum Issuers {
+  MASTERCARD
+  VISA
+}

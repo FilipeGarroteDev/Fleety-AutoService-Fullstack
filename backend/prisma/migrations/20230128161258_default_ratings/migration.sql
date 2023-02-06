@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Ratings" ALTER COLUMN "environmentRate" SET DEFAULT 1,
+ALTER COLUMN "foodRate" SET DEFAULT 1,
+ALTER COLUMN "beverageRate" SET DEFAULT 1,
+ALTER COLUMN "pricesRate" SET DEFAULT 1,
+ALTER COLUMN "serviceRate" SET DEFAULT 1,
+ALTER COLUMN "userNote" SET DEFAULT E'';
