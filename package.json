@@ -1,0 +1,14 @@
+{
+	"name": "fleety",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"docker:start": "docker-compose --env-file backend/.env.development up --build",
+		"docker:down": "docker-compose --env-file backend/.env.development down -v && docker system prune -a -f --volumes"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
+}

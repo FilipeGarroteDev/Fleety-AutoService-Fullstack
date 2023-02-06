@@ -1,0 +1,63 @@
+version: "3"
+services:
+  app_react:
+    build: ./frontend
+    container_name: app_react
+    volumes:
+      - build_react:/var/www/html
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - 80:80
+    volumes:
+      - build_react:/var/www/html
+    depends_on:
+      - app_react
+      - app_node
+  
+  app_node:
+    container_name: app_node
+    build: ./backend
+    env_file:
+      - ./backend/.env.development
+    ports:
+      - 4002:${PORT}
+    depends_on:
+      - postgresDB
+      - mongoDB
+    volumes:
+      - ./backend:/app
+
+  postgresDB:
+    image: postgres:13
+    container_name: postgresDB
+    env_file:
+      - ./backend/.env.development
+    ports:
+      - 5433:${POSTGRES_PORT}
+    restart: always
+    volumes:
+      - postgresDB:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+
+  mongoDB:
+    image: 'mongo'
+    container_name: mongoDB
+    env_file:
+      - ./backend/.env.development
+    ports:
+      - 27018:${MONGO_PORT}
+    restart: always
+    volumes:
+      - mongoDB:/var/lib/mongodb/data/db
+    environment:
+      - MONGODB_URI=${MONGO_URI}
+
+volumes:
+  build_react:
+  postgresDB:
+  mongoDB:
