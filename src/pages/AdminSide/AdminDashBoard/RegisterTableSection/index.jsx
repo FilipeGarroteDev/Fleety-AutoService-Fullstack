@@ -9,6 +9,7 @@ import { deleteUser, getAllActiveUsers } from '../../../../services/axios/users-
 import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function RegisterTableSection() {
   const [clientData, setClientData] = useState({});
@@ -92,6 +93,7 @@ export default function RegisterTableSection() {
 
 function UserLine({ id, name, role, createdAt, header }) {
   const date = dayjs(createdAt).format('DD/MM/YYYY');
+  const [isClicked, setIsClicked] = useState(false);
 
   const [isHidden, setIsHidden] = useState(true);
   const objectLiterals = {
@@ -100,11 +102,15 @@ function UserLine({ id, name, role, createdAt, header }) {
   };
 
   async function deleteSelectedUser() {
+    setIsClicked(true);
+
     try {
       await deleteUser(id);
       toast.success('Usuário excluído com sucesso!', { theme: 'light' });
+      setIsClicked(false);
     } catch (error) {
       toast.error('Não foi possível deletar o usuário. Tente novamente mais tarde', { theme: 'light' });
+      setIsClicked(false);
       return;
     }
   }
@@ -116,7 +122,15 @@ function UserLine({ id, name, role, createdAt, header }) {
       <div>{header ? <h2>Mesa</h2> : <span>{!isHidden ? name : '------'}</span>}</div>
       <div>{header ? <h2>Privilégio</h2> : <span>{!isHidden ? role : '------'}</span>}</div>
       <div>{header ? <h2>Data de criação</h2> : <span>{!isHidden ? date : '------'}</span>}</div>
-      <div>{header ? '' : <button onClick={deleteSelectedUser}>Excluir</button>}</div>
+      <div>
+        {header ? (
+          ''
+        ) : (
+          <button onClick={deleteSelectedUser} disabled={isClicked}>
+            {isClicked ? <ThreeDots color="#ece8e8" /> : 'Excluir'}
+          </button>
+        )}
+      </div>
     </LineStyle>
   );
 }

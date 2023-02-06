@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import CheckoutButton from '../../../../components/ClientSideComponents/AccountPage/CheckoutButton';
 import { postPayment } from '../../../../services/axios/checkout-connections';
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function CreditCard({ totalValue, setPaymentMethod }) {
   const [card, setCard] = useState({
@@ -17,6 +18,7 @@ export default function CreditCard({ totalValue, setPaymentMethod }) {
     totalValue,
   });
   const [ticket, setTicket] = useState({});
+  const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
     const storageTicket = localStorage.getItem('ticket');
@@ -26,10 +28,17 @@ export default function CreditCard({ totalValue, setPaymentMethod }) {
 
   async function sendPayment(e) {
     e.preventDefault();
-    if (card.cvv === '' || card.expiry === '' || card.focused === '' || card.name === '' || card.number === '')
-      return toast.error('Preencha corretamente os campos do cartão');
-    if (isNaN(Number(card.number) && Number(card.expiry) && Number(card.cvv)) || card.issuer === 'UNKNOWN')
-      return toast.error('São aceitas somente as bandeiras Visa (início 4) e MasterCard (início 54)');
+    setIsClicked(true);
+    if (card.cvv === '' || card.expiry === '' || card.focused === '' || card.name === '' || card.number === '') {
+      toast.error('Preencha corretamente os campos do cartão');
+      setIsClicked(false);
+      return;
+    }
+    if (isNaN(Number(card.number) && Number(card.expiry) && Number(card.cvv)) || card.issuer === 'UNKNOWN') {
+      toast.error('São aceitas somente as bandeiras Visa (início 4) e MasterCard (início 54)');
+      setIsClicked(false);
+      return;
+    }
 
     const paymentBody = {
       totalValue: card.totalValue,
@@ -43,8 +52,10 @@ export default function CreditCard({ totalValue, setPaymentMethod }) {
       await postPayment(paymentBody, ticket.id);
       setPaymentMethod('paymentSuccessful');
       toast.success('Pagamento efetuado com sucesso!');
+      setIsClicked(false);
     } catch (error) {
       toast.error(error.response.data);
+      setIsClicked(false);
     }
   }
 
@@ -105,7 +116,13 @@ export default function CreditCard({ totalValue, setPaymentMethod }) {
             onChange={(e) => setCard({ ...card, cvv: e.target.value })}
             onFocus={(e) => setCard({ ...card, focused: e.target.name })}
           />
-          <CheckoutButton>FINALIZAR PAGAMENTO</CheckoutButton>
+          {isClicked ? (
+            <CheckoutButton disabled>
+              <ThreeDots color="#ece8e8" />
+            </CheckoutButton>
+          ) : (
+            <CheckoutButton>FINALIZAR PAGAMENTO</CheckoutButton>
+          )}
         </form>
       </CardContainer>
     </div>

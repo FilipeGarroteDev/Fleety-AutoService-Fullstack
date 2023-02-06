@@ -32,6 +32,9 @@ export default styled.li`
     > button {
       width: 120px;
       height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border: none;
       background-color: #5b82e4;
       border-radius: 8px;

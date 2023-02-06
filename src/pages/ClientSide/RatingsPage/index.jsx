@@ -5,18 +5,25 @@ import styled from 'styled-components';
 import { postRatings } from '../../../services/axios/ratings-connections';
 import RateSection from './RateSection';
 import UserNoteSection from './UserNoteSection';
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function RatingsPage() {
   const navigate = useNavigate();
   const [ratingObject, setRatingObject] = useState({});
+  const [isClicked, setIsClicked] = useState(false);
 
   async function sendRatings() {
+    setIsClicked(true);
     try {
       await postRatings(ratingObject);
       toast.success('Sua opinião é muito importante para nós. Obrigado por colaborar!!');
+      setIsClicked(false);
       navigate('/');
     } catch (error) {
-      toast.error('Algo deu errado. Você precisa preencher os campos corretamente. O campo "opinião pessoal" é opcional');
+      toast.error(
+        'Algo deu errado. Você precisa preencher os campos corretamente. O campo "opinião pessoal" é opcional'
+      );
+      setIsClicked(false);
     }
   }
 
@@ -29,7 +36,13 @@ export default function RatingsPage() {
             <RateSection ratingObject={ratingObject} setRatingObject={setRatingObject} />
             <UserNoteSection ratingObject={ratingObject} setRatingObject={setRatingObject} />
           </div>
-          <button onClick={sendRatings}>Enviar Avaliação</button>
+          {isClicked ? (
+            <button disabled>
+              <ThreeDots color="#ece8e8" />
+            </button>
+          ) : (
+            <button onClick={sendRatings}>Enviar Avaliação</button>
+          )}
         </RatingsBox>
       </Wrapper>
     </>
@@ -65,7 +78,9 @@ const RatingsBox = styled.section`
     height: 50px;
     margin-top: 25px;
     margin-right: 120px;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: none;
     background-color: #dea12a;
     border-radius: 10px;

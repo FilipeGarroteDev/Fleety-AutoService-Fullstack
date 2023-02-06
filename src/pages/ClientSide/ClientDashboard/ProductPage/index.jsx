@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getProductData } from '../../../../services/axios/products-connections';
 import { postOrder } from '../../../../services/axios/orders-connections';
 import { toast } from 'react-toastify';
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function ProductPage() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function ProductPage() {
   const [extraValue, setExtraValue] = useState(0);
   const [productData, setProductData] = useState({});
   const [selectedOptionals, setSelectedOptionals] = useState({});
+  const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -42,6 +44,7 @@ export default function ProductPage() {
   }
 
   async function sendProduct() {
+    setIsClicked(true);
     const withdrawItens = selectedOptionals.withdraw ? `Retirar: ${selectedOptionals.withdraw}\n` : '';
     let auxString = '';
     for (let i = 0; i < Object.keys(selectedOptionals).length; i++) {
@@ -64,9 +67,11 @@ export default function ProductPage() {
     try {
       await postOrder(body);
       toast.success('Pedido realizado com sucesso. Você já pode visualizá-lo no menu "Meu Pedido"');
+      setIsClicked(false);
       navigate('/chart');
     } catch (error) {
       toast.error('Algo deu errado com o seu pedido, por gentileza, refaça a operação');
+      setIsClicked(false);
     }
   }
 
@@ -95,7 +100,13 @@ export default function ProductPage() {
           <strong>{productAmount}</strong>
           <AiOutlinePlusCircle onClick={() => increaseOrDecreaseProductAmount('+')} />
         </aside>
-        <button onClick={sendProduct}>{`${formattedValue} Adicionar`}</button>
+        {isClicked ? (
+          <button disabled>
+            <ThreeDots color="#ece8e8" />
+          </button>
+        ) : (
+          <button onClick={sendProduct}>{`${formattedValue} Adicionar`}</button>
+        )}
       </FinishOrderSection>
     </Wrapper>
   );

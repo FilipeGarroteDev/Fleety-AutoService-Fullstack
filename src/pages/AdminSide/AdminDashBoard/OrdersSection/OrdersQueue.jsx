@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard/LineStyle';
 import { updateOrderStatus } from '../../../../services/axios/orders-connections';
+import { ThreeDots } from 'react-loader-spinner';
+import { useState } from 'react';
 
 export default function OrdersQueue({ data }) {
   return (
@@ -24,17 +26,22 @@ export default function OrdersQueue({ data }) {
 }
 
 function OrderLine({ id, ticketId, amount, optionals, createdAt, name, header, table }) {
+  const [isClicked, setIsClicked] = useState(false);
   const date = dayjs(createdAt).format('DD/MM/YY');
   const hour = dayjs(createdAt).format('HH:mm');
 
   const timeDiff = dayjs(Date.now() - dayjs(createdAt)).format('mm:ss');
 
   async function deliverOrder() {
+    setIsClicked(true);
+
     try {
       await updateOrderStatus(id);
       toast.success('O pedido está a caminho do cliente!', { theme: 'light' });
+      setIsClicked(false);
     } catch (error) {
       toast.error('Algo deu errado. Atualize a página e tente novamente.', { theme: 'light' });
+      setIsClicked(false);
     }
   }
 
@@ -46,7 +53,9 @@ function OrderLine({ id, ticketId, amount, optionals, createdAt, name, header, t
       <div>{header ? <h2>Observações</h2> : <span>{optionals}</span>}</div>
       <div>{header ? <h2>Entrada</h2> : <span>{`${hour} - ${date}`}</span>}</div>
       <div>{header ? <h2>Tempo de espera</h2> : <span>{`${timeDiff}`}</span>}</div>
-      <div>{header ? '' : <button onClick={deliverOrder}>Entregar</button>}</div>
+      <div>
+        {header ? '' : <button onClick={deliverOrder}>{isClicked ? <ThreeDots color="#ece8e8" /> : 'Entregar'}</button>}
+      </div>
     </LineStyle>
   );
 }

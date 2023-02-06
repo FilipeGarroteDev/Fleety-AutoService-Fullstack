@@ -3,6 +3,9 @@ import styled from 'styled-components';
 export default styled.button`
   width: ${(props) => (props.logout ? '30%' : 'auto')};
   margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 35px;
   border-radius: 5px;
   border: 1px solid #7a7474;

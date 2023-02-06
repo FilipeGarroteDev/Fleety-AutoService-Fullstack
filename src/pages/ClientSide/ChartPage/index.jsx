@@ -7,12 +7,14 @@ import { listAllOrders } from '../../../services/axios/orders-connections';
 import { finishOrderAndUpdateStatus } from '../../../services/axios/checkout-connections';
 import Home from '../ClientDashboard/Home';
 import { toast } from 'react-toastify';
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function ChartPage() {
   const navigate = useNavigate();
   const [ordersList, setOrdersList] = useState([]);
   const [ticket, setTicket] = useState([]);
   const [rerender, setRerender] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
     const storedTicket = JSON.parse(localStorage.getItem('ticket'));
@@ -43,6 +45,7 @@ export default function ChartPage() {
   }
 
   async function checkout() {
+    setIsClicked(true);
     const body = {
       ticketId: ticket.id,
       status: 'PREPARING',
@@ -53,11 +56,14 @@ export default function ChartPage() {
       toast.success(
         'Seu pedido foi enviado para a cozinha! Você já consegue visualizá-lo no menu "Minha Conta". Fique à vontade para escolher mais itens! :)'
       );
+      setIsClicked(false);
+
       navigate('/foods');
     } catch (error) {
       toast.error(
         'Ocorreu um erro com seu pedido. Certifique-se de que seu pedido não está vazio ou, caso o erro persista, chame o garçom.'
       );
+      setIsClicked(false);
     }
   }
 
@@ -96,7 +102,13 @@ export default function ChartPage() {
             <h2>VALOR TOTAL:</h2>
             <h3>{calculateTotalValue()}</h3>
           </div>
-          <button onClick={checkout}>ENVIAR PEDIDO</button>
+          {isClicked ? (
+            <button disabled>
+              <ThreeDots color="#ece8e8" />
+            </button>
+          ) : (
+            <button onClick={checkout}>ENVIAR PEDIDO</button>
+          )}
         </footer>
       </ChartWindow>
     </>
@@ -165,7 +177,7 @@ const ChartWindow = styled.section`
 
     &:hover {
       cursor: pointer;
-      filter: brightness(0.7)
+      filter: brightness(0.7);
     }
   }
 
@@ -211,6 +223,9 @@ const ChartWindow = styled.section`
     > button {
       width: 180px;
       height: 65px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       border: none;
       background-color: #dea12a;
       border-radius: 15px;
@@ -219,10 +234,10 @@ const ChartWindow = styled.section`
       font-size: 16px;
 
       &:hover {
-      cursor: pointer;
-      filter: brightness(0.95);
-      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
-    }
+        cursor: pointer;
+        filter: brightness(0.95);
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+      }
     }
   }
 `;

@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { postNewUserData } from '../../../../services/axios/users-connections';
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function ConfirmBox({ type, setConfirmRegister, data, setData }) {
   const [restaurantSecretKey, setRestaurantSecretKey] = useState('');
+  const [isClicked, setIsClicked] = useState(false);
 
   async function registerNewUser() {
+    setIsClicked(true);
+
     const body = {
       ...data,
       role: type === 'admin' ? 'ADMIN' : 'CLIENT',
@@ -22,9 +26,14 @@ export default function ConfirmBox({ type, setConfirmRegister, data, setData }) 
       });
       setConfirmRegister(false);
       toast.success('Usuário criado com sucesso!', { theme: 'light' });
+      setIsClicked(false);
     } catch (error) {
-      toast.error('Não foi possível cadastrar o usuário. Verifique se digitou a chave de segurança corretamente e tente novamente mais tarde.', { theme: 'light' });
+      toast.error(
+        'Não foi possível cadastrar o usuário. Verifique se digitou a chave de segurança corretamente e tente novamente mais tarde.',
+        { theme: 'light' }
+      );
       setRestaurantSecretKey('');
+      setIsClicked(false);
     }
   }
 
@@ -41,7 +50,9 @@ export default function ConfirmBox({ type, setConfirmRegister, data, setData }) 
         />
         <div>
           <button onClick={() => setConfirmRegister(false)}>Cancelar</button>
-          <button onClick={registerNewUser}>Cadastrar</button>
+          <button onClick={registerNewUser} disabled={isClicked}>
+            {isClicked ? <ThreeDots color="#ece8e8" /> : 'Cadastrar'}
+          </button>
         </div>
       </Box>
     </Wrapper>
@@ -131,6 +142,9 @@ const Box = styled.div`
       width: 120px;
       height: 40px;
       border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background-color: #5b82e4;
       border-radius: 8px;
       box-shadow: 0 2px 10px 3px rgba(0, 0, 0, 0.2);
