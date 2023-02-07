@@ -64,32 +64,28 @@ As seguintes ferramentas, tecnologias e frameworks foram utilizadas na construç
 
 - Faça o clone/fork desse repositório, que já contém o front-end, back-end e configurações do Docker. - https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack
 
-1. Na pasta 'backend', rode o seguinte comando, para instalar as dependências:
-```bash
-npm i
-```
-2. Crie uma database no PostgreSQL com o nome de sua preferência ( recomendo que seja: fleety :D )
+1. Crie uma database no PostgreSQL com o nome de sua preferência ( recomendo que seja: fleety :D )
 
-3. Crie um arquivo `.env.development` na raiz da pasta 'backend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
+2. Crie um arquivo `.env.development` na raiz da pasta 'backend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
 
-4. Crie um arquivo `.env` na raiz da pasta 'frontend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
+3. Crie um arquivo `.env` na raiz da pasta 'frontend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
 
-3. Por fim, rode, **na raiz do projeto (./)**, o comando a seguir para iniciar a aplicação:
+4. Por fim, rode, **na raiz do projeto (./)**, o comando a seguir para iniciar a aplicação:
 ```bash
 npm run docker:start
 ```
 
-4. Pronto, agora você já pode acessar o app através da url:
+5. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o))*
 ```bash
 http://localhost
 ```
 
-5. Caso queira parar a aplicação, rode:
+6. Caso queira parar a aplicação, rode:
 ```bash
 npm run docker:down
 ```
 
-6. Caso queira deletar a aplicação, bem como seus volumes, containers e imagens, rode:
+7. Caso queira deletar a aplicação, bem como seus volumes, containers e imagens, rode:
 ```bash
 npm run docker:clean
 ```
@@ -131,19 +127,19 @@ npm run dev
 
 ### Pasta ./frontend:
  
-1. Na pasta 'frontend', rode o seguinte comando, para instalar as dependências:
+8. Na pasta 'frontend', rode o seguinte comando, para instalar as dependências:
 ```bash
 npm i
 ```
 
-2. Crie um arquivo `.env` na raiz da pasta 'frontend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
+9. Crie um arquivo `.env` na raiz da pasta 'frontend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
 
-3. Por fim, rode o comando a seguir para iniciar a aplicação:
+10. Por fim, rode o comando a seguir para iniciar a aplicação:
 ```bash
 npm start
 ```
 
-4. Pronto, agora você já pode acessar o app através da url:
+11. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o))*
 ```bash
 http://localhost:[SUA PORTA]
 ```
