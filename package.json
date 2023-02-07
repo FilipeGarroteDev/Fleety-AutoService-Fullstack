@@ -6,7 +6,8 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"docker:start": "docker-compose --env-file backend/.env.development up --build -d",
-		"docker:down": "docker-compose --env-file backend/.env.development down -v && docker system prune -a -f --volumes"
+		"docker:down": "docker-compose --env-file backend/.env.development down",
+		"docker:clear": "docker-compose --env-file backend/.env.development down -v && docker system prune -a -f --volumes"
 	},
 	"keywords": [],
 	"author": "",

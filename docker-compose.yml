@@ -29,6 +29,7 @@ services:
       - mongoDB
     volumes:
       - ./backend:/app
+      - node_modules:/app/node_modules
 
   postgresDB:
     image: postgres:13
@@ -58,6 +59,7 @@ services:
       - MONGODB_URI=${MONGO_URI}
 
 volumes:
+  node_modules:
   build_react:
   postgresDB:
   mongoDB:
