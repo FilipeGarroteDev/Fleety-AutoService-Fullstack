@@ -5,11 +5,10 @@ import LineStyle from '../../../../components/AdminSideComponents/AdminDashboard
 import { useState } from 'react';
 import { BiHide, BiShow } from 'react-icons/bi';
 import RegisterForm from './RegisterForm';
-import { deleteUser, getAllActiveUsers } from '../../../../services/axios/users-connections';
+import { getAllActiveUsers } from '../../../../services/axios/users-connections';
 import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
-import { toast } from 'react-toastify';
-import { ThreeDots } from 'react-loader-spinner';
+import KeyDialog from '../../../../common/MUI - components/KeyDialog';
 
 export default function RegisterTableSection() {
   const [clientData, setClientData] = useState({});
@@ -63,7 +62,7 @@ export default function RegisterTableSection() {
           name="name"
           value={adminData.name}
           type="name"
-          placeholder='Nome (ex: "Mesa 01")'
+          placeholder="Login (Nome do admin)"
           onChange={handleAdminRegister}
         />
         <input
@@ -93,28 +92,12 @@ export default function RegisterTableSection() {
 
 function UserLine({ id, name, role, createdAt, header, refetch }) {
   const date = dayjs(createdAt).format('DD/MM/YYYY');
-  const [isClicked, setIsClicked] = useState(false);
 
   const [isHidden, setIsHidden] = useState(true);
   const objectLiterals = {
     true: <BiShow onClick={() => setIsHidden(!isHidden)} />,
     false: <BiHide onClick={() => setIsHidden(!isHidden)} />,
   };
-
-  async function deleteSelectedUser() {
-    setIsClicked(true);
-
-    try {
-      await deleteUser(id);
-      toast.success('Usuário excluído com sucesso!', { theme: 'light' });
-      setIsClicked(false);
-      refetch();
-    } catch (error) {
-      toast.error('Não foi possível deletar o usuário. Tente novamente mais tarde', { theme: 'light' });
-      setIsClicked(false);
-      return;
-    }
-  }
 
   return (
     <LineStyle order>
@@ -127,9 +110,9 @@ function UserLine({ id, name, role, createdAt, header, refetch }) {
         {header ? (
           ''
         ) : (
-          <button onClick={deleteSelectedUser} disabled={isClicked}>
-            {isClicked ? <ThreeDots color="#ece8e8" /> : 'Excluir'}
-          </button>
+          <KeyDialog id={id} refetch={refetch}>
+            Teste
+          </KeyDialog>
         )}
       </div>
     </LineStyle>

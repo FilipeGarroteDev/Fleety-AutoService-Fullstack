@@ -137,7 +137,7 @@ const ButtonsContainer = styled.nav`
 
     &:hover {
       cursor: pointer;
-      background-color: #121111;
+      filter: brightness(0.8);
     }
   }
 
@@ -154,7 +154,7 @@ const ButtonsContainer = styled.nav`
 
     &:hover {
       cursor: pointer;
-      background-color: #121111;
+      filter: brightness(0.8);
     }
   }
 `;
