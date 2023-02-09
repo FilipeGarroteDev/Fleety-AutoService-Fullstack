@@ -64,26 +64,33 @@ As seguintes ferramentas, tecnologias e frameworks foram utilizadas na construç
 
 - Faça o clone/fork desse repositório, que já contém o front-end, back-end e configurações do Docker. - https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack
 
-1. Crie um arquivo `.env.development` na raiz da pasta 'backend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
+1. Instale o docker em sua máquina, seguindo a seguinte documentação: [Instalação Docker Ubunto](https://docs.docker.com/engine/install/ubuntu/);
 
-2. Crie um arquivo `.env` na raiz da pasta 'frontend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
+2. Instale o docker-compose por meio do seguinte comando:
+```bash
+sudo apt-get install docker-compose
+```
 
-3. Por fim, rode, **na raiz do projeto (./)**, o comando a seguir para iniciar a aplicação:
+3. Crie um arquivo `.env.development` na raiz da pasta 'backend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
+
+4. Crie um arquivo `.env` na raiz da pasta 'frontend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
+
+5. Por fim, rode, **na raiz do projeto (./)**, o comando a seguir para iniciar a aplicação:
 ```bash
 npm run docker:start
 ```
 
-4. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o)*
+6. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o)*
 ```bash
 http://localhost
 ```
 
-5. Caso queira parar a aplicação, rode:
+7. Caso queira parar a aplicação, rode:
 ```bash
 npm run docker:down
 ```
 
-6. Caso queira deletar a aplicação, bem como seus volumes, containers e imagens, rode:
+8. Caso queira deletar a aplicação, bem como seus volumes, containers e imagens, rode:
 ```bash
 npm run docker:clear
 ```
