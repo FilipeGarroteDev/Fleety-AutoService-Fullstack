@@ -31,11 +31,7 @@ export async function listAllActiveUsers(req: Request, res: Response) {
     const users: Users[] = await usersService.validateAndSearchAllUsers(role);
     res.status(httpStatus.OK).send(users);
   } catch (error) {
-    if (error.name === 'ConflictError') {
-      res.sendStatus(httpStatus.CONFLICT);
-    } else if (error.name === 'ForbiddenError') {
-      res.sendStatus(httpStatus.FORBIDDEN);
-    } else if (error.name === 'UnauthorizedError') {
+    if (error.name === 'UnauthorizedError') {
       res.sendStatus(httpStatus.UNAUTHORIZED);
     } else {
       res.sendStatus(httpStatus.BAD_REQUEST);

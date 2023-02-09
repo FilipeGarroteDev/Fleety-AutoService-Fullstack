@@ -17,8 +17,6 @@ export async function listCategoryProducts(req: Request, res: Response) {
       res.sendStatus(httpStatus.BAD_REQUEST);
     }
   }
-
-  return res.status(httpStatus.OK);
 }
 
 export async function findSpecificProductData(req: Request, res: Response) {
@@ -36,6 +34,4 @@ export async function findSpecificProductData(req: Request, res: Response) {
       res.sendStatus(httpStatus.BAD_REQUEST);
     }
   }
-
-  return res.status(httpStatus.OK);
 }

@@ -52,8 +52,6 @@ export async function checkAndFinishPayment(req: Request, res: Response) {
       return res
         .status(httpStatus.NOT_FOUND)
         .send('Não há pedidos entregues vinculados à sua mesa. Verifique ou, se preferir, chame o garçom.');
-    } else if (error.name === 'UnauthorizedError') {
-      return res.status(httpStatus.UNAUTHORIZED).send('');
     } else if (error.name === 'UnprocessableEntityError') {
       return res
         .status(httpStatus.UNPROCESSABLE_ENTITY)
