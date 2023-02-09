@@ -73,7 +73,7 @@ As seguintes ferramentas, tecnologias e frameworks foram utilizadas na construç
 npm run docker:start
 ```
 
-4. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o))*
+4. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](chave-super-secreta-do-restaurante)*
 ```bash
 http://localhost
 ```
@@ -137,7 +137,7 @@ npm i
 npm start
 ```
 
-11. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o))*
+11. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](chave-super-secreta-do-restaurante)*
 ```bash
 http://localhost:[SUA PORTA]
 ```
