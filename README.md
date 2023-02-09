@@ -11,7 +11,7 @@
 
 O Fleety é um projeto fullstack de fácil utilização - acessível para quaisquer tipos de clientes, da mais variada faixa etária - desenvolvido com o intuito de melhorar a experiência do consumidor e facilitar o monitoramento, controle e análise dos serviços para o administrador do restaurante. É um serviço de automatização/monitoramento de pedidos para restaurantes através do qual, por meio de login, é possível acessar menu digital - lado do cliente - ou o dashboard do administrador - caso tenha permissão para tal. O Fleety foi desenvolvido do zero, do layout ao deploy, utilizando tecnologias como React.js, JavaScript, Node.js, TypeScript, PostgreSQL, mongoDB, jest, dentre outras.
 
-**Deploy**: www.fleety.site
+**Deploy**: http://fleety.site
 
 
 ## Funcionalidades
