@@ -1,4 +1,4 @@
-[Sobre](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#fleety) | [Funcionalidades](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#funcionalidades) | [Tecnologias](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#tecnologias) | [Rodar com Docker](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#como-rodar-o-projeto-com-docker) | [Rodar localmente](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#como-rodar-a-aplica%C3%A7%C3%A3o) | [Rodar testes](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#como-rodar-os-testes-automatizados) | [Informações Importantes](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o)
+[Sobre](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#fleety) | [Funcionalidades](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#funcionalidades) | [Tecnologias](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#tecnologias) | [Rodar com Docker](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#como-rodar-o-projeto-com-docker) | [Rodar localmente](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#como-rodar-a-aplica%C3%A7%C3%A3o-localmente) | [Rodar testes](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#como-rodar-a-aplica%C3%A7%C3%A3o-localmente) | [Informações Importantes](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o)
 
 <h1>Fleety</h1>
 
@@ -64,30 +64,35 @@ As seguintes ferramentas, tecnologias e frameworks foram utilizadas na construç
 
 - Faça o clone/fork desse repositório, que já contém o front-end, back-end e configurações do Docker. - https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack
 
-1. Crie uma database no PostgreSQL com o nome de sua preferência ( recomendo que seja: fleety :D )
+1. Instale o docker em sua máquina, seguindo a seguinte documentação: [Instalação Docker Ubunto](https://docs.docker.com/engine/install/ubuntu/);
 
-2. Crie um arquivo `.env.development` na raiz da pasta 'backend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
+2. Instale o docker-compose por meio do seguinte comando:
+```bash
+sudo apt-get install docker-compose
+```
 
-3. Crie um arquivo `.env` na raiz da pasta 'frontend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
+3. Crie um arquivo `.env.development` na raiz da pasta 'backend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
 
-4. Por fim, rode, **na raiz do projeto (./)**, o comando a seguir para iniciar a aplicação:
+4. Crie um arquivo `.env` na raiz da pasta 'frontend' e o configure utilizando, como exemplo, o arquivo `.env.example`, seguindo as instruções constantes dele.
+
+5. Por fim, rode, **na raiz do projeto (./)**, o comando a seguir para iniciar a aplicação:
 ```bash
 npm run docker:start
 ```
 
-5. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o))*
+6. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o)*
 ```bash
 http://localhost
 ```
 
-6. Caso queira parar a aplicação, rode:
+7. Caso queira parar a aplicação, rode:
 ```bash
 npm run docker:down
 ```
 
-7. Caso queira deletar a aplicação, bem como seus volumes, containers e imagens, rode:
+8. Caso queira deletar a aplicação, bem como seus volumes, containers e imagens, rode:
 ```bash
-npm run docker:clean
+npm run docker:clear
 ```
 
 
@@ -139,7 +144,7 @@ npm i
 npm start
 ```
 
-11. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](https://github.com/FilipeGarroteDev/linkr-front/edit/main/README.md#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o))*
+11. Pronto, agora você já pode acessar o app através da url: *(Para saber como logar na aplicação, consulte a seção [Informações Importantes](https://github.com/FilipeGarroteDev/Fleety-AutoService-Fullstack#informa%C3%A7%C3%B5es-importantes-para-o-uso-da-aplica%C3%A7%C3%A3o)*
 ```bash
 http://localhost:[SUA PORTA]
 ```
@@ -182,7 +187,7 @@ npm run test
 
 ## Informações importantes para o uso da aplicação
 
-1. Ao rodar o comando "dev:seed", é criado um usuário com privilégio de administrador, cujo login é "test" e a senha é "test".
+1. Foi criado um usuário com privilégio de administrador, cujo login é "test" e a senha é "test".
 2. Entre no sistema com essas credenciais e, assim, poderá criar um usuário com privilégio "CLIENT" ou até mesmo um outro admin com seu e-mail google.
 3. Lembrando que, para criar qualquer usuário, lhe será pedida uma chave secreta do restaurante. Tal chave deve ser configurada nos arquivos .env, tanto do back-end, quanto do front-end.
 4. Estou aberto e à disposição para quaisquer críticas, sugestões, parcerias e propostas. É só me procurar nos canais fornecidos no meu perfil.
